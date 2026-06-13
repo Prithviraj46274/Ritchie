@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Richie.Application/Richie.Application.csproj" />
+    <Project Path="src/Richie.Domain/Richie.Domain.csproj" />
+    <Project Path="src/Richie.Infrastructure/Richie.Infrastructure.csproj" />
+    <Project Path="src/Richie.UI/Richie.UI.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Richie.Infrastructure.Tests/Richie.Infrastructure.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,23 @@
+# .NET build output
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+
+# Visual Studio / Rider / VS Code
+.vs/
+.idea/
+*.user
+*.suo
+
+# Test results & coverage
+[Tt]est[Rr]esults/
+*.coverage
+*.trx
+
+# Local runtime artifacts (encrypted DB, logs, exports live under %LOCALAPPDATA%, not the repo)
+*.db
+*.db-shm
+*.db-wal

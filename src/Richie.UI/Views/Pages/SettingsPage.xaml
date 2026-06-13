@@ -1,0 +1,15 @@
+<Page x:Class="Richie.UI.Views.Pages.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      mc:Ignorable="d"
+      Title="Settings">
+    <StackPanel Margin="32" VerticalAlignment="Top">
+        <ui:TextBlock FontTypography="TitleLarge" Text="Settings" />
+        <ui:TextBlock Appearance="Secondary"
+                      Margin="0,8,0,0"
+                      Text="Phase 0 — placeholder. Theme, budgets, and lock timeout arrive in Phase 9." />
+    </StackPanel>
+</Page>
