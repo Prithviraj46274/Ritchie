@@ -19,6 +19,7 @@ public class RichieDbContext : DbContext
 
     public DbSet<User> Users => Set<User>();
     public DbSet<Asset> Assets => Set<Asset>();
+    public DbSet<AssetDocument> AssetDocuments => Set<AssetDocument>();
     public DbSet<Goal> Goals => Set<Goal>();
     public DbSet<AssetGoalLink> AssetGoalLinks => Set<AssetGoalLink>();
     public DbSet<SipSchedule> SipSchedules => Set<SipSchedule>();

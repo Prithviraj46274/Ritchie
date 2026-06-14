@@ -6,7 +6,8 @@ namespace Richie.Infrastructure;
 /// </summary>
 public static class AppPaths
 {
-    public static string DataDirectory { get; } = Path.Combine(
+    // Settable so tests can redirect storage to a temp directory; production uses the default.
+    public static string DataDirectory { get; set; } = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Richie");
 
     public static string LogsDirectory => Path.Combine(DataDirectory, "logs");

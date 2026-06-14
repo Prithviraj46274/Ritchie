@@ -4,11 +4,13 @@ using Richie.Application.Assets;
 using Richie.Application.Authentication;
 using Richie.Application.Notifications;
 using Richie.Application.Security;
+using Richie.Application.Storage;
 using Richie.Infrastructure.Assets;
 using Richie.Infrastructure.Authentication;
 using Richie.Infrastructure.Notifications;
 using Richie.Infrastructure.Persistence;
 using Richie.Infrastructure.Security;
+using Richie.Infrastructure.Storage;
 
 namespace Richie.Infrastructure;
 
@@ -36,6 +38,8 @@ public static class DependencyInjection
         services.AddSingleton<IAssetService, AssetService>();
         services.AddSingleton<ISipService, SipService>();
         services.AddSingleton<IGoalService, GoalService>();
+        services.AddSingleton<IFileVault, FileVault>();
+        services.AddSingleton<IAssetDocumentService, AssetDocumentService>();
         services.AddSingleton<INotificationService, NotificationService>();
         return services;
     }

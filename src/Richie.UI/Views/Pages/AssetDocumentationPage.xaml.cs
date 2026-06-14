@@ -62,6 +62,18 @@ public partial class AssetDocumentationPage : Page
         Vm.Refresh();
     }
 
+    private void OnDocsAsset(object sender, RoutedEventArgs e)
+    {
+        if (sender is not FrameworkElement { Tag: Guid id })
+            return;
+
+        string assetName = Vm.Items.FirstOrDefault(a => a.Id == id)?.Name ?? "Asset";
+        var window = ((App)System.Windows.Application.Current).Services.GetRequiredService<DocumentsWindow>();
+        window.Owner = Window.GetWindow(this);
+        window.Documents.Initialize(id, assetName);
+        window.ShowDialog();
+    }
+
     private void OnDeleteAsset(object sender, RoutedEventArgs e)
     {
         if (sender is not FrameworkElement { Tag: Guid id })
