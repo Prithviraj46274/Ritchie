@@ -35,6 +35,7 @@ public static class DependencyInjection
         services.AddSingleton<IValuationService, ValuationService>();
         services.AddSingleton<IAssetService, AssetService>();
         services.AddSingleton<ISipService, SipService>();
+        services.AddSingleton<IGoalService, GoalService>();
         services.AddSingleton<INotificationService, NotificationService>();
         return services;
     }

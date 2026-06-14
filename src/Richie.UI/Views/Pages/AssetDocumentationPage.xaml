@@ -20,7 +20,10 @@
         <!-- Header -->
         <Grid Grid.Row="0" Margin="0,0,0,16">
             <ui:TextBlock FontTypography="TitleLarge" Text="Asset Documentation" VerticalAlignment="Center" />
-            <ui:Button Content="Add asset" Appearance="Primary" HorizontalAlignment="Right" Click="OnAddAsset" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <ui:Button Content="Goals" Margin="0,0,8,0" Click="OnOpenGoals" />
+                <ui:Button Content="Add asset" Appearance="Primary" Click="OnAddAsset" />
+            </StackPanel>
         </Grid>
 
         <!-- Summary + allocation -->

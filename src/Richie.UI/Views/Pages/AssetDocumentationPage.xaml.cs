@@ -19,6 +19,14 @@ public partial class AssetDocumentationPage : Page
 
     private void OnAddAsset(object sender, RoutedEventArgs e) => OpenEditor(null);
 
+    private void OnOpenGoals(object sender, RoutedEventArgs e)
+    {
+        var window = ((App)System.Windows.Application.Current).Services.GetRequiredService<GoalsWindow>();
+        window.Owner = Window.GetWindow(this);
+        window.ShowDialog();
+        Vm.Refresh(); // goal links don't change assets, but current values may have been recalculated
+    }
+
     private void OnViewAsset(object sender, RoutedEventArgs e)
     {
         if (sender is not FrameworkElement { Tag: Guid id })

@@ -11,6 +11,7 @@ public partial class AssetDetailsViewModel : ObservableObject
 {
     private readonly IAssetService _assets;
     private readonly IValuationService _valuation;
+    private readonly IGoalService _goals;
     private Guid _assetId;
     private bool _loading;
 
@@ -26,10 +27,11 @@ public partial class AssetDetailsViewModel : ObservableObject
 
     public event Action? CloseRequested;
 
-    public AssetDetailsViewModel(IAssetService assets, IValuationService valuation)
+    public AssetDetailsViewModel(IAssetService assets, IValuationService valuation, IGoalService goals)
     {
         _assets = assets;
         _valuation = valuation;
+        _goals = goals;
     }
 
     public void Initialize(Guid id)
@@ -72,6 +74,10 @@ public partial class AssetDetailsViewModel : ObservableObject
         AddIf(rows, "Guaranteed return %", a.GuaranteedReturnPercent);
         AddIf(rows, "Valuation date", a.ValuationDate?.ToString("d", CultureInfo.CurrentCulture));
         AddIf(rows, "Notes", a.Notes);
+
+        IReadOnlyList<string> goalNames = _goals.GetGoalNamesForAsset(a.Id);
+        if (goalNames.Count > 0)
+            rows.Add(new DetailRow("Goals", string.Join(", ", goalNames)));
 
         Rows = new ObservableCollection<DetailRow>(rows);
         _loading = false;
