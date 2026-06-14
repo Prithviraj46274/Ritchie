@@ -198,7 +198,8 @@ public sealed class ExpenseService : IExpenseService
     }
 
     private static ExpenseSummary ToSummary(Expense e) => new(
-        e.Id, e.Date, e.Amount, e.Category, ExpenseCategoryNames.Display(e.Category), e.SpentBy, e.SpentFor);
+        e.Id, e.Date, e.Amount, e.Category, ExpenseCategoryNames.Display(e.Category), e.SpentBy, e.SpentFor,
+        e.RecurringId is not null);
 
     private static bool Contains(string? value, string term) =>
         value is not null && value.Contains(term, StringComparison.OrdinalIgnoreCase);

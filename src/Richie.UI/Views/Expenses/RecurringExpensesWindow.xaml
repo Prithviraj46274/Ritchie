@@ -1,0 +1,62 @@
+<ui:FluentWindow x:Class="Richie.UI.Views.Expenses.RecurringExpensesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        mc:Ignorable="d"
+        Title="Recurring expenses"
+        Height="600" Width="520"
+        WindowStartupLocation="CenterOwner"
+        ExtendsContentIntoTitleBar="True"
+        WindowBackdropType="Mica"
+        WindowCornerPreference="Round">
+    <ui:FluentWindow.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </ui:FluentWindow.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Title="Recurring expenses" />
+
+        <Grid Grid.Row="1" Margin="24,8,24,16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Margin="0,0,0,12">
+                <ui:TextBlock FontTypography="TitleLarge" Text="Recurring" VerticalAlignment="Center" />
+                <ui:Button Content="Add recurring" Appearance="Primary" HorizontalAlignment="Right" Click="OnAdd" />
+            </Grid>
+
+            <ui:TextBlock Grid.Row="1" Appearance="Secondary" VerticalAlignment="Top"
+                          Text="No recurring expenses yet. Add one and it will be auto-recorded on schedule."
+                          Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVis}}" />
+
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding Items}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ui:Card Margin="0,0,0,8">
+                                <Grid>
+                                    <StackPanel>
+                                        <ui:TextBlock FontTypography="BodyStrong" Text="{Binding Header}" />
+                                        <ui:TextBlock Appearance="Secondary" Text="{Binding Detail}" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <ui:Button Content="Edit" Padding="8,2" Margin="0,0,4,0" Tag="{Binding Id}" Click="OnEdit" />
+                                        <ui:Button Content="Delete" Padding="8,2" Tag="{Binding Id}" Click="OnDelete" />
+                                    </StackPanel>
+                                </Grid>
+                            </ui:Card>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</ui:FluentWindow>

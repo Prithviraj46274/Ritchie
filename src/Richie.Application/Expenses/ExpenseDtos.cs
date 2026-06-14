@@ -7,7 +7,7 @@ public sealed record ExpenseInput(
 
 public sealed record ExpenseSummary(
     Guid Id, DateTime Date, decimal Amount, ExpenseCategory Category, string CategoryName,
-    string? SpentBy, string? SpentFor);
+    string? SpentBy, string? SpentFor, bool IsRecurring);
 
 /// <summary>Filters for the expense history (all optional).</summary>
 public sealed record ExpenseFilter(

@@ -35,6 +35,15 @@ public partial class ExpenseTrackerPage : Page
             Vm.Delete(id);
     }
 
+    private void OnRecurring(object sender, RoutedEventArgs e)
+    {
+        var window = ((App)System.Windows.Application.Current).Services
+            .GetRequiredService<RecurringExpensesWindow>();
+        window.Owner = Window.GetWindow(this);
+        window.ShowDialog();
+        Vm.Refresh();
+    }
+
     private void OnApplyFilter(object sender, RoutedEventArgs e) => Vm.ApplyFilter();
 
     private void OnClearFilter(object sender, RoutedEventArgs e) => Vm.ClearFilter();

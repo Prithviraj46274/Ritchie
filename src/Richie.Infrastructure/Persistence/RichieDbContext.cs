@@ -26,6 +26,7 @@ public class RichieDbContext : DbContext
     public DbSet<SipSchedule> SipSchedules => Set<SipSchedule>();
     public DbSet<SipContribution> SipContributions => Set<SipContribution>();
     public DbSet<Expense> Expenses => Set<Expense>();
+    public DbSet<ExpenseRecurring> ExpenseRecurrings => Set<ExpenseRecurring>();
     public DbSet<Notification> Notifications => Set<Notification>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
