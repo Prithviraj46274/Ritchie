@@ -5,18 +5,16 @@ using Richie.UI.Services;
 using Richie.UI.ViewModels;
 using Wpf.Ui.Controls;
 
-namespace Richie.UI.Views.Assets;
+namespace Richie.UI.Views.Expenses;
 
-public partial class DocumentsWindow : FluentWindow
+public partial class BillsWindow : FluentWindow
 {
-    private readonly DocumentsViewModel _vm;
+    public BillsViewModel Bills { get; }
 
-    public DocumentsViewModel Documents => _vm;
-
-    public DocumentsWindow(DocumentsViewModel vm)
+    public BillsWindow(BillsViewModel vm)
     {
         InitializeComponent();
-        _vm = vm;
+        Bills = vm;
         DataContext = vm;
     }
 
@@ -24,39 +22,40 @@ public partial class DocumentsWindow : FluentWindow
     {
         var dialog = new OpenFileDialog
         {
-            Title = "Attach a document",
+            Title = "Attach a bill or receipt",
             Filter = "Documents and images|*.pdf;*.png;*.jpg;*.jpeg;*.bmp;*.gif;*.webp|All files|*.*"
         };
         if (dialog.ShowDialog(this) == true)
         {
-            _vm.Attach(dialog.FileName);
+            Bills.Attach(dialog.FileName);
+            Bills.Refresh();
             ((App)System.Windows.Application.Current).Services
-                .GetRequiredService<ToastService>().Success("Document attached.");
+                .GetRequiredService<ToastService>().Success("Bill attached.");
         }
     }
 
     private void OnDownload(object sender, RoutedEventArgs e)
     {
-        if (_vm.SelectedDocument is not { } doc)
+        if (Bills.SelectedDocument is not { } doc)
             return;
 
         var dialog = new SaveFileDialog { FileName = doc.FileName, Title = "Save a copy" };
         if (dialog.ShowDialog(this) == true)
-            _vm.Download(dialog.FileName);
+            Bills.Download(dialog.FileName);
     }
 
     private void OnDelete(object sender, RoutedEventArgs e)
     {
-        if (_vm.SelectedDocument is null)
+        if (Bills.SelectedDocument is null)
             return;
 
-        if (System.Windows.MessageBox.Show("Delete this document? This cannot be undone.", "Confirm delete",
+        if (System.Windows.MessageBox.Show("Delete this bill? This cannot be undone.", "Confirm delete",
                 System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Warning)
             == System.Windows.MessageBoxResult.Yes)
-            _vm.DeleteSelected();
+            Bills.DeleteSelected();
     }
 
-    private void OnPrevious(object sender, RoutedEventArgs e) => _vm.SelectPrevious();
+    private void OnPrevious(object sender, RoutedEventArgs e) => Bills.SelectPrevious();
 
-    private void OnNext(object sender, RoutedEventArgs e) => _vm.SelectNext();
+    private void OnNext(object sender, RoutedEventArgs e) => Bills.SelectNext();
 }

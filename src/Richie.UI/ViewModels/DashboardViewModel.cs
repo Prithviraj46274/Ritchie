@@ -23,6 +23,7 @@ public partial class DashboardViewModel : ObservableObject
     [ObservableProperty] private string _totalInvestedText = "—";
     [ObservableProperty] private string _totalExpensesText = "—";
     [ObservableProperty] private string _profitLossText = "—";
+    [ObservableProperty] private Brush _profitLossBrush = Brushes.Gray;
     [ObservableProperty] private int _healthScore;
     [ObservableProperty] private string _healthRating = string.Empty;
     [ObservableProperty] private Brush _healthBrush = Brushes.Gray;
@@ -62,6 +63,7 @@ public partial class DashboardViewModel : ObservableObject
         TotalInvestedText = Money(s.TotalInvested);
         TotalExpensesText = Money(s.TotalExpensesThisMonth);
         ProfitLossText = $"{Money(s.ProfitLoss)} ({s.ProfitLossPercent:+0.0;-0.0;0.0}%)";
+        ProfitLossBrush = s.ProfitLoss < 0 ? Red : Green;
         HealthScore = s.HealthScore;
         HealthRating = s.HealthRating;
         HealthBrush = s.HealthScore >= 80 ? Green : s.HealthScore >= 60 ? Amber : Red;

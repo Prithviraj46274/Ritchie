@@ -4,6 +4,7 @@ using Richie.Domain.Assets;
 using Richie.Domain.Auditing;
 using Richie.Domain.Authentication;
 using Richie.Domain.Expenses;
+using Richie.Domain.Income;
 using Richie.Domain.Insurance;
 using Richie.Domain.Notifications;
 using Richie.Domain.Vault;
@@ -30,6 +31,8 @@ public class RichieDbContext : DbContext
     public DbSet<Expense> Expenses => Set<Expense>();
     public DbSet<ExpenseRecurring> ExpenseRecurrings => Set<ExpenseRecurring>();
     public DbSet<ExpenseBudget> ExpenseBudgets => Set<ExpenseBudget>();
+    public DbSet<ExpenseDocument> ExpenseDocuments => Set<ExpenseDocument>();
+    public DbSet<Richie.Domain.Income.Income> Incomes => Set<Richie.Domain.Income.Income>();
     public DbSet<Notification> Notifications => Set<Notification>();
     public DbSet<VaultEntry> VaultEntries => Set<VaultEntry>();
     public DbSet<VaultKey> VaultKeys => Set<VaultKey>();

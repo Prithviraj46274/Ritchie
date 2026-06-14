@@ -1,12 +1,12 @@
-<ui:FluentWindow x:Class="Richie.UI.Views.Assets.DocumentsWindow"
+<ui:FluentWindow x:Class="Richie.UI.Views.Expenses.BillsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         mc:Ignorable="d"
-        Title="Documents"
-        Height="640" Width="820"
+        Title="Bills &amp; receipts"
+        Height="600" Width="820"
         WindowStartupLocation="CenterOwner"
         ExtendsContentIntoTitleBar="True"
         WindowBackdropType="Mica"
@@ -20,7 +20,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <ui:TitleBar Grid.Row="0" Title="Documents" />
+        <ui:TitleBar Grid.Row="0" Title="Bills &amp; receipts" />
 
         <Grid Grid.Row="1" Margin="24,8,24,16">
             <Grid.ColumnDefinitions>
@@ -29,11 +29,10 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <!-- List + actions -->
             <DockPanel Grid.Column="0">
-                <ui:TextBlock DockPanel.Dock="Top" FontTypography="TitleLarge" Text="{Binding AssetName}" Margin="0,0,0,8" />
+                <ui:TextBlock DockPanel.Dock="Top" FontTypography="BodyStrong" Text="{Binding Heading}" Margin="0,0,0,8" />
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
-                    <ui:Button Content="Attach file" Appearance="Primary" Click="OnAttach" Margin="0,0,8,0" />
+                    <ui:Button Content="Attach bill" Appearance="Primary" Click="OnAttach" Margin="0,0,8,0" />
                     <ui:Button Content="Delete" Click="OnDelete" />
                 </StackPanel>
                 <ui:TextBlock DockPanel.Dock="Bottom" Appearance="Secondary" FontTypography="Caption"
@@ -44,7 +43,7 @@
                     <ui:Button Content="Next" Click="OnNext" IsEnabled="{Binding HasMultiple}" />
                 </StackPanel>
                 <ui:TextBlock DockPanel.Dock="Bottom" Appearance="Secondary" Margin="0,8,0,0"
-                              Text="No documents yet."
+                              Text="No bills attached yet."
                               Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVisibilityConverter}}" />
                 <ListBox ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedDocument}">
                     <ListBox.ItemTemplate>
@@ -61,15 +60,13 @@
                 </ListBox>
             </DockPanel>
 
-            <!-- Preview -->
             <Border Grid.Column="2" BorderBrush="{DynamicResource ControlElevationBorderBrush}" BorderThickness="1" CornerRadius="6">
                 <Grid Margin="12">
                     <ui:TextBlock Appearance="Secondary" TextWrapping="Wrap"
                                   HorizontalAlignment="Center" VerticalAlignment="Center"
                                   Text="{Binding PreviewMessage}" />
                     <Image Source="{Binding PreviewImage}" Stretch="Uniform" />
-                    <ui:Button Content="Download" HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                               Click="OnDownload" />
+                    <ui:Button Content="Download" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="OnDownload" />
                 </Grid>
             </Border>
         </Grid>

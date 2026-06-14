@@ -5,10 +5,12 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+      xmlns:conv="clr-namespace:Richie.UI.Converters"
       mc:Ignorable="d"
       Title="Asset Documentation">
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <conv:ProfitLossBrushConverter x:Key="PnlBrush" />
     </Page.Resources>
     <Grid Margin="24">
         <Grid.RowDefinitions>
@@ -82,8 +84,20 @@
                 <DataGridTextColumn Header="Identifier" Binding="{Binding Identifier}" Width="Auto" />
                 <DataGridTextColumn Header="Invested" Binding="{Binding InvestedAmount, StringFormat=N2}" Width="Auto" />
                 <DataGridTextColumn Header="Current" Binding="{Binding CurrentValue, StringFormat=N2}" Width="Auto" />
-                <DataGridTextColumn Header="P&amp;L" Binding="{Binding ProfitLoss, StringFormat=N2}" Width="Auto" />
-                <DataGridTextColumn Header="P&amp;L %" Binding="{Binding ProfitLossPercent, StringFormat=&#39;{}{0:+0.0;-0.0;0.0}&#39;}" Width="Auto" />
+                <DataGridTextColumn Header="P&amp;L" Binding="{Binding ProfitLoss, StringFormat=N2}" Width="Auto">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="{Binding ProfitLoss, Converter={StaticResource PnlBrush}}" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="P&amp;L %" Binding="{Binding ProfitLossPercent, StringFormat=&#39;{}{0:+0.0;-0.0;0.0}&#39;}" Width="Auto">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="{Binding ProfitLossPercent, Converter={StaticResource PnlBrush}}" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
                 <DataGridCheckBoxColumn Header="Excl." Binding="{Binding IsExcludedFromPortfolio}" Width="Auto" />
                 <DataGridTemplateColumn Header="Actions" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>

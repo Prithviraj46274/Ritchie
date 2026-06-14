@@ -2,6 +2,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Richie.Application.Expenses;
+using Richie.UI.Services;
 using Richie.UI.ViewModels;
 using Richie.UI.Views.Assets;
 using Richie.UI.Views.Expenses;
@@ -20,6 +21,30 @@ public partial class ExpenseTrackerPage : Page
     private ExpenseTrackerViewModel Vm => (ExpenseTrackerViewModel)DataContext;
 
     private void OnAddExpense(object sender, RoutedEventArgs e) => OpenEditor(null);
+
+    private void OnAddIncome(object sender, RoutedEventArgs e)
+    {
+        var services = ((App)System.Windows.Application.Current).Services;
+        var window = services.GetRequiredService<AddIncomeWindow>();
+        window.Owner = Window.GetWindow(this);
+        window.Editor.Initialize(null);
+        if (window.ShowDialog() == true)
+        {
+            Vm.Refresh();
+            services.GetRequiredService<ToastService>().Success("Income added.");
+        }
+    }
+
+    private void OnBills(object sender, RoutedEventArgs e)
+    {
+        if (sender is not FrameworkElement { Tag: Guid id })
+            return;
+
+        var window = ((App)System.Windows.Application.Current).Services.GetRequiredService<BillsWindow>();
+        window.Owner = Window.GetWindow(this);
+        window.Bills.Initialize(id, "Bills & receipts");
+        window.ShowDialog();
+    }
 
     private void OnEditExpense(object sender, RoutedEventArgs e)
     {

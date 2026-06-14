@@ -4,10 +4,12 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
       mc:Ignorable="d"
       Title="Expense Tracker">
     <Grid Margin="24">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -21,6 +23,7 @@
                 <ui:Button Content="Analytics" Margin="0,0,8,0" Click="OnAnalytics" />
                 <ui:Button Content="Recurring" Margin="0,0,8,0" Click="OnRecurring" />
                 <ui:Button Content="Bulk upload" Margin="0,0,8,0" Click="OnBulkUpload" />
+                <ui:Button Content="Add income" Margin="0,0,8,0" Click="OnAddIncome" />
                 <ui:Button Content="Add expense" Appearance="Primary" Click="OnAddExpense" />
             </StackPanel>
         </Grid>
@@ -34,13 +37,23 @@
             </Grid.ColumnDefinitions>
 
             <ui:Card Grid.Column="0">
-                <StackPanel>
-                    <ui:TextBlock Appearance="Secondary" Text="Spent this month" />
-                    <ui:TextBlock FontTypography="TitleLarge" Text="{Binding CurrentMonthText}" />
-                    <ui:TextBlock Appearance="Secondary" Margin="0,4,0,0" Text="{Binding MonthOverMonthText}" />
-                    <ui:TextBlock Appearance="Secondary" Margin="0,8,0,0"
-                                  Text="{Binding TopCategoryText, StringFormat='Top category: {0}'}" />
-                </StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <ui:TextBlock Appearance="Secondary" Text="Spent this month" />
+                        <ui:TextBlock FontTypography="TitleLarge" Foreground="{Binding SpendBrush}" Text="{Binding CurrentMonthText}" />
+                        <ui:TextBlock Appearance="Secondary" Margin="0,4,0,0" Text="{Binding MonthOverMonthText}" />
+                        <ui:TextBlock Appearance="Secondary" Margin="0,8,0,0"
+                                      Text="{Binding TopCategoryText, StringFormat='Top category: {0}'}" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <ui:TextBlock Appearance="Secondary" Text="Income this month" />
+                        <ui:TextBlock FontTypography="TitleLarge" Foreground="{Binding IncomeBrush}" Text="{Binding IncomeThisMonthText}" />
+                    </StackPanel>
+                </Grid>
             </ui:Card>
 
             <ui:Card Grid.Column="2">
@@ -57,8 +70,17 @@
             </ui:Card>
         </Grid>
 
+        <!-- Income vs expense chart -->
+        <ui:Card Grid.Row="2" Margin="0,0,0,12" Height="220">
+            <StackPanel>
+                <ui:TextBlock FontTypography="BodyStrong" Text="Income vs expense (last 6 months)" Margin="0,0,0,4" />
+                <lvc:CartesianChart Height="160" Series="{Binding IncomeExpenseSeries}" XAxes="{Binding IncomeExpenseAxes}"
+                                    LegendPosition="Right" />
+            </StackPanel>
+        </ui:Card>
+
         <!-- Filter bar -->
-        <Grid Grid.Row="2" Margin="0,0,0,12">
+        <Grid Grid.Row="3" Margin="0,0,0,12">
             <StackPanel Orientation="Horizontal">
                 <ui:TextBox x:Name="SearchBox" PlaceholderText="Search" Width="160" Margin="0,0,8,0"
                             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
@@ -76,7 +98,7 @@
         </Grid>
 
         <!-- History -->
-        <DataGrid Grid.Row="3" ItemsSource="{Binding Items}" AutoGenerateColumns="False"
+        <DataGrid Grid.Row="4" ItemsSource="{Binding Items}" AutoGenerateColumns="False"
                   IsReadOnly="True" CanUserAddRows="False" HeadersVisibility="Column"
                   GridLinesVisibility="Horizontal">
             <DataGrid.Columns>
@@ -90,6 +112,8 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
+                                <ui:Button Content="Bills" Padding="8,2" Margin="0,0,4,0"
+                                           Tag="{Binding Id}" Click="OnBills" />
                                 <ui:Button Content="Edit" Padding="8,2" Margin="0,0,4,0"
                                            Tag="{Binding Id}" Click="OnEditExpense" />
                                 <ui:Button Content="Delete" Padding="8,2"

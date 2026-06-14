@@ -32,12 +32,13 @@ public partial class MainWindow : FluentWindow
     public event EventHandler? LogoutRequested;
 
     public MainWindow(IUserSession session, InactivityLockService inactivity, TourService tour,
-        INotificationService notifications)
+        INotificationService notifications, Wpf.Ui.ISnackbarService snackbar)
     {
         InitializeComponent();
         _inactivity = inactivity;
         _tour = tour;
         _notifications = notifications;
+        snackbar.SetSnackbarPresenter(RootSnackbar);
 
         ProfileName.Text = session.FullName ?? "Signed in";
 

@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Richie.Application.Assets;
@@ -22,6 +23,11 @@ public partial class AssetDetailsViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<DetailRow> _rows = [];
     [ObservableProperty] private bool _isJewellery;
     [ObservableProperty] private bool _isExcluded;
+    [ObservableProperty] private string _profitLossText = string.Empty;
+    [ObservableProperty] private Brush _profitLossBrush = Brushes.Gray;
+
+    private static readonly Brush Green = Frozen(Color.FromRgb(0x0F, 0x7B, 0x0F));
+    private static readonly Brush Red = Frozen(Color.FromRgb(0xC4, 0x2B, 0x1C));
 
     public bool EditRequested { get; private set; }
 
@@ -47,13 +53,16 @@ public partial class AssetDetailsViewModel : ObservableObject
         IsJewellery = a.Type == AssetType.GoldJewellery;
         IsExcluded = a.IsExcludedFromPortfolio;
 
+        decimal pl = _valuation.ProfitLoss(a.InvestedAmount, a.CurrentValue);
+        decimal plPercent = _valuation.ProfitLossPercent(a.InvestedAmount, a.CurrentValue);
+        ProfitLossText = $"{Money(pl)} ({plPercent:+0.0;-0.0;0.0}%)";
+        ProfitLossBrush = pl < 0 ? Red : Green;
+
         var rows = new List<DetailRow>
         {
             new("Type", TypeName),
             new("Invested", Money(a.InvestedAmount)),
             new("Current value", Money(a.CurrentValue)),
-            new("Profit / Loss", $"{Money(_valuation.ProfitLoss(a.InvestedAmount, a.CurrentValue))} " +
-                                 $"({_valuation.ProfitLossPercent(a.InvestedAmount, a.CurrentValue):+0.0;-0.0;0.0}%)"),
             new("Investment mode", a.InvestmentMode == InvestmentMode.Sip ? "SIP (recurring)" : "Lump sum"),
             new("Start date", a.InvestmentStartDate.ToString("d", CultureInfo.CurrentCulture)),
         };
@@ -113,4 +122,11 @@ public partial class AssetDetailsViewModel : ObservableObject
     }
 
     private static string Money(decimal value) => value.ToString("N2", CultureInfo.CurrentCulture);
+
+    private static Brush Frozen(Color color)
+    {
+        var brush = new SolidColorBrush(color);
+        brush.Freeze();
+        return brush;
+    }
 }

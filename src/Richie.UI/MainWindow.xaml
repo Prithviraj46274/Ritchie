@@ -124,5 +124,8 @@
                 </StackPanel>
             </ui:Card>
         </Border>
+
+        <!-- Toast host (overlays all rows) -->
+        <ui:SnackbarPresenter x:Name="RootSnackbar" Grid.RowSpan="3" Panel.ZIndex="200" />
     </Grid>
 </ui:FluentWindow>

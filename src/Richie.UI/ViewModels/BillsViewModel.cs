@@ -3,49 +3,46 @@ using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Richie.Application.Assets;
+using Richie.Application.Expenses;
 using Richie.Domain.Assets;
 
 namespace Richie.UI.ViewModels;
 
-public partial class DocumentsViewModel : ObservableObject
+/// <summary>Bills/receipts attached to an expense (mirrors DocumentsViewModel; encrypted at rest).</summary>
+public partial class BillsViewModel : ObservableObject
 {
-    private readonly IAssetDocumentService _docs;
-    private Guid _assetId;
+    private readonly IExpenseDocumentService _docs;
+    private Guid _expenseId;
 
-    [ObservableProperty] private string _assetName = string.Empty;
-    [ObservableProperty] private ObservableCollection<AssetDocumentDto> _items = [];
-    [ObservableProperty] private AssetDocumentDto? _selectedDocument;
+    public const string PreviewableTypes = "Previewable: PNG, JPG, JPEG, BMP, GIF, WEBP. Other files (e.g. PDF): use Download.";
+
+    [ObservableProperty] private string _heading = "Bills & receipts";
+    [ObservableProperty] private ObservableCollection<ExpenseDocumentDto> _items = [];
+    [ObservableProperty] private ExpenseDocumentDto? _selectedDocument;
     [ObservableProperty] private ImageSource? _previewImage;
-    [ObservableProperty] private string _previewMessage = "Select a document to preview.";
+    [ObservableProperty] private string _previewMessage = "Select a bill to preview.";
     [ObservableProperty] private bool _isEmpty;
     [ObservableProperty] private bool _hasMultiple;
 
-    /// <summary>Image formats that render in the inline preview.</summary>
-    public const string PreviewableTypes = "Previewable: PNG, JPG, JPEG, BMP, GIF, WEBP. Other files (e.g. PDF): use Download.";
+    public BillsViewModel(IExpenseDocumentService docs) => _docs = docs;
 
-    public DocumentsViewModel(IAssetDocumentService docs) => _docs = docs;
-
-    public void Initialize(Guid assetId, string assetName)
+    public void Initialize(Guid expenseId, string heading)
     {
-        _assetId = assetId;
-        AssetName = assetName;
+        _expenseId = expenseId;
+        Heading = heading;
         Refresh();
     }
 
     public void Refresh()
     {
-        Items = new ObservableCollection<AssetDocumentDto>(_docs.GetForAsset(_assetId));
+        Items = new ObservableCollection<ExpenseDocumentDto>(_docs.GetForExpense(_expenseId));
         IsEmpty = Items.Count == 0;
         HasMultiple = Items.Count > 1;
         SelectedDocument = Items.FirstOrDefault();
     }
 
-    public void Attach(string filePath)
-    {
-        _docs.Attach(_assetId, Path.GetFileName(filePath), File.ReadAllBytes(filePath));
-        Refresh();
-    }
+    public void Attach(string filePath) =>
+        _docs.Attach(_expenseId, Path.GetFileName(filePath), File.ReadAllBytes(filePath));
 
     public void Download(string destinationPath)
     {
@@ -74,12 +71,12 @@ public partial class DocumentsViewModel : ObservableObject
             SelectedDocument = Items[index];
     }
 
-    partial void OnSelectedDocumentChanged(AssetDocumentDto? value)
+    partial void OnSelectedDocumentChanged(ExpenseDocumentDto? value)
     {
         PreviewImage = null;
         if (value is null)
         {
-            PreviewMessage = "Select a document to preview.";
+            PreviewMessage = "Select a bill to preview.";
             return;
         }
 

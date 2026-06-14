@@ -1,5 +1,7 @@
 using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
+using Richie.UI.Services;
 using Richie.UI.ViewModels;
 using Wpf.Ui.Controls;
 
@@ -24,7 +26,10 @@ public partial class BulkUploadWindow : FluentWindow
             Filter = "CSV or Excel|*.csv;*.xlsx"
         };
         if (dialog.ShowDialog(this) == true)
+        {
             Upload.ImportFile(dialog.FileName);
+            NotifyResult();
+        }
     }
 
     private void OnDragOver(object sender, DragEventArgs e)
@@ -36,7 +41,19 @@ public partial class BulkUploadWindow : FluentWindow
     private void OnDrop(object sender, DragEventArgs e)
     {
         if (e.Data.GetData(DataFormats.FileDrop) is string[] { Length: > 0 } files)
+        {
             Upload.ImportFile(files[0]);
+            NotifyResult();
+        }
+    }
+
+    private void NotifyResult()
+    {
+        var toast = ((App)System.Windows.Application.Current).Services.GetRequiredService<ToastService>();
+        if (Upload.ImportedAny)
+            toast.Success(Upload.Summary, "Import complete");
+        else
+            toast.Info(Upload.Summary, "Import");
     }
 
     private void OnDownloadCsv(object sender, RoutedEventArgs e)

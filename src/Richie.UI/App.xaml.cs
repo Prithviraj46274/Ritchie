@@ -45,6 +45,8 @@ public partial class App : System.Windows.Application
                 services.AddSingleton<IAuthNavigation>(sp => sp.GetRequiredService<AuthNavigationService>());
                 services.AddSingleton<InactivityLockService>();
                 services.AddSingleton<TourService>();
+                services.AddSingleton<Wpf.Ui.ISnackbarService, Wpf.Ui.SnackbarService>();
+                services.AddSingleton<ToastService>();
 
                 services.AddTransient<LoginViewModel>();
                 services.AddTransient<SignupViewModel>();
@@ -69,6 +71,8 @@ public partial class App : System.Windows.Application
                 services.AddTransient<RecurringExpensesViewModel>();
                 services.AddTransient<AddEditRecurringViewModel>();
                 services.AddTransient<ExpenseAnalyticsViewModel>();
+                services.AddTransient<AddIncomeViewModel>();
+                services.AddTransient<BillsViewModel>();
                 services.AddTransient<PasswordVaultViewModel>();
                 services.AddTransient<AddEditVaultEntryViewModel>();
                 services.AddTransient<VaultReauthViewModel>();
@@ -90,6 +94,8 @@ public partial class App : System.Windows.Application
                 services.AddTransient<Views.Expenses.RecurringExpensesWindow>();
                 services.AddTransient<Views.Expenses.AddEditRecurringWindow>();
                 services.AddTransient<Views.Expenses.ExpenseAnalyticsWindow>();
+                services.AddTransient<Views.Expenses.AddIncomeWindow>();
+                services.AddTransient<Views.Expenses.BillsWindow>();
                 services.AddTransient<Views.Vault.AddEditVaultEntryWindow>();
                 services.AddTransient<Views.Vault.VaultReauthWindow>();
                 services.AddTransient<Views.Vault.VaultHealthWindow>();

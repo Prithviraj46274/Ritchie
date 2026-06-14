@@ -43,6 +43,16 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
+                <Grid Margin="0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <ui:TextBlock Grid.Column="0" Appearance="Secondary" Text="Profit / Loss" />
+                    <ui:TextBlock Grid.Column="1" TextWrapping="Wrap" Foreground="{Binding ProfitLossBrush}"
+                                  Text="{Binding ProfitLossText}" />
+                </Grid>
+
                 <CheckBox Margin="0,16,0,0"
                           Content="Exclude from portfolio valuation"
                           IsChecked="{Binding IsExcluded}"

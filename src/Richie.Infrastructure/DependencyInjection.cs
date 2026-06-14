@@ -5,6 +5,7 @@ using Richie.Application.Audit;
 using Richie.Application.Authentication;
 using Richie.Application.Dashboard;
 using Richie.Application.Expenses;
+using Richie.Application.Income;
 using Richie.Application.Insurance;
 using Richie.Application.Notifications;
 using Richie.Application.Security;
@@ -55,6 +56,8 @@ public static class DependencyInjection
         services.AddSingleton<IExpenseBudgetService, ExpenseBudgetService>();
         services.AddSingleton<IExpenseAnalyticsService, ExpenseAnalyticsService>();
         services.AddSingleton<IExpenseImportService, ExpenseImportService>();
+        services.AddSingleton<IExpenseDocumentService, ExpenseDocumentService>();
+        services.AddSingleton<IIncomeService, Income.IncomeService>();
         services.AddSingleton<INotificationService, NotificationService>();
         services.AddSingleton<IVaultGate, VaultGate>();
         services.AddSingleton<IVaultService, VaultService>();

@@ -1,14 +1,27 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
 using Richie.Application.Expenses;
+using Richie.Application.Income;
 using Richie.Domain.Expenses;
+using SkiaSharp;
 
 namespace Richie.UI.ViewModels;
 
 public partial class ExpenseTrackerViewModel : ObservableObject
 {
     private readonly IExpenseService _expenses;
+    private readonly IIncomeService _income;
+    private readonly IExpenseAnalyticsService _analytics;
+
+    private static readonly SKColor GreenColor = new(0x0F, 0x7B, 0x0F);
+    private static readonly SKColor RedColor = new(0xC4, 0x2B, 0x1C);
+    public Brush SpendBrush { get; } = new SolidColorBrush(Color.FromRgb(0xC4, 0x2B, 0x1C));
+    public Brush IncomeBrush { get; } = new SolidColorBrush(Color.FromRgb(0x0F, 0x7B, 0x0F));
 
     public sealed record CategoryFilterOption(ExpenseCategory? Value, string Text);
 
@@ -18,8 +31,11 @@ public partial class ExpenseTrackerViewModel : ObservableObject
             .ToList();
 
     [ObservableProperty] private string _currentMonthText = string.Empty;
+    [ObservableProperty] private string _incomeThisMonthText = string.Empty;
     [ObservableProperty] private string _monthOverMonthText = string.Empty;
     [ObservableProperty] private string _topCategoryText = string.Empty;
+    [ObservableProperty] private ISeries[] _incomeExpenseSeries = [];
+    [ObservableProperty] private Axis[] _incomeExpenseAxes = [];
     [ObservableProperty] private ObservableCollection<CategorySpend> _breakdown = [];
     [ObservableProperty] private ObservableCollection<string> _insights = [];
     [ObservableProperty] private ObservableCollection<ExpenseSummary> _items = [];
@@ -32,9 +48,11 @@ public partial class ExpenseTrackerViewModel : ObservableObject
     [ObservableProperty] private string _minAmountText = string.Empty;
     [ObservableProperty] private string _maxAmountText = string.Empty;
 
-    public ExpenseTrackerViewModel(IExpenseService expenses)
+    public ExpenseTrackerViewModel(IExpenseService expenses, IIncomeService income, IExpenseAnalyticsService analytics)
     {
         _expenses = expenses;
+        _income = income;
+        _analytics = analytics;
         Refresh();
     }
 
@@ -42,13 +60,28 @@ public partial class ExpenseTrackerViewModel : ObservableObject
     {
         ExpenseDashboard dash = _expenses.GetDashboard();
         CurrentMonthText = Money(dash.CurrentMonthTotal);
+        IncomeThisMonthText = Money(_income.GetMonthlyTotal());
         MonthOverMonthText = dash.LastMonthTotal > 0
             ? $"{(dash.MonthOverMonthPercent >= 0 ? "+" : "")}{dash.MonthOverMonthPercent:0.#}% vs last month"
             : "No spending last month to compare";
         TopCategoryText = dash.TopCategoryName ?? "—";
         Breakdown = new ObservableCollection<CategorySpend>(dash.CurrentMonthBreakdown);
         Insights = new ObservableCollection<string>(dash.Insights);
+        BuildIncomeExpenseChart();
         ApplyFilter();
+    }
+
+    private void BuildIncomeExpenseChart()
+    {
+        IReadOnlyList<PeriodDatum> income = _income.GetMonthlyTotals(6);
+        IReadOnlyList<PeriodDatum> expense = _analytics.GetMonthlyTotals(6);
+
+        IncomeExpenseSeries =
+        [
+            new ColumnSeries<double> { Name = "Income", Values = income.Select(d => (double)d.Amount).ToArray(), Fill = new SolidColorPaint(GreenColor) },
+            new ColumnSeries<double> { Name = "Expense", Values = expense.Select(d => (double)d.Amount).ToArray(), Fill = new SolidColorPaint(RedColor) }
+        ];
+        IncomeExpenseAxes = [new Axis { Labels = income.Select(d => d.Label).ToArray(), LabelsRotation = 30 }];
     }
 
     public void ApplyFilter()

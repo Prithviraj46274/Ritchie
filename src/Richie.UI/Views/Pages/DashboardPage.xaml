@@ -7,11 +7,13 @@
       xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
       mc:Ignorable="d"
       Title="Dashboard"
+      ScrollViewer.CanContentScroll="False"
       Loaded="OnLoaded">
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </Page.Resources>
-    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="24">
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="24">
         <StackPanel>
             <ui:TextBlock FontTypography="TitleLarge" Text="Dashboard" Margin="0,0,0,12" />
 
@@ -38,7 +40,7 @@
                 <ui:Card Margin="0,0,8,0">
                     <StackPanel>
                         <ui:TextBlock Appearance="Secondary" Text="Profit &amp; loss" />
-                        <ui:TextBlock FontTypography="Title" Text="{Binding ProfitLossText}" />
+                        <ui:TextBlock FontTypography="Title" Foreground="{Binding ProfitLossBrush}" Text="{Binding ProfitLossText}" />
                     </StackPanel>
                 </ui:Card>
                 <ui:Card>
@@ -172,5 +174,6 @@
                 </StackPanel>
             </ui:Card>
         </StackPanel>
-    </ScrollViewer>
+        </ScrollViewer>
+    </Grid>
 </Page>
