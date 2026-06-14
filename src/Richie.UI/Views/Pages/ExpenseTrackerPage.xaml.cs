@@ -44,6 +44,15 @@ public partial class ExpenseTrackerPage : Page
         Vm.Refresh();
     }
 
+    private void OnAnalytics(object sender, RoutedEventArgs e)
+    {
+        var window = ((App)System.Windows.Application.Current).Services
+            .GetRequiredService<ExpenseAnalyticsWindow>();
+        window.Owner = Window.GetWindow(this);
+        window.ShowDialog();
+        Vm.Refresh();
+    }
+
     private void OnApplyFilter(object sender, RoutedEventArgs e) => Vm.ApplyFilter();
 
     private void OnClearFilter(object sender, RoutedEventArgs e) => Vm.ClearFilter();

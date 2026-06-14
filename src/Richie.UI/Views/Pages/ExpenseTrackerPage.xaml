@@ -18,6 +18,7 @@
         <Grid Grid.Row="0" Margin="0,0,0,16">
             <ui:TextBlock FontTypography="TitleLarge" Text="Expense Tracker" VerticalAlignment="Center" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <ui:Button Content="Analytics" Margin="0,0,8,0" Click="OnAnalytics" />
                 <ui:Button Content="Recurring" Margin="0,0,8,0" Click="OnRecurring" />
                 <ui:Button Content="Add expense" Appearance="Primary" Click="OnAddExpense" />
             </StackPanel>

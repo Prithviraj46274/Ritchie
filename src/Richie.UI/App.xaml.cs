@@ -67,6 +67,7 @@ public partial class App : System.Windows.Application
                 services.AddTransient<AddEditExpenseViewModel>();
                 services.AddTransient<RecurringExpensesViewModel>();
                 services.AddTransient<AddEditRecurringViewModel>();
+                services.AddTransient<ExpenseAnalyticsViewModel>();
                 services.AddTransient<Views.Assets.AddEditAssetWindow>();
                 services.AddTransient<Views.Assets.AssetDetailsWindow>();
                 services.AddTransient<Views.Assets.SipScheduleWindow>();
@@ -77,6 +78,7 @@ public partial class App : System.Windows.Application
                 services.AddTransient<Views.Expenses.AddEditExpenseWindow>();
                 services.AddTransient<Views.Expenses.RecurringExpensesWindow>();
                 services.AddTransient<Views.Expenses.AddEditRecurringWindow>();
+                services.AddTransient<Views.Expenses.ExpenseAnalyticsWindow>();
 
                 services.AddHostedService<Infrastructure.Assets.SipProcessingService>();
                 services.AddHostedService<Infrastructure.Expenses.RecurringExpenseProcessingService>();

@@ -45,6 +45,8 @@ public static class DependencyInjection
         services.AddSingleton<IAssetImportService, AssetImportService>();
         services.AddSingleton<IExpenseService, ExpenseService>();
         services.AddSingleton<IExpenseRecurringService, ExpenseRecurringService>();
+        services.AddSingleton<IExpenseBudgetService, ExpenseBudgetService>();
+        services.AddSingleton<IExpenseAnalyticsService, ExpenseAnalyticsService>();
         services.AddSingleton<INotificationService, NotificationService>();
         return services;
     }
