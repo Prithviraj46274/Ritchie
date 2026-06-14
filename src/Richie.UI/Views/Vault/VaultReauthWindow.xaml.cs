@@ -18,7 +18,7 @@ public partial class VaultReauthWindow : FluentWindow
         Loaded += (_, _) => PasswordBox.Focus();
     }
 
-    public void Configure(string prompt) => _vm.Configure(prompt);
+    public void Configure(string prompt, bool unlockOnConfirm = false) => _vm.Configure(prompt, unlockOnConfirm);
 
     private void OnPasswordKeyDown(object sender, KeyEventArgs e)
     {

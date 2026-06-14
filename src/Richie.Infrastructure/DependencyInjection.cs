@@ -8,6 +8,7 @@ using Richie.Application.Expenses;
 using Richie.Application.Income;
 using Richie.Application.Insurance;
 using Richie.Application.Notifications;
+using Richie.Application.Reports;
 using Richie.Application.Security;
 using Richie.Application.Storage;
 using Richie.Application.Vault;
@@ -70,6 +71,8 @@ public static class DependencyInjection
         services.AddSingleton<IComplianceService, Audit.ComplianceService>();
         services.AddSingleton<IInsightGenerator, Audit.InsightGenerator>();
         services.AddSingleton<IDashboardService, Dashboard.DashboardService>();
+        services.AddSingleton<IReportService, Reports.ReportService>();
+        services.AddSingleton<IReportExporter, Reports.ReportExporter>();
         return services;
     }
 }

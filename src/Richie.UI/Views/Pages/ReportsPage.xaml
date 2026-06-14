@@ -3,9 +3,80 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:controls="clr-namespace:Richie.UI.Controls"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       mc:Ignorable="d"
-      Title="Reports">
-    <controls:ModulePlaceholder Title="Reports"
-                                Description="Generate Asset, Expense, Vault and Full-Portfolio reports with previews. Arrives in Phase 8." />
+      Title="Reports"
+      Loaded="OnLoaded">
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </Page.Resources>
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ui:TextBlock Grid.Row="0" FontTypography="TitleLarge" Text="Reports" Margin="0,0,0,12" />
+
+        <!-- Controls -->
+        <Grid Grid.Row="1" Margin="0,0,0,12">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Margin="0,0,12,0">
+                    <ui:TextBlock Appearance="Secondary" Text="Report" FontTypography="Caption" />
+                    <ComboBox Width="160" ItemsSource="{Binding ReportTypes}" DisplayMemberPath="Text"
+                              SelectedValuePath="Value" SelectedValue="{Binding SelectedType}" />
+                </StackPanel>
+                <StackPanel Margin="0,0,12,0">
+                    <ui:TextBlock Appearance="Secondary" Text="From" FontTypography="Caption" />
+                    <DatePicker Width="130" SelectedDate="{Binding FromDate}" />
+                </StackPanel>
+                <StackPanel Margin="0,0,12,0">
+                    <ui:TextBlock Appearance="Secondary" Text="To" FontTypography="Caption" />
+                    <DatePicker Width="130" SelectedDate="{Binding ToDate}" />
+                </StackPanel>
+                <ui:Button Content="Generate preview" VerticalAlignment="Bottom" Margin="0,0,8,0" Click="OnGeneratePreview" />
+                <ui:Button Content="Export PDF" Appearance="Primary" VerticalAlignment="Bottom" Margin="0,0,8,0" Click="OnExportPdf" />
+                <ui:Button Content="Export PPTX" VerticalAlignment="Bottom" Click="OnExportPptx" />
+            </StackPanel>
+        </Grid>
+
+        <!-- Sections + preview -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="260" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <ui:Card Grid.Column="0">
+                <DockPanel>
+                    <ui:TextBlock DockPanel.Dock="Top" FontTypography="BodyStrong" Text="Sections" Margin="0,0,0,8" />
+                    <CheckBox DockPanel.Dock="Bottom" Margin="0,8,0,0" Content="Include unmasked passwords"
+                              IsChecked="{Binding IncludeUnmaskedPasswords}"
+                              Visibility="{Binding IsVaultReport, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    <ui:TextBlock DockPanel.Dock="Bottom" Appearance="Secondary" FontTypography="Caption" TextWrapping="Wrap"
+                                  Margin="0,8,0,0"
+                                  Text="Unmasked export needs your master password and an explicit confirmation."
+                                  Visibility="{Binding IsVaultReport, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    <ItemsControl ItemsSource="{Binding Sections}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox Margin="0,2" Content="{Binding Heading}" IsChecked="{Binding IsIncluded}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </DockPanel>
+            </ui:Card>
+
+            <ui:Card Grid.Column="2">
+                <DockPanel>
+                    <ui:TextBlock DockPanel.Dock="Top" FontTypography="BodyStrong" Text="Preview" Margin="0,0,0,8" />
+                    <TextBox Text="{Binding PreviewText, Mode=OneWay}" IsReadOnly="True"
+                             FontFamily="Consolas" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                             TextWrapping="NoWrap" BorderThickness="0" Background="Transparent" />
+                </DockPanel>
+            </ui:Card>
+        </Grid>
+    </Grid>
 </Page>

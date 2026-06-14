@@ -3,9 +3,27 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:controls="clr-namespace:Richie.UI.Controls"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       mc:Ignorable="d"
       Title="Export">
-    <controls:ModulePlaceholder Title="Export"
-                                Description="Export reports to PDF and PowerPoint, with masked-password safeguards. Arrives in Phase 8." />
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ui:TextBlock Grid.Row="0" FontTypography="TitleLarge" Text="Export" Margin="0,0,0,12" />
+
+        <ui:Card Grid.Row="1" VerticalAlignment="Top">
+            <StackPanel>
+                <ui:TextBlock FontTypography="BodyStrong" Text="Quick export — Full Portfolio" />
+                <ui:TextBlock Appearance="Secondary" TextWrapping="Wrap" Margin="0,4,0,12"
+                              Text="Exports your full portfolio (assets, expenses, insurance and the vault with passwords MASKED). For specific report types, section selection, or unmasked passwords, use the Reports page." />
+                <StackPanel Orientation="Horizontal">
+                    <ui:Button Content="Export PDF" Appearance="Primary" Margin="0,0,8,0" Click="OnExportPdf" />
+                    <ui:Button Content="Export PPTX" Click="OnExportPptx" />
+                </StackPanel>
+            </StackPanel>
+        </ui:Card>
+    </Grid>
 </Page>

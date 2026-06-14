@@ -14,17 +14,26 @@ public partial class VaultReauthViewModel : ObservableObject
     [ObservableProperty] private string _masterPassword = string.Empty;
     [ObservableProperty] private string? _error;
 
+    /// <summary>When true, Confirm unlocks the vault (holds the key) rather than only verifying —
+    /// needed when the caller must subsequently decrypt (e.g. unmasked export).</summary>
+    private bool _unlockOnConfirm;
+
     public event Action<bool>? CloseRequested;
 
     public VaultReauthViewModel(IVaultGate gate) => _gate = gate;
 
-    public void Configure(string prompt) => Prompt = prompt;
+    public void Configure(string prompt, bool unlockOnConfirm = false)
+    {
+        Prompt = prompt;
+        _unlockOnConfirm = unlockOnConfirm;
+    }
 
     [RelayCommand]
     private void Confirm()
     {
         Error = null;
-        if (_gate.Verify(MasterPassword))
+        bool ok = _unlockOnConfirm ? _gate.Unlock(MasterPassword).IsSuccess : _gate.Verify(MasterPassword);
+        if (ok)
         {
             MasterPassword = string.Empty;
             CloseRequested?.Invoke(true);
