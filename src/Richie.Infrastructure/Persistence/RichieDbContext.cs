@@ -5,6 +5,7 @@ using Richie.Domain.Auditing;
 using Richie.Domain.Authentication;
 using Richie.Domain.Expenses;
 using Richie.Domain.Notifications;
+using Richie.Domain.Vault;
 
 namespace Richie.Infrastructure.Persistence;
 
@@ -29,6 +30,8 @@ public class RichieDbContext : DbContext
     public DbSet<ExpenseRecurring> ExpenseRecurrings => Set<ExpenseRecurring>();
     public DbSet<ExpenseBudget> ExpenseBudgets => Set<ExpenseBudget>();
     public DbSet<Notification> Notifications => Set<Notification>();
+    public DbSet<VaultEntry> VaultEntries => Set<VaultEntry>();
+    public DbSet<VaultKey> VaultKeys => Set<VaultKey>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

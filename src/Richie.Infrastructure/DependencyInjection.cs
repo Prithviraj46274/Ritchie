@@ -6,6 +6,7 @@ using Richie.Application.Expenses;
 using Richie.Application.Notifications;
 using Richie.Application.Security;
 using Richie.Application.Storage;
+using Richie.Application.Vault;
 using Richie.Infrastructure.Assets;
 using Richie.Infrastructure.Expenses;
 using Richie.Infrastructure.Authentication;
@@ -13,6 +14,7 @@ using Richie.Infrastructure.Notifications;
 using Richie.Infrastructure.Persistence;
 using Richie.Infrastructure.Security;
 using Richie.Infrastructure.Storage;
+using Richie.Infrastructure.Vault;
 
 namespace Richie.Infrastructure;
 
@@ -49,6 +51,8 @@ public static class DependencyInjection
         services.AddSingleton<IExpenseAnalyticsService, ExpenseAnalyticsService>();
         services.AddSingleton<IExpenseImportService, ExpenseImportService>();
         services.AddSingleton<INotificationService, NotificationService>();
+        services.AddSingleton<IVaultGate, VaultGate>();
+        services.AddSingleton<IVaultService, VaultService>();
         return services;
     }
 }

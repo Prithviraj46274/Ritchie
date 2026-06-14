@@ -3,6 +3,7 @@ using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Richie.Application.Authentication;
+using Richie.Application.Vault;
 using Richie.Infrastructure;
 using Richie.Infrastructure.Persistence;
 using Richie.UI.Services;
@@ -68,6 +69,8 @@ public partial class App : System.Windows.Application
                 services.AddTransient<RecurringExpensesViewModel>();
                 services.AddTransient<AddEditRecurringViewModel>();
                 services.AddTransient<ExpenseAnalyticsViewModel>();
+                services.AddTransient<PasswordVaultViewModel>();
+                services.AddTransient<AddEditVaultEntryViewModel>();
                 services.AddTransient<Views.Assets.AddEditAssetWindow>();
                 services.AddTransient<Views.Assets.AssetDetailsWindow>();
                 services.AddTransient<Views.Assets.SipScheduleWindow>();
@@ -79,6 +82,7 @@ public partial class App : System.Windows.Application
                 services.AddTransient<Views.Expenses.RecurringExpensesWindow>();
                 services.AddTransient<Views.Expenses.AddEditRecurringWindow>();
                 services.AddTransient<Views.Expenses.ExpenseAnalyticsWindow>();
+                services.AddTransient<Views.Vault.AddEditVaultEntryWindow>();
 
                 services.AddHostedService<Infrastructure.Assets.SipProcessingService>();
                 services.AddHostedService<Infrastructure.Expenses.RecurringExpenseProcessingService>();
@@ -169,6 +173,7 @@ public partial class App : System.Windows.Application
         var inactivity = _host.Services.GetRequiredService<InactivityLockService>();
         inactivity.Stop();
         inactivity.Locked -= OnLocked;
+        _host.Services.GetRequiredService<IVaultGate>().Lock();
         _host.Services.GetRequiredService<IUserSession>().SignOut();
 
         MainWindow closing = _main;

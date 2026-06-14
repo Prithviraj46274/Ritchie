@@ -1,0 +1,47 @@
+<ui:FluentWindow x:Class="Richie.UI.Views.Vault.AddEditVaultEntryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        mc:Ignorable="d"
+        Title="Password"
+        Height="560" Width="460"
+        WindowStartupLocation="CenterOwner"
+        ExtendsContentIntoTitleBar="True"
+        WindowBackdropType="Mica"
+        WindowCornerPreference="Round">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Title="{Binding Title}" />
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="24,8,24,8">
+            <StackPanel>
+                <ui:TextBox PlaceholderText="Account / platform name" Margin="0,0,0,10"
+                            Text="{Binding AccountName, UpdateSourceTrigger=PropertyChanged}" />
+                <ui:TextBox PlaceholderText="Category (e.g. Bank, Mutual Fund)" Margin="0,0,0,10"
+                            Text="{Binding Category, UpdateSourceTrigger=PropertyChanged}" />
+                <ui:TextBox PlaceholderText="Web URL / login link" Margin="0,0,0,10"
+                            Text="{Binding Url, UpdateSourceTrigger=PropertyChanged}" />
+                <ui:TextBox PlaceholderText="User ID / email" Margin="0,0,0,10"
+                            Text="{Binding LoginId, UpdateSourceTrigger=PropertyChanged}" />
+                <ui:PasswordBox PlaceholderText="{Binding PasswordHint}" Margin="0,0,0,10"
+                                Password="{Binding Password, UpdateSourceTrigger=PropertyChanged}" />
+                <ui:TextBox PlaceholderText="Notes" Margin="0,0,0,10" AcceptsReturn="True" MinLines="2"
+                            Text="{Binding Notes, UpdateSourceTrigger=PropertyChanged}" />
+
+                <ui:TextBlock Foreground="#C42B1C" TextWrapping="Wrap" Text="{Binding Error}" />
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="24,8,24,16">
+            <ui:Button Content="Cancel" Margin="0,0,8,0" Command="{Binding CancelCommand}" />
+            <ui:Button Content="Save" Appearance="Primary" Command="{Binding SaveCommand}" />
+        </StackPanel>
+    </Grid>
+</ui:FluentWindow>
