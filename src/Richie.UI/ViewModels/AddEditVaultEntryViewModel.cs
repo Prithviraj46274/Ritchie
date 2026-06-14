@@ -1,3 +1,4 @@
+using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Richie.Application.Vault;
@@ -18,6 +19,16 @@ public partial class AddEditVaultEntryViewModel : ObservableObject
     [ObservableProperty] private string? _notes;
     [ObservableProperty] private string _passwordHint = "Password";
     [ObservableProperty] private string? _error;
+
+    [ObservableProperty] private bool _showStrength;
+    [ObservableProperty] private string _strengthText = string.Empty;
+    [ObservableProperty] private int _strengthPercent;
+    [ObservableProperty] private Brush _strengthBrush = Brushes.Transparent;
+
+    // Soft status palette (green good / amber attention / red critical) — consistent app-wide.
+    private static readonly Brush Red = new SolidColorBrush(Color.FromRgb(0xC4, 0x2B, 0x1C));
+    private static readonly Brush Amber = new SolidColorBrush(Color.FromRgb(0x9D, 0x5D, 0x00));
+    private static readonly Brush Green = new SolidColorBrush(Color.FromRgb(0x0F, 0x7B, 0x0F));
 
     public event Action<bool>? CloseRequested;
 
@@ -68,4 +79,19 @@ public partial class AddEditVaultEntryViewModel : ObservableObject
 
     [RelayCommand]
     private void Cancel() => CloseRequested?.Invoke(false);
+
+    partial void OnPasswordChanged(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            ShowStrength = false;
+            return;
+        }
+
+        PasswordStrengthResult s = PasswordStrength.Evaluate(value);
+        StrengthText = $"Strength: {s.Label}";
+        StrengthPercent = s.Percent;
+        StrengthBrush = s.Score <= 1 ? Red : s.Score == 2 ? Amber : Green;
+        ShowStrength = true;
+    }
 }

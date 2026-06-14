@@ -41,6 +41,18 @@ public partial class PasswordVaultPage : Page
 
     private void OnAddEntry(object sender, RoutedEventArgs e) => OpenEditor(null);
 
+    private void OnViewEntry(object sender, RoutedEventArgs e)
+    {
+        if (sender is not FrameworkElement { Tag: Guid id })
+            return;
+
+        var window = ((App)System.Windows.Application.Current).Services
+            .GetRequiredService<VaultEntryDetailsWindow>();
+        window.Owner = Window.GetWindow(this);
+        window.Details.Initialize(id);
+        window.ShowDialog();
+    }
+
     private void OnEditEntry(object sender, RoutedEventArgs e)
     {
         if (sender is FrameworkElement { Tag: Guid id })

@@ -11,6 +11,9 @@
         ExtendsContentIntoTitleBar="True"
         WindowBackdropType="Mica"
         WindowCornerPreference="Round">
+    <ui:FluentWindow.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </ui:FluentWindow.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -30,8 +33,15 @@
                             Text="{Binding Url, UpdateSourceTrigger=PropertyChanged}" />
                 <ui:TextBox PlaceholderText="User ID / email" Margin="0,0,0,10"
                             Text="{Binding LoginId, UpdateSourceTrigger=PropertyChanged}" />
-                <ui:PasswordBox PlaceholderText="{Binding PasswordHint}" Margin="0,0,0,10"
+                <ui:PasswordBox PlaceholderText="{Binding PasswordHint}" Margin="0,0,0,6"
                                 Password="{Binding Password, UpdateSourceTrigger=PropertyChanged}" />
+                <StackPanel Margin="0,0,0,10"
+                            Visibility="{Binding ShowStrength, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <ProgressBar Height="6" Minimum="0" Maximum="100" Value="{Binding StrengthPercent}"
+                                 Foreground="{Binding StrengthBrush}" />
+                    <ui:TextBlock FontTypography="Caption" Margin="0,4,0,0"
+                                  Foreground="{Binding StrengthBrush}" Text="{Binding StrengthText}" />
+                </StackPanel>
                 <ui:TextBox PlaceholderText="Notes" Margin="0,0,0,10" AcceptsReturn="True" MinLines="2"
                             Text="{Binding Notes, UpdateSourceTrigger=PropertyChanged}" />
 
