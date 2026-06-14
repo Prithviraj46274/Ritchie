@@ -20,7 +20,7 @@ public partial class PasswordVaultViewModel : ObservableObject
     [ObservableProperty] private bool _isSetupMode;
     [ObservableProperty] private string _masterPassword = string.Empty;
     [ObservableProperty] private string? _error;
-    [ObservableProperty] private ObservableCollection<VaultEntrySummary> _items = [];
+    [ObservableProperty] private ObservableCollection<VaultEntryRowViewModel> _items = [];
 
     private const string AllCategories = "All categories";
     [ObservableProperty] private string _searchText = string.Empty;
@@ -80,8 +80,12 @@ public partial class PasswordVaultViewModel : ObservableObject
         RefreshCategories();
         string? category = SelectedCategory == AllCategories ? null : SelectedCategory;
         string? search = string.IsNullOrWhiteSpace(SearchText) ? null : SearchText;
-        Items = new ObservableCollection<VaultEntrySummary>(_vault.GetEntries(search, category));
+        Items = new ObservableCollection<VaultEntryRowViewModel>(
+            _vault.GetEntries(search, category).Select(s => new VaultEntryRowViewModel(s)));
     }
+
+    /// <summary>Decrypt a credential for inline reveal/copy — caller must have re-authenticated.</summary>
+    public string? RevealPassword(Guid id) => _vault.RevealPassword(id);
 
     public void Delete(Guid id)
     {

@@ -24,7 +24,7 @@
         <StackPanel Grid.Row="1" Margin="24,8,24,8" VerticalAlignment="Center">
             <ui:TextBlock Appearance="Secondary" TextWrapping="Wrap" Margin="0,0,0,10" Text="{Binding Prompt}" />
             <ui:PasswordBox x:Name="PasswordBox" PlaceholderText="Master password"
-                            Password="{Binding MasterPassword, UpdateSourceTrigger=PropertyChanged}"
+                            Password="{Binding MasterPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             KeyDown="OnPasswordKeyDown" />
             <ui:TextBlock Foreground="#C42B1C" TextWrapping="Wrap" Margin="0,8,0,0" Text="{Binding Error}" />
         </StackPanel>

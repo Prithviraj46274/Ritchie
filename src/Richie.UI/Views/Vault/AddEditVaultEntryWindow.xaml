@@ -34,7 +34,7 @@
                 <ui:TextBox PlaceholderText="User ID / email" Margin="0,0,0,10"
                             Text="{Binding LoginId, UpdateSourceTrigger=PropertyChanged}" />
                 <ui:PasswordBox PlaceholderText="{Binding PasswordHint}" Margin="0,0,0,6"
-                                Password="{Binding Password, UpdateSourceTrigger=PropertyChanged}" />
+                                Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <StackPanel Margin="0,0,0,10"
                             Visibility="{Binding ShowStrength, Converter={StaticResource BoolToVisibilityConverter}}">
                     <ProgressBar Height="6" Minimum="0" Maximum="100" Value="{Binding StrengthPercent}"

@@ -1,7 +1,9 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
+using Richie.UI.Services;
 using Richie.UI.ViewModels;
 using Richie.UI.Views.Vault;
 
@@ -41,16 +43,58 @@ public partial class PasswordVaultPage : Page
 
     private void OnAddEntry(object sender, RoutedEventArgs e) => OpenEditor(null);
 
-    private void OnViewEntry(object sender, RoutedEventArgs e)
+    private void OnAccountLinkClick(object sender, RoutedEventArgs e)
     {
-        if (sender is not FrameworkElement { Tag: Guid id })
+        if (sender is Hyperlink { Tag: string url } && !UrlLauncher.TryOpen(url))
+            MessageBox.Show("This entry's website link is not a valid http(s) URL.", "Open website",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void OnReveal(object sender, RoutedEventArgs e)
+    {
+        if (sender is not FrameworkElement { Tag: VaultEntryRowViewModel row })
             return;
 
+        if (row.IsRevealed)
+        {
+            row.Hide();
+            return;
+        }
+
+        if (Reauthenticate("Re-enter your master password to reveal this password.")
+            && Vm.RevealPassword(row.Id) is { } plaintext)
+            row.Reveal(plaintext);
+    }
+
+    private void OnCopy(object sender, RoutedEventArgs e)
+    {
+        if (sender is not FrameworkElement { Tag: VaultEntryRowViewModel row })
+            return;
+
+        // Copying exposes the secret — require re-auth unless it's already revealed on screen.
+        if (!row.IsRevealed && !Reauthenticate("Re-enter your master password to copy this password."))
+            return;
+
+        if (Vm.RevealPassword(row.Id) is { Length: > 0 } plaintext)
+        {
+            SecureClipboard.CopyWithAutoClear(plaintext);
+            new Wpf.Ui.Controls.Snackbar(VaultSnackbar)
+            {
+                Title = "Password copied",
+                Content = "It will clear from the clipboard in 30 seconds.",
+                Appearance = Wpf.Ui.Controls.ControlAppearance.Success,
+                Timeout = TimeSpan.FromSeconds(3)
+            }.Show();
+        }
+    }
+
+    private bool Reauthenticate(string prompt)
+    {
         var window = ((App)System.Windows.Application.Current).Services
-            .GetRequiredService<VaultEntryDetailsWindow>();
+            .GetRequiredService<VaultReauthWindow>();
         window.Owner = Window.GetWindow(this);
-        window.Details.Initialize(id);
-        window.ShowDialog();
+        window.Configure(prompt);
+        return window.ShowDialog() == true;
     }
 
     private void OnEditEntry(object sender, RoutedEventArgs e)
