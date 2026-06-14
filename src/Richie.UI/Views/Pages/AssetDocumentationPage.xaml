@@ -22,6 +22,7 @@
             <ui:TextBlock FontTypography="TitleLarge" Text="Asset Documentation" VerticalAlignment="Center" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <ui:Button Content="Goals" Margin="0,0,8,0" Click="OnOpenGoals" />
+                <ui:Button Content="Bulk upload" Margin="0,0,8,0" Click="OnBulkUpload" />
                 <ui:Button Content="Add asset" Appearance="Primary" Click="OnAddAsset" />
             </StackPanel>
         </Grid>

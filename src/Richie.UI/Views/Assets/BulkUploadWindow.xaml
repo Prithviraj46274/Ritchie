@@ -1,0 +1,63 @@
+<ui:FluentWindow x:Class="Richie.UI.Views.Assets.BulkUploadWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        mc:Ignorable="d"
+        Title="Bulk upload assets"
+        Height="640" Width="560"
+        WindowStartupLocation="CenterOwner"
+        ExtendsContentIntoTitleBar="True"
+        WindowBackdropType="Mica"
+        WindowCornerPreference="Round">
+    <ui:FluentWindow.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </ui:FluentWindow.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Title="Bulk upload assets" />
+
+        <StackPanel Grid.Row="1" Margin="24,8,24,16">
+            <ui:TextBlock FontTypography="TitleLarge" Text="Bulk upload" />
+            <ui:TextBlock Appearance="Secondary" Margin="0,4,0,12" TextWrapping="Wrap"
+                          Text="Download a template, fill in one asset per row, then import the CSV or Excel file." />
+
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                <ui:Button Content="Download CSV template" Click="OnDownloadCsv" Margin="0,0,8,0" />
+                <ui:Button Content="Download Excel template" Click="OnDownloadExcel" />
+            </StackPanel>
+
+            <Border AllowDrop="True" Drop="OnDrop" DragOver="OnDragOver"
+                    BorderBrush="{DynamicResource ControlElevationBorderBrush}"
+                    BorderThickness="1" CornerRadius="8" Padding="24" Margin="0,0,0,12"
+                    Background="{DynamicResource ControlFillColorDefaultBrush}">
+                <StackPanel HorizontalAlignment="Center">
+                    <ui:TextBlock HorizontalAlignment="Center" Text="Drop a .csv or .xlsx file here" />
+                    <ui:TextBlock HorizontalAlignment="Center" Appearance="Secondary" Text="or" Margin="0,4" />
+                    <ui:Button HorizontalAlignment="Center" Content="Browse…" Click="OnBrowse" />
+                </StackPanel>
+            </Border>
+
+            <ui:TextBlock TextWrapping="Wrap" Margin="0,0,0,8" Text="{Binding Summary}" />
+
+            <ItemsControl ItemsSource="{Binding Errors}"
+                          Visibility="{Binding HasErrors, Converter={StaticResource BoolToVisibilityConverter}}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ui:TextBlock Foreground="#C42B1C" Margin="0,2">
+                            <Run Text="Row" />
+                            <Run Text="{Binding RowNumber, Mode=OneWay}" />
+                            <Run Text=":" />
+                            <Run Text="{Binding Message, Mode=OneWay}" />
+                        </ui:TextBlock>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </Grid>
+</ui:FluentWindow>

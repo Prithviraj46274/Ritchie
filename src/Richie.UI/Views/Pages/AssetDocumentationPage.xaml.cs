@@ -27,6 +27,15 @@ public partial class AssetDocumentationPage : Page
         Vm.Refresh(); // goal links don't change assets, but current values may have been recalculated
     }
 
+    private void OnBulkUpload(object sender, RoutedEventArgs e)
+    {
+        var window = ((App)System.Windows.Application.Current).Services.GetRequiredService<BulkUploadWindow>();
+        window.Owner = Window.GetWindow(this);
+        window.ShowDialog();
+        if (window.Upload.ImportedAny)
+            Vm.Refresh();
+    }
+
     private void OnViewAsset(object sender, RoutedEventArgs e)
     {
         if (sender is not FrameworkElement { Tag: Guid id })

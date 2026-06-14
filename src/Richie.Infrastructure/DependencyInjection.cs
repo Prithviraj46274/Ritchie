@@ -40,6 +40,7 @@ public static class DependencyInjection
         services.AddSingleton<IGoalService, GoalService>();
         services.AddSingleton<IFileVault, FileVault>();
         services.AddSingleton<IAssetDocumentService, AssetDocumentService>();
+        services.AddSingleton<IAssetImportService, AssetImportService>();
         services.AddSingleton<INotificationService, NotificationService>();
         return services;
     }
