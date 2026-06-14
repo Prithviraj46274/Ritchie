@@ -1,0 +1,38 @@
+using Richie.Application.Audit;
+using Richie.Application.Expenses;
+
+namespace Richie.Infrastructure.Audit;
+
+/// <summary>
+/// Aggregates insights across modules (PRD §18.1): portfolio/coverage findings from the Financial
+/// Health Audit plus spending insights from the Expense Tracker. Kept deliberately simple — it
+/// reuses each module's own insight logic rather than re-deriving it.
+/// </summary>
+public sealed class InsightGenerator : IInsightGenerator
+{
+    private readonly IHealthAuditService _audit;
+    private readonly IExpenseService _expenses;
+
+    public InsightGenerator(IHealthAuditService audit, IExpenseService expenses)
+    {
+        _audit = audit;
+        _expenses = expenses;
+    }
+
+    public IReadOnlyList<string> Generate(int max = 8)
+    {
+        var insights = new List<string>();
+
+        // Portfolio + coverage (already phrased as actionable conclusions by the audit).
+        insights.AddRange(_audit.GetReport().Suggestions);
+
+        // Spending trends.
+        insights.AddRange(_expenses.GetDashboard().Insights);
+
+        return insights
+            .Where(s => !string.IsNullOrWhiteSpace(s))
+            .Distinct()
+            .Take(max)
+            .ToList();
+    }
+}

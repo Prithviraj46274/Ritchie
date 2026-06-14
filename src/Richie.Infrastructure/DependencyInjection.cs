@@ -63,6 +63,8 @@ public static class DependencyInjection
         services.AddSingleton<IScoringEngine, PlaceholderScoringEngine>();
         services.AddSingleton<IBenchmarkProvider, AgeBandBenchmarkProvider>();
         services.AddSingleton<IHealthAuditService, Audit.HealthAuditService>();
+        services.AddSingleton<IComplianceService, Audit.ComplianceService>();
+        services.AddSingleton<IInsightGenerator, Audit.InsightGenerator>();
         return services;
     }
 }

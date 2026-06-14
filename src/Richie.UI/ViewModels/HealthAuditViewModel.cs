@@ -9,9 +9,13 @@ namespace Richie.UI.ViewModels;
 public partial class HealthAuditViewModel : ObservableObject
 {
     private readonly IHealthAuditService _audit;
+    private readonly IComplianceService _complianceService;
+    private readonly IInsightGenerator _insights;
 
     public sealed record BenchmarkDisplay(
         string ClassName, string ActualText, string RecommendedText, string StatusText, Brush StatusBrush);
+
+    public sealed record ComplianceDisplay(string Name, string StatusText, Brush StatusBrush, string Detail);
 
     [ObservableProperty] private bool _hasAssets;
     [ObservableProperty] private bool _scoresAreInterim;
@@ -37,6 +41,12 @@ public partial class HealthAuditViewModel : ObservableObject
     [ObservableProperty] private bool _coverageOk;
     [ObservableProperty] private ObservableCollection<string> _suggestions = [];
 
+    [ObservableProperty] private string _complianceOverall = string.Empty;
+    [ObservableProperty] private Brush _complianceBrush = Brushes.Gray;
+    [ObservableProperty] private ObservableCollection<ComplianceDisplay> _compliance = [];
+    [ObservableProperty] private ObservableCollection<GipStatusRow> _gips = [];
+    [ObservableProperty] private bool _hasGips;
+
     public string HealthScaleLegend => "Scale: 80–100 Excellent · 60–79 Good · below 60 Needs attention.";
     public string RiskScaleLegend => "Scale: ≤20 Low · ≤40 Moderate · ≤60 Moderately High · ≤80 High · >80 Very High.";
     public string InterimNotice =>
@@ -46,7 +56,12 @@ public partial class HealthAuditViewModel : ObservableObject
     private static readonly Brush Amber = new SolidColorBrush(Color.FromRgb(0x9D, 0x5D, 0x00));
     private static readonly Brush Green = new SolidColorBrush(Color.FromRgb(0x0F, 0x7B, 0x0F));
 
-    public HealthAuditViewModel(IHealthAuditService audit) => _audit = audit;
+    public HealthAuditViewModel(IHealthAuditService audit, IComplianceService compliance, IInsightGenerator insights)
+    {
+        _audit = audit;
+        _complianceService = compliance;
+        _insights = insights;
+    }
 
     public void Load()
     {
@@ -76,7 +91,28 @@ public partial class HealthAuditViewModel : ObservableObject
         CoverageGaps = new ObservableCollection<string>(r.CoverageGaps);
         HasCoverageGaps = r.CoverageGaps.Count > 0;
         CoverageOk = !HasCoverageGaps;
-        Suggestions = new ObservableCollection<string>(r.Suggestions);
+
+        // Cross-module insights (portfolio + spending) supersede the audit-only suggestions list.
+        Suggestions = new ObservableCollection<string>(_insights.Generate());
+
+        ComplianceReport c = _complianceService.GetReport();
+        ComplianceOverall = c.OverallStatus;
+        ComplianceBrush = c.IsCompliant ? Green
+            : c.Areas.Any(a => a.Status == ComplianceStatus.Red) ? Red : Amber;
+        Compliance = new ObservableCollection<ComplianceDisplay>(c.Areas.Select(ToComplianceDisplay));
+        Gips = new ObservableCollection<GipStatusRow>(c.Gips);
+        HasGips = c.Gips.Count > 0;
+    }
+
+    private ComplianceDisplay ToComplianceDisplay(ComplianceArea area)
+    {
+        (string text, Brush brush) = area.Status switch
+        {
+            ComplianceStatus.Green => ("Good", Green),
+            ComplianceStatus.Amber => ("Needs attention", Amber),
+            _ => ("Critical", Red)
+        };
+        return new ComplianceDisplay(area.Name, text, brush, area.Detail);
     }
 
     private BenchmarkDisplay ToDisplay(BenchmarkRow row)
