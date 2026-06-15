@@ -1,0 +1,8 @@
+Type,Name,Identifier,InvestmentStartDate,InvestedAmount,CurrentValue,InvestmentMode,Notes
+MutualFund,Axis Bluechip Fund,INF846K01EW2,2024-01-15,120000,148000,Sip,Monthly SIP
+Equity,Reliance Industries,RELIANCE,2023-06-10,90000,112500,LumpSum,Long-term hold
+SovereignGoldBond,SGB 2023-24 Series III,SGB2023III,2023-09-20,80000,93000,LumpSum,8 grams
+RealEstate,Pune 2BHK Flat,,2021-03-01,5000000,6800000,LumpSum,Wakad
+DigitalGold,Digital Gold (MMTC-PAMP),,2024-02-01,40000,47000,Sip,Auto-invest
+GoldJewellery,Gold Necklace,,2022-11-05,150000,180000,LumpSum,22K 30g
+GuaranteedInvestmentPlan,LIC Jeevan Anand,GIP-99812,2022-04-01,200000,230000,LumpSum,Guaranteed plan

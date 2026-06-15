@@ -1,0 +1,11 @@
+Date,Amount,Category,SpentBy,SpentFor,Notes
+2026-06-01,15000,HousingUtilities,Self,Family,Monthly rent
+2026-06-02,2500,GroceriesFood,Self,Family,Weekly groceries
+2026-06-03,1200,Transportation,Self,Self,Fuel
+2026-06-05,800,DiningRestaurants,Self,Friends,Dinner out
+2026-06-08,3000,Healthcare,Self,Family,Pharmacy + checkup
+2026-06-10,2000,EntertainmentLeisure,Self,Family,Movie and snacks
+2026-06-12,5000,Education,Self,Child,Tuition fees
+2026-06-14,1800,PersonalCareClothing,Self,Self,Apparel
+2026-06-16,4500,InsuranceInvestments,Self,Family,Term insurance premium
+2026-06-18,600,Miscellaneous,Self,Self,Stationery
