@@ -39,7 +39,7 @@
                     <StackPanel>
                         <ui:TextBlock FontTypography="BodyStrong" Text="About" Margin="0,0,0,6" />
                         <ui:TextBlock Appearance="Secondary" Text="Richie — offline-first personal finance for Windows." />
-                        <ui:TextBlock Appearance="Secondary" Text="Version 0.9 (in development)." />
+                        <ui:TextBlock x:Name="VersionTextBlock" Appearance="Secondary" />
                         <ui:TextBlock Appearance="Secondary" TextWrapping="Wrap" Margin="0,6,0,0"
                                       Text="Tech: .NET 10 · WPF + WPF-UI (Fluent) · EF Core / SQLite + SQLCipher · LiveCharts2 · QuestPDF · OpenXML." />
                         <ui:TextBlock Appearance="Secondary" Margin="0,6,0,0" Text="Contact: the Richie team." />

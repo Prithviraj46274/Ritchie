@@ -1,0 +1,83 @@
+<!--
+  Richie MSI installer, WiX v7.
+  Per-user install (no UAC); installs to %LOCALAPPDATA%\Programs\Richie.
+  App data stays in %LOCALAPPDATA%\Richie (managed by the app itself).
+  Run build-installer.ps1 from the repo root to produce dist\Richie-Setup.msi.
+-->
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+  <!--
+    UpgradeCode: NEVER change this GUID — it identifies the Richie product family for
+    upgrade/uninstall detection across all versions.
+  -->
+  <Package Name="Richie"
+           Manufacturer="Richie"
+           Version="1.0.0.0"
+           UpgradeCode="2E4D9F8A-3B7C-4E1A-9D5F-8C2A6B1E4D7F"
+           Scope="perUser"
+           Compressed="yes">
+
+    <!-- Silently remove the previous version before installing the new one. -->
+    <MajorUpgrade DowngradeErrorMessage="A newer version of Richie is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <!-- App icon shown in Settings > Apps and Add/Remove Programs. -->
+    <Icon Id="AppIcon" SourceFile="$(var.PublishDir)Richie.UI.exe" />
+    <Property Id="ARPPRODUCTICON" Value="AppIcon" />
+
+    <!-- Simple progress-only wizard (no license page, no directory picker). -->
+    <ui:WixUI Id="WixUI_Minimal" />
+
+    <Feature Id="ProductFeature" Level="1">
+      <ComponentGroupRef Id="AppFiles" />
+      <ComponentGroupRef Id="AppShortcuts" />
+    </Feature>
+
+  </Package>
+
+  <!-- ─── Directory layout ─────────────────────────────────────────────────── -->
+
+  <Fragment>
+    <!-- Install directory: %LOCALAPPDATA%\Programs\Richie -->
+    <StandardDirectory Id="LocalAppDataFolder">
+      <Directory Id="ProgramsFolder" Name="Programs">
+        <Directory Id="INSTALLFOLDER" Name="Richie" />
+      </Directory>
+    </StandardDirectory>
+
+    <!-- Start menu: %APPDATA%\Microsoft\Windows\Start Menu\Programs\Richie -->
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="Richie" />
+    </StandardDirectory>
+  </Fragment>
+
+  <!-- ─── App files (harvested from dotnet publish output) ─────────────────── -->
+
+  <Fragment>
+    <ComponentGroup Id="AppFiles" Directory="INSTALLFOLDER">
+      <!-- $(var.PublishDir) is passed via -d "PublishDir=path\" in build-installer.ps1. -->
+      <Files Include="$(var.PublishDir)**" />
+    </ComponentGroup>
+  </Fragment>
+
+  <!-- ─── Start menu shortcut ──────────────────────────────────────────────── -->
+
+  <Fragment>
+    <ComponentGroup Id="AppShortcuts" Directory="ApplicationProgramsFolder">
+      <Component Id="StartMenuShortcut">
+        <Shortcut Id="AppShortcut"
+                  Name="Richie"
+                  Description="Personal Financial Management"
+                  Target="[INSTALLFOLDER]Richie.UI.exe"
+                  WorkingDirectory="INSTALLFOLDER" />
+        <!-- Remove the Start Menu subfolder on uninstall. -->
+        <RemoveFolder Id="CleanUpStartMenu" Directory="ApplicationProgramsFolder" On="uninstall" />
+        <!-- Registry key used as the component's KeyPath (shortcuts can't be KeyPaths). -->
+        <RegistryValue Root="HKCU" Key="Software\Richie" Name="installed"
+                       Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+
+</Wix>

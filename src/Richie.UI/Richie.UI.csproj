@@ -7,6 +7,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Logo PNG embedded as a WPF resource; reference as pack://application:,,,/Assets/richie-logo.png -->
+    <Resource Include="Assets\richie-logo.png" />
+    <!-- ICO is used by <ApplicationIcon> above (compiled into exe); not a runtime resource. -->
+    <None Include="Assets\richie-logo.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.4" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.9" />
@@ -25,6 +32,15 @@
     <!-- LiveCharts2 pulls SkiaSharp/OpenTK transitives that only ship .NET Framework TFMs;
          the WPF chart uses the CPU SKElement path, so these restore-fallback warnings are benign. -->
     <NoWarn>$(NoWarn);NU1701</NoWarn>
+    <!-- Product identity — used by the MSI installer and shown in Add/Remove Programs. -->
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Company>Richie</Company>
+    <Product>Richie</Product>
+    <Description>Offline-first personal financial management for Windows</Description>
+    <Copyright>© 2026 Richie</Copyright>
+    <ApplicationIcon>Assets\richie-logo.ico</ApplicationIcon>
   </PropertyGroup>
 
 </Project>

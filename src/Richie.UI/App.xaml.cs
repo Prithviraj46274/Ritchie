@@ -151,6 +151,17 @@ public partial class App : System.Windows.Application
             MessageBox.Show(args.Exception.ToString(), "Richie — startup error");
         };
 
+        // On a brand-new install (no db.key yet) ask the user before touching any data files.
+        if (AppPaths.IsFirstRun)
+        {
+            var welcome = new FirstRunWindow();
+            if (welcome.ShowDialog() != true)
+            {
+                Shutdown();
+                return;
+            }
+        }
+
         var splash = new SplashWindow();
         splash.Show();
 
