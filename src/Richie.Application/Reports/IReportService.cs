@@ -23,7 +23,12 @@ public sealed record ReportContent(
 
 /// <summary>What to build. <paramref name="IncludeUnmaskedPasswords"/> reveals vault passwords and
 /// must only be set after a master-password re-auth + explicit user confirmation (PRD §12).</summary>
-public sealed record ReportRequest(ReportType Type, DateTime? From, DateTime? To, bool IncludeUnmaskedPasswords);
+public sealed record ReportRequest(
+    ReportType Type,
+    DateTime? From,
+    DateTime? To,
+    bool IncludeUnmaskedPasswords,
+    IReadOnlyCollection<Guid>? RevealedVaultEntryIds = null);
 
 /// <summary>Builds report content from the user's real data across modules.</summary>
 public interface IReportService

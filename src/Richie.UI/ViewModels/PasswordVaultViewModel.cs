@@ -1,6 +1,10 @@
+using System;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Richie.Application.Vault;
+using Richie.UI.Services;
 
 namespace Richie.UI.ViewModels;
 
@@ -13,7 +17,12 @@ public partial class PasswordVaultViewModel : ObservableObject
 {
     private readonly IVaultGate _gate;
     private readonly IVaultService _vault;
+    private readonly IVaultRevealStateService _revealState;
+    private readonly DispatcherTimer _lockTimer;
+    private DateTime _lockDeadlineUtc;
     private bool _suppressReload;
+
+    private static readonly TimeSpan AutoLockTimeout = TimeSpan.FromMinutes(5);
 
     [ObservableProperty] private bool _isUnlocked;
     [ObservableProperty] private bool _isLocked = true;
@@ -21,7 +30,9 @@ public partial class PasswordVaultViewModel : ObservableObject
     [ObservableProperty] private string _masterPassword = string.Empty;
     [ObservableProperty] private string? _error;
     [ObservableProperty] private bool _recoveryAvailable;
+    [ObservableProperty] private bool _allRevealed;
     [ObservableProperty] private ObservableCollection<VaultEntryRowViewModel> _items = [];
+    [ObservableProperty] private string _unlockTimerText = string.Empty;
 
     private const string AllCategories = "All categories";
     [ObservableProperty] private string _searchText = string.Empty;
@@ -36,10 +47,14 @@ public partial class PasswordVaultViewModel : ObservableObject
 
     public string SubmitText => IsSetupMode ? "Create vault" : "Unlock";
 
-    public PasswordVaultViewModel(IVaultGate gate, IVaultService vault)
+    public PasswordVaultViewModel(IVaultGate gate, IVaultService vault, IVaultRevealStateService revealState)
     {
         _gate = gate;
         _vault = vault;
+        _revealState = revealState;
+
+        _lockTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+        _lockTimer.Tick += (_, _) => UpdateLockCountdown();
     }
 
     /// <summary>Re-lock and reset to the gate screen — called whenever the page is shown.</summary>
@@ -56,6 +71,8 @@ public partial class PasswordVaultViewModel : ObservableObject
         SearchText = string.Empty;
         Categories = [AllCategories];
         SelectedCategory = AllCategories;
+        UnlockTimerText = string.Empty;
+        _revealState.Clear();
         _suppressReload = false;
     }
 
@@ -82,12 +99,44 @@ public partial class PasswordVaultViewModel : ObservableObject
         RefreshCategories();
         string? category = SelectedCategory == AllCategories ? null : SelectedCategory;
         string? search = string.IsNullOrWhiteSpace(SearchText) ? null : SearchText;
-        Items = new ObservableCollection<VaultEntryRowViewModel>(
-            _vault.GetEntries(search, category).Select(s => new VaultEntryRowViewModel(s)));
+        var revealedIds = _revealState.GetRevealedEntryIds().ToHashSet();
+        var entries = _vault.GetEntries(search, category)
+            .Select(s => new VaultEntryRowViewModel(
+                s,
+                _revealState,
+                revealedIds.Contains(s.Id) ? _vault.RevealPassword(s.Id) : null));
+        Items = new ObservableCollection<VaultEntryRowViewModel>(entries);
+        AllRevealed = Items.Count > 0 && Items.All(i => i.IsRevealed);
     }
 
     /// <summary>Decrypt a credential for inline reveal/copy — caller must have re-authenticated.</summary>
     public string? RevealPassword(Guid id) => _vault.RevealPassword(id);
+
+    public void ToggleRevealAll()
+    {
+        if (AllRevealed)
+        {
+            HideAll();
+            return;
+        }
+
+        foreach (VaultEntryRowViewModel row in Items)
+        {
+            if (!row.IsRevealed && RevealPassword(row.Id) is { Length: > 0 } plaintext)
+                row.Reveal(plaintext);
+        }
+
+        AllRevealed = true;
+    }
+
+    public void HideAll()
+    {
+        foreach (VaultEntryRowViewModel row in Items)
+            row.Hide();
+
+        AllRevealed = false;
+        _revealState.Clear();
+    }
 
     /// <summary>Transition to the unlocked state after a recovery unlock (gate is already unlocked).</summary>
     public void MarkUnlocked()
@@ -131,12 +180,51 @@ public partial class PasswordVaultViewModel : ObservableObject
     {
         IsUnlocked = unlocked;
         IsLocked = !unlocked;
+        if (unlocked)
+            StartLockTimer();
+        else
+        {
+            AllRevealed = false;
+            StopLockTimer();
+        }
     }
+
+    private void StartLockTimer()
+    {
+        _lockDeadlineUtc = DateTime.UtcNow.Add(AutoLockTimeout);
+        UpdateLockCountdown();
+        _lockTimer.Start();
+    }
+
+    private void StopLockTimer()
+    {
+        _lockTimer.Stop();
+        UnlockTimerText = string.Empty;
+    }
+
+    private void UpdateLockCountdown()
+    {
+        TimeSpan remaining = _lockDeadlineUtc - DateTime.UtcNow;
+        if (remaining <= TimeSpan.Zero)
+        {
+            ResetToLocked();
+            return;
+        }
+
+        UnlockTimerText = $"Auto-lock in {remaining:mm\\:ss}";
+    }
+
+    public string RevealAllText => AllRevealed ? "Hide all" : "Reveal all";
 
     partial void OnIsSetupModeChanged(bool value)
     {
         OnPropertyChanged(nameof(GateHeading));
         OnPropertyChanged(nameof(GateDescription));
         OnPropertyChanged(nameof(SubmitText));
+    }
+
+    partial void OnAllRevealedChanged(bool value)
+    {
+        OnPropertyChanged(nameof(RevealAllText));
     }
 }

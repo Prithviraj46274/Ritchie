@@ -65,7 +65,8 @@ public partial class ReportsPage : Page
 
         try
         {
-            ReportContent content = Vm.BuildForExport(unmask);
+            var revealState = services.GetRequiredService<IVaultRevealStateService>();
+            ReportContent content = Vm.BuildForExport(unmask, revealState.GetRevealedEntryIds());
             var exporter = services.GetRequiredService<IReportExporter>();
             byte[] bytes = format switch
             {

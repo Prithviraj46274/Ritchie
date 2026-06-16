@@ -80,6 +80,8 @@ public partial class PasswordVaultPage : Page
             Vm.Reload();
     }
 
+    private void OnRevealAll(object sender, RoutedEventArgs e) => Vm.ToggleRevealAll();
+
     private void OnAccountLinkClick(object sender, RoutedEventArgs e)
     {
         if (sender is Hyperlink { Tag: string url } && !UrlLauncher.TryOpen(url))

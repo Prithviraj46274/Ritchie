@@ -49,7 +49,7 @@ public partial class ReportsViewModel : ObservableObject
     /// <summary>Builds a masked preview and refreshes the section toggles.</summary>
     public void GeneratePreview()
     {
-        ReportContent content = _reports.Build(Request(unmasked: false));
+        ReportContent content = _reports.Build(Request(unmasked: false, revealedVaultEntryIds: null));
         Sections = new ObservableCollection<SectionToggle>(
             content.Sections.Select(s => new SectionToggle { Heading = s.Heading }));
         PreviewText = Render(content);
@@ -57,9 +57,9 @@ public partial class ReportsViewModel : ObservableObject
     }
 
     /// <summary>Builds the report for export, honouring the section checkboxes and unmask choice.</summary>
-    public ReportContent BuildForExport(bool unmasked)
+    public ReportContent BuildForExport(bool unmasked, IReadOnlyCollection<Guid>? revealedVaultEntryIds = null)
     {
-        ReportContent content = _reports.Build(Request(unmasked));
+        ReportContent content = _reports.Build(Request(unmasked, revealedVaultEntryIds));
         var included = Sections.Where(s => s.IsIncluded).Select(s => s.Heading).ToHashSet();
         if (included.Count == 0)
             return content;   // no preview / nothing toggled → include everything
@@ -70,7 +70,8 @@ public partial class ReportsViewModel : ObservableObject
     public string SuggestedFileName(string extension) =>
         $"richie-{SelectedType.ToString().ToLowerInvariant()}-{DateTime.Now:yyyyMMdd}.{extension}";
 
-    private ReportRequest Request(bool unmasked) => new(SelectedType, FromDate, ToDate, unmasked);
+    private ReportRequest Request(bool unmasked, IReadOnlyCollection<Guid>? revealedVaultEntryIds) =>
+        new(SelectedType, FromDate, ToDate, unmasked, revealedVaultEntryIds);
 
     private static string Render(ReportContent content)
     {

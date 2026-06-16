@@ -51,7 +51,7 @@ public sealed class ReportService : IReportService
                 sections.AddRange(ExpenseSections(request));
                 break;
             case ReportType.Vault:
-                sections.Add(VaultSection(request.IncludeUnmaskedPasswords));
+                sections.Add(VaultSection(request.IncludeUnmaskedPasswords, request.RevealedVaultEntryIds));
                 break;
             case ReportType.Insurance:
                 sections.AddRange(InsuranceSections());
@@ -60,7 +60,7 @@ public sealed class ReportService : IReportService
                 sections.AddRange(AssetSections());
                 sections.AddRange(ExpenseSections(request));
                 sections.AddRange(InsuranceSections());
-                sections.Add(VaultSection(request.IncludeUnmaskedPasswords));
+                sections.Add(VaultSection(request.IncludeUnmaskedPasswords, request.RevealedVaultEntryIds));
                 break;
         }
 
@@ -151,21 +151,36 @@ public sealed class ReportService : IReportService
                 bySource.Select(s => (IReadOnlyList<string>)[s.Source, Money(s.Amount)]).ToList()));
     }
 
-    private ReportSection VaultSection(bool unmasked)
+    private ReportSection VaultSection(bool unmasked, IReadOnlyCollection<Guid>? revealedEntryIds)
     {
         IReadOnlyList<VaultEntrySummary> entries = _vault.GetEntries();
         var rows = entries.Select(e => (IReadOnlyList<string>)
         [
-            e.AccountName, e.Category ?? "", e.LoginId ?? "",
-            unmasked ? _vault.RevealPassword(e.Id) ?? "" : Masked
+            AccountCell(e), e.Category ?? "", e.LoginId ?? "",
+            PasswordCell(e, unmasked, revealedEntryIds)
         ]).ToList();
 
         return new ReportSection("Vault accounts",
             unmasked
                 ? ["Passwords are shown UNMASKED — handle this export securely."]
-                : ["Passwords are masked."],
+                : ["Passwords are masked unless currently revealed on the vault page."],
             new ReportTable(["Account", "Category", "User ID", "Password"], rows));
     }
+
+    private string PasswordCell(VaultEntrySummary entry, bool unmasked, IReadOnlyCollection<Guid>? revealedEntryIds)
+    {
+        if (unmasked)
+            return _vault.RevealPassword(entry.Id) ?? "";
+
+        if (revealedEntryIds is { Count: > 0 } and var ids && ids.Contains(entry.Id))
+            return _vault.RevealPassword(entry.Id) ?? Masked;
+
+        return Masked;
+    }
+
+    private static string AccountCell(VaultEntrySummary entry) =>
+        string.IsNullOrWhiteSpace(entry.Url) ? entry.AccountName :
+        $"{entry.AccountName} ({entry.Url})";
 
     private IEnumerable<ReportSection> InsuranceSections()
     {

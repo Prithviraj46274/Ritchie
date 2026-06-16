@@ -23,8 +23,14 @@ public partial class ExportPage : Page
     private void Export(string format)
     {
         var services = ((App)System.Windows.Application.Current).Services;
+        var revealState = services.GetRequiredService<IVaultRevealStateService>();
         ReportContent content = services.GetRequiredService<IReportService>()
-            .Build(new ReportRequest(ReportType.FullPortfolio, null, null, IncludeUnmaskedPasswords: false));
+            .Build(new ReportRequest(
+                ReportType.FullPortfolio,
+                null,
+                null,
+                IncludeUnmaskedPasswords: false,
+                RevealedVaultEntryIds: revealState.GetRevealedEntryIds()));
 
         var exporter = services.GetRequiredService<IReportExporter>();
         byte[] bytes = format switch

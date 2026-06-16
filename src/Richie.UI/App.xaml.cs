@@ -117,6 +117,7 @@ public partial class App : System.Windows.Application
                 services.AddTransient<Views.Insurance.InsuranceWindow>();
                 services.AddTransient<Views.Insurance.AddEditInsuranceWindow>();
 
+                services.AddSingleton<IVaultRevealStateService, VaultRevealStateService>();
                 services.AddHostedService<Infrastructure.Assets.SipProcessingService>();
                 services.AddHostedService<Infrastructure.Expenses.RecurringExpenseProcessingService>();
                 services.AddHostedService<Infrastructure.Insurance.InsuranceRenewalProcessingService>();
