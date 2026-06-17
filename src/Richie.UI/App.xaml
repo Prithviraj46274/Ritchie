@@ -23,6 +23,7 @@
                 <GradientStop Color="#E6CF97" Offset="1" />
             </LinearGradientBrush>
 
+
             <!-- Professional Dracula-inspired Dark Mode Colors -->
             <SolidColorBrush x:Key="DarkModeBackgroundBrush" Color="#1E1E2E" />
             <SolidColorBrush x:Key="DarkModeCardBrush" Color="#282A36" />
