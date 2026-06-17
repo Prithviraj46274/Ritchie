@@ -24,6 +24,16 @@
             </LinearGradientBrush>
 
 
+            <!-- Professional Dracula-inspired Dark Mode Colors -->
+            <SolidColorBrush x:Key="DarkModeBackgroundBrush" Color="#1E1E2E" />
+            <SolidColorBrush x:Key="DarkModeCardBrush" Color="#282A36" />
+            <SolidColorBrush x:Key="DarkModeSecondaryCardBrush" Color="#313244" />
+            <SolidColorBrush x:Key="DarkModeTextBrush" Color="#F8F8F2" />
+            <SolidColorBrush x:Key="DarkModeSecondaryTextBrush" Color="#E0E0E0" />
+            <SolidColorBrush x:Key="DarkModeTertiaryTextBrush" Color="#B0B0B0" />
+            <SolidColorBrush x:Key="DarkModeBorderBrush" Color="#44475A" />
+            <SolidColorBrush x:Key="DarkModeHoverBrush" Color="#3A3D48" />
+=======
             <!-- Warm Dark Mode Colors (not pure black, with orange undertones) -->
             <SolidColorBrush x:Key="DarkModeBackgroundBrush" Color="#2A2416" />
             <SolidColorBrush x:Key="DarkModeCardBrush" Color="#3A3228" />
@@ -33,6 +43,7 @@
             <SolidColorBrush x:Key="DarkModeTertiaryTextBrush" Color="#B8AFA0" />
             <SolidColorBrush x:Key="DarkModeBorderBrush" Color="#524A3E" />
             <SolidColorBrush x:Key="DarkModeHoverBrush" Color="#4A4236" />
+>>>>>>> 838b956 (Updated dashboard expense breakdown graph and UI improvements)
 
             <!-- Primary Button Colors (Soft Golden Orange) -->
             <SolidColorBrush x:Key="DarkModeButtonPrimaryBrush" Color="#E6A756" />
@@ -40,6 +51,7 @@
             <SolidColorBrush x:Key="DarkModeButtonSecondaryBrush" Color="#FFFFFF" />
             <SolidColorBrush x:Key="DarkModeButtonSecondaryHoverBrush" Color="#F8F4EC" />
 
+>>>>>>> Stashed changes
             <!-- Sidebar Colors -->
             <SolidColorBrush x:Key="SidebarBackgroundBrush" Color="#FFFFFF" />
             <SolidColorBrush x:Key="SidebarSelectedItemBrush" Color="#FFF3E3" />
