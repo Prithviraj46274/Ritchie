@@ -218,6 +218,7 @@
                         <lvc:CartesianChart Height="220" Series="{Binding IncomeExpenseSeries}"
                                             XAxes="{Binding IncomeExpenseAxes}"
                                             YAxes="{Binding IncomeExpenseYAxes}"
+                                            LegendTextPaint="{DynamicResource ChartLegendTextPaint}"
                                             LegendPosition="Bottom" />
                     </StackPanel>
                 </ui:Card>
@@ -259,24 +260,9 @@
                     <StackPanel>
                         <ui:TextBlock FontTypography="BodyStrong" Text="Expense breakdown" />
                         <ui:TextBlock Appearance="Secondary" FontTypography="Caption" Text="This month" Margin="0,0,0,8" />
-                       <lvc:CartesianChart Height="220" Series="{Binding ExpenseBreakdownSeries}"
-                                            YAxes="{Binding ExpenseBreakdownAxes}"
-                                            XAxes="{Binding ExpenseBreakdownYAxes}" />
-                        <ItemsControl ItemsSource="{Binding ExpenseBreakdownLegend}" Margin="0,8,0,0">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,12,0" VerticalAlignment="Center">
-                                        <Border Width="12" Height="12" Background="{Binding Swatch}" CornerRadius="2" Margin="0,0,6,0" />
-                                        <ui:TextBlock Appearance="Secondary" FontTypography="Caption" Text="{Binding Label}" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                        <lvc:CartesianChart Height="220" Series="{Binding ExpenseBreakdownSeries}"
+                                            XAxes="{Binding ExpenseBreakdownAxes}"
+                                            YAxes="{Binding ExpenseBreakdownYAxes}" />
                     </StackPanel>
                 </ui:Card>
             </Grid>

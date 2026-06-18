@@ -52,19 +52,20 @@
                             </ui:TextBlock.Style>
                         </ui:TextBlock>
                         <lvc:PieChart Series="{Binding CategorySeries}" LegendPosition="Right"
+                                      LegendTextPaint="{DynamicResource ChartLegendTextPaint}"
                                       Visibility="{Binding HasCategoryData, Converter={StaticResource BoolToVis}}" />
                     </Grid>
                 </ui:Card>
 
 <ui:TextBlock FontTypography="BodyStrong" Text="Monthly spending (last 12 months)" Margin="0,0,0,8" />
                 <ui:Card Margin="0,0,0,16">
-                    <lvc:CartesianChart Height="220" Series="{Binding MonthlySeries}" XAxes="{Binding MonthlyAxes}" />
+                    <lvc:CartesianChart Height="220" Series="{Binding MonthlySeries}" XAxes="{Binding MonthlyAxes}" YAxes="{Binding MonthlyYAxes}" />
                 </ui:Card>
 
                 <ui:TextBlock FontTypography="BodyStrong" Text="Yearly spending" Margin="0,0,0,8" />
                 <ui:Card Margin="0,0,0,16"
                          Visibility="{Binding HasYearlyData, Converter={StaticResource BoolToVis}}">
-                    <lvc:CartesianChart Height="200" Series="{Binding YearlySeries}" XAxes="{Binding YearlyAxes}" />
+                    <lvc:CartesianChart Height="200" Series="{Binding YearlySeries}" XAxes="{Binding YearlyAxes}" YAxes="{Binding YearlyYAxes}" />
                 </ui:Card>
 
                 <!-- Budgets -->

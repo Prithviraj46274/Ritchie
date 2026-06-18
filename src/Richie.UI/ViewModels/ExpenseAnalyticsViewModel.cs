@@ -40,8 +40,10 @@ public partial class ExpenseAnalyticsViewModel : ObservableObject
     [ObservableProperty] private bool _hasCategoryData;
     [ObservableProperty] private ISeries[] _monthlySeries = [];
     [ObservableProperty] private Axis[] _monthlyAxes = [];
+    [ObservableProperty] private Axis[] _monthlyYAxes = [];
     [ObservableProperty] private ISeries[] _yearlySeries = [];
     [ObservableProperty] private Axis[] _yearlyAxes = [];
+    [ObservableProperty] private Axis[] _yearlyYAxes = [];
     [ObservableProperty] private bool _hasYearlyData;
     [ObservableProperty] private ObservableCollection<BudgetEditRow> _budgetRows = [];
 
@@ -88,7 +90,8 @@ public partial class ExpenseAnalyticsViewModel : ObservableObject
         IReadOnlyList<PeriodDatum> data = _analytics.GetMonthlyTotals(12);
         MonthlySeries = [new ColumnSeries<double>
             { Values = data.Select(d => (double)d.Amount).ToArray(), Name = "Spend", Fill = BrandPalette.Solid(BrandPalette.Primary) }];
-        MonthlyAxes = [new Axis { Labels = data.Select(d => d.Label).ToArray(), LabelsRotation = 0 }];
+        MonthlyAxes = [new Axis { Labels = data.Select(d => d.Label).ToArray(), LabelsRotation = 0, LabelsPaint = BrandPalette.ChartAxesLabelPaint, SeparatorsPaint = BrandPalette.ChartGridLinesPaint }];
+        MonthlyYAxes = [new Axis { LabelsPaint = BrandPalette.ChartAxesLabelPaint, SeparatorsPaint = BrandPalette.ChartGridLinesPaint }];
     }
 
     private void BuildYearly()
@@ -97,7 +100,8 @@ public partial class ExpenseAnalyticsViewModel : ObservableObject
         HasYearlyData = data.Count > 0;
         YearlySeries = [new ColumnSeries<double>
             { Values = data.Select(d => (double)d.Amount).ToArray(), Name = "Spend", Fill = BrandPalette.Solid(BrandPalette.Primary) }];
-        YearlyAxes = [new Axis { Labels = data.Select(d => d.Label).ToArray(), LabelsRotation = 0 }];
+        YearlyAxes = [new Axis { Labels = data.Select(d => d.Label).ToArray(), LabelsRotation = 0, LabelsPaint = BrandPalette.ChartAxesLabelPaint, SeparatorsPaint = BrandPalette.ChartGridLinesPaint }];
+        YearlyYAxes = [new Axis { LabelsPaint = BrandPalette.ChartAxesLabelPaint, SeparatorsPaint = BrandPalette.ChartGridLinesPaint }];
     }
 
     private void BuildBudgets()

@@ -56,7 +56,6 @@ public partial class DashboardViewModel : ObservableObject
     [ObservableProperty] private ISeries[] _expenseBreakdownSeries = [];
     [ObservableProperty] private Axis[] _expenseBreakdownAxes = [];
     [ObservableProperty] private Axis[] _expenseBreakdownYAxes = [];
-    [ObservableProperty] private ObservableCollection<AllocationLegendItem> _expenseBreakdownLegend = [];
 
     // Hero greeting (top of the dashboard).
     [ObservableProperty] private string _heroDateText = string.Empty;
@@ -72,9 +71,19 @@ public partial class DashboardViewModel : ObservableObject
     [ObservableProperty] private bool _hasActivity;
     [ObservableProperty] private bool _noActivity;
 
-    private static readonly Brush Red = new SolidColorBrush(Color.FromRgb(0xFF, 0xB3, 0x66));       // Light Orange for losses/critical
-    private static readonly Brush Orange = new SolidColorBrush(Color.FromRgb(0xE6, 0xA7, 0x56));   // Orange for 60-79 health
-    private static readonly Brush Green = new SolidColorBrush(Color.FromRgb(0x57, 0xB8, 0x94));
+    private static bool IsDarkMode => Wpf.Ui.Appearance.ApplicationThemeManager.GetAppTheme() == Wpf.Ui.Appearance.ApplicationTheme.Dark;
+
+    private static Brush Red => IsDarkMode 
+        ? new SolidColorBrush(Color.FromRgb(0xEF, 0x44, 0x44)) 
+        : new SolidColorBrush(Color.FromRgb(0xC4, 0x2B, 0x1C));
+
+    private static Brush Amber => IsDarkMode 
+        ? new SolidColorBrush(Color.FromRgb(0xF5, 0x9E, 0x0B)) 
+        : new SolidColorBrush(Color.FromRgb(0x9D, 0x5D, 0x00));
+
+    private static Brush Green => IsDarkMode 
+        ? new SolidColorBrush(Color.FromRgb(0x22, 0xC5, 0x5E)) 
+        : new SolidColorBrush(Color.FromRgb(0x0F, 0x7B, 0x0F));
 
     public DashboardViewModel(IDashboardService dashboard, IAssetService assets,
         IExpenseAnalyticsService analytics, IIncomeService income, IUserSession session)
@@ -135,48 +144,12 @@ public partial class DashboardViewModel : ObservableObject
         // built-in legend overflowing it.
         AllocationLegend = new ObservableCollection<AllocationLegendItem>(
             allocation.Select((a, i) => new AllocationLegendItem($"{a.TypeName}  {a.Percent:0.#}%", BrandPalette.MediaBrush(i))));
-
-            // Income vs Expense — grouped column chart (Income vs Expense per month).
-            IReadOnlyList<PeriodDatum> income = _income.GetMonthlyTotals(9);
-            IReadOnlyList<PeriodDatum> expense = _analytics.GetMonthlyTotals(9);
-
-            // Ensure both series have the same length (pad with zeros if needed) so grouped bars align.
-            int len = Math.Max(income.Count, expense.Count);
-            double[] incomeValues = new double[len];
-            double[] expenseValues = new double[len];
-            for (int i = 0; i < len; i++)
-            {
-                incomeValues[i] = i < income.Count ? (double)income[i].Amount : 0.0;
-                expenseValues[i] = i < expense.Count ? (double)expense[i].Amount : 0.0;
-            }
-
-            IncomeExpenseSeries = new ISeries[]
-            {
-                new ColumnSeries<double>
-                {
-                    Name = "Income",
-                    Values = incomeValues,
-                    Fill = new SolidColorPaint(BrandPalette.Success),
-                    MaxBarWidth = 48
-                },
-                new ColumnSeries<double>
-                {
-                    Name = "Expense",
-                    Values = expenseValues,
-                    Fill = new SolidColorPaint(BrandPalette.Danger),
-                    MaxBarWidth = 48
-                }
-            };
-
-            // X axis: use consistent MMM-yyyy format (e.g., Oct-2025)
-            var xLabels = income.Select(d => FormatMonthLabel(d.Label)).ToArray();
-            if (xLabels.Length == 0 && expense.Count > 0)
-                xLabels = expense.Select(d => FormatMonthLabel(d.Label)).ToArray();
-
-            IncomeExpenseAxes = new Axis[] { new Axis { Labels = xLabels, LabelsRotation = 0 } };
-
-            // Y axis: compact formatting, start at zero to avoid large empty areas and improve scaling
-            IncomeExpenseYAxes = new Axis[] { new Axis { Labeler = FormatCompactNumber, MinLimit = 0 } };
+        // Income vs Expense — filled area trend over the last 9 months.
+        IReadOnlyList<PeriodDatum> income = _income.GetMonthlyTotals(9);
+        IReadOnlyList<PeriodDatum> expense = _analytics.GetMonthlyTotals(9);
+        IncomeExpenseSeries = [Area("Income", income, BrandPalette.Success), Area("Expense", expense, BrandPalette.Danger)];
+        IncomeExpenseAxes = [new Axis { Labels = income.Select(d => d.Label).ToArray(), LabelsRotation = 0, LabelsPaint = BrandPalette.ChartAxesLabelPaint, SeparatorsPaint = BrandPalette.ChartGridLinesPaint }];
+        IncomeExpenseYAxes = [new Axis { LabelsPaint = BrandPalette.ChartAxesLabelPaint, SeparatorsPaint = BrandPalette.ChartGridLinesPaint }];
 
         // Investment growth — invested capital over time (line + period-growth badge).
         InvestmentSeries = new ISeries[]
@@ -192,11 +165,10 @@ public partial class DashboardViewModel : ObservableObject
                 Fill = null,
                 LineSmoothness = 0.5
             }
-        };
-        
-            InvestmentAxes = new Axis[] { new Axis { Labels = s.InvestedHistory.Select(d => FormatMonthLabel(d.Label)).ToArray() } };
-            InvestmentYAxes = new Axis[] { new Axis { Labeler = FormatCompactNumber, MinLimit = 0 } };
-            InvestmentGrowthText = $"{(s.InvestedGrowthPercent >= 0 ? "▲ +" : "▼ ")}{s.InvestedGrowthPercent:0.#}% YoY";
+        ];
+        InvestmentAxes = [new Axis { Labels = s.InvestedHistory.Select(d => d.Label).ToArray(), LabelsPaint = BrandPalette.ChartAxesLabelPaint, SeparatorsPaint = BrandPalette.ChartGridLinesPaint }];
+        InvestmentYAxes = [new Axis { LabelsPaint = BrandPalette.ChartAxesLabelPaint, SeparatorsPaint = BrandPalette.ChartGridLinesPaint }];
+        InvestmentGrowthText = $"{(s.InvestedGrowthPercent >= 0 ? "▲ +" : "▼ ")}{s.InvestedGrowthPercent:0.#}% YoY";
 
         // Expense breakdown — this month's spend by category (horizontal bar chart for better space efficiency).
         var categories = _analytics.GetCategoryDistribution(AnalyticsPeriod.ThisMonth)
@@ -233,37 +205,13 @@ public partial class DashboardViewModel : ObservableObject
             
             rowSeries.Add(new RowSeries<double>
             {
-                Name = category.CategoryName,
-                Values = new[] { (double)category.Amount },
-                Fill = new SolidColorPaint(skColor),
-                MaxBarWidth = 24,
-                DataLabelsPosition = DataLabelsPosition.End,
-                DataLabelsFormatter = (point) => FormatCompactNumber(point.Coordinate.PrimaryValue)
-            });
-        }
-
-        ExpenseBreakdownSeries = rowSeries.ToArray();
-
-        // Y axis: category labels (no rotation needed for horizontal bars)
-        ExpenseBreakdownAxes = new Axis[] { new Axis { Labels = categoryLabels.ToArray() } };
-
-        // X axis: compact formatting for values, start at zero
-        ExpenseBreakdownYAxes = new Axis[] { new Axis { Labeler = FormatCompactNumber, MinLimit = 0 } };
-
-        // Build legend with the same category colors
-        ExpenseBreakdownLegend = new ObservableCollection<AllocationLegendItem>(
-            categories.Select((c, i) =>
-            {
-                var hexColor = colorMap.ContainsKey(c.CategoryName)
-                    ? colorMap[c.CategoryName]
-                    : "#9E9E9E";
-                
-                var brush = new System.Windows.Media.SolidColorBrush(
-                    (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(hexColor));
-                brush.Freeze();
-                return new AllocationLegendItem(c.CategoryName, brush);
-            }));
-        
+                Name = "Spend",
+                Values = categories.Select(c => (double)c.Amount).ToArray(),
+                Fill = new SolidColorPaint(BrandPalette.Primary)
+            }
+        ];
+        ExpenseBreakdownAxes = [new Axis { Labels = categories.Select(c => c.CategoryName).ToArray(), LabelsRotation = 20, LabelsPaint = BrandPalette.ChartAxesLabelPaint, SeparatorsPaint = BrandPalette.ChartGridLinesPaint }];
+        ExpenseBreakdownYAxes = [new Axis { LabelsPaint = BrandPalette.ChartAxesLabelPaint, SeparatorsPaint = BrandPalette.ChartGridLinesPaint }];
     }
 
     private static LineSeries<double> Area(string name, IReadOnlyList<PeriodDatum> data, SKColor color) => new()

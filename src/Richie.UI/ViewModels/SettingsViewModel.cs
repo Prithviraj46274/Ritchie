@@ -8,6 +8,8 @@ using Richie.Application.Settings;
 using Richie.Domain.Notifications;
 using Richie.UI.Services;
 using Wpf.Ui.Appearance;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 
 namespace Richie.UI.ViewModels;
 
@@ -105,6 +107,84 @@ public partial class SettingsViewModel : ObservableObject
 
         // ApplicationThemeManager.Apply resets the accent to the system accent, so re-brand afterwards.
         ApplyBrandAccent();
+        ApplyThemeOverrides(actualTheme);
+    }
+
+    public static void ApplyThemeOverrides(string theme)
+    {
+        if (System.Windows.Application.Current is null) return;
+        
+        bool isDark = theme == "Dark";
+        var resources = System.Windows.Application.Current.Resources;
+
+        if (isDark)
+        {
+            // Softer primary, secondary and tertiary text colors for Dark Mode to avoid high contrast look
+            resources["TextFillColorPrimaryBrush"] = new SolidColorBrush(Color.FromRgb(0xE2, 0xE8, 0xF0));
+            resources["TextFillColorSecondaryBrush"] = new SolidColorBrush(Color.FromRgb(0x94, 0xA3, 0xB8));
+            resources["TextFillColorTertiaryBrush"] = new SolidColorBrush(Color.FromRgb(0x64, 0x74, 0x8B));
+
+            // Status foreground colors
+            resources["StatusTealBrush"] = new SolidColorBrush(Color.FromRgb(0x2D, 0xD4, 0xBF));
+            resources["StatusOrangeBrush"] = new SolidColorBrush(Color.FromRgb(0xFB, 0x92, 0x3C));
+            resources["StatusAmberBrush"] = new SolidColorBrush(Color.FromRgb(0xF5, 0x9E, 0x0B));
+            resources["StatusBlueBrush"] = new SolidColorBrush(Color.FromRgb(0x60, 0xA5, 0xFA));
+
+            // Badge text color
+            resources["BadgeTextBrush"] = new SolidColorBrush(Color.FromRgb(0x1E, 0x1E, 0x2E));
+
+            // Profit & Loss colors
+            resources["ProfitLossPositiveBrush"] = new SolidColorBrush(Color.FromRgb(0x2D, 0xD4, 0xBF));
+            resources["ProfitLossNegativeBrush"] = new SolidColorBrush(Color.FromRgb(0xFB, 0x92, 0x3C));
+            resources["ProfitLossPositiveBgBrush"] = new SolidColorBrush(Color.FromArgb(0x1A, 0x2D, 0xD4, 0xBF));
+            resources["ProfitLossNegativeBgBrush"] = new SolidColorBrush(Color.FromArgb(0x1A, 0xFB, 0x92, 0x3C));
+
+            // Success cards colors
+            resources["SuccessCardBackgroundBrush"] = new SolidColorBrush(Color.FromArgb(0x1A, 0x22, 0xC5, 0x5E));
+            resources["SuccessCardBorderBrush"] = new SolidColorBrush(Color.FromArgb(0x33, 0x22, 0xC5, 0x5E));
+            resources["SuccessCardTextBrush"] = new SolidColorBrush(Color.FromRgb(0x4A, 0xDE, 0x80));
+            resources["SuccessCardSubTextBrush"] = new SolidColorBrush(Color.FromRgb(0xA7, 0xF3, 0xD0));
+
+            // Lighter Blue brush
+            resources["LighterBlueBrush"] = new SolidColorBrush(Color.FromRgb(0x60, 0xA5, 0xFA));
+
+            // Chart legend text color paint
+            resources["ChartLegendTextPaint"] = new SolidColorPaint(SKColor.Parse("#E2E8F0")) { SKTypeface = SKTypeface.FromFamilyName("Arial") };
+        }
+        else
+        {
+            // Remove overrides in Light Mode to fallback to default Light Mode resource dictionary values
+            resources.Remove("TextFillColorPrimaryBrush");
+            resources.Remove("TextFillColorSecondaryBrush");
+            resources.Remove("TextFillColorTertiaryBrush");
+
+            // Status colors
+            resources["StatusTealBrush"] = new SolidColorBrush(Color.FromRgb(0x0F, 0x76, 0x6E));
+            resources["StatusOrangeBrush"] = new SolidColorBrush(Color.FromRgb(0xEA, 0x58, 0x0C));
+            resources["StatusAmberBrush"] = new SolidColorBrush(Color.FromRgb(0x9D, 0x5D, 0x00));
+            resources["StatusBlueBrush"] = new SolidColorBrush(Color.FromRgb(0x25, 0x63, 0xEB));
+
+            // Badge text color
+            resources["BadgeTextBrush"] = Brushes.White;
+
+            // Profit & Loss colors
+            resources["ProfitLossPositiveBrush"] = new SolidColorBrush(Color.FromRgb(0x0F, 0x76, 0x6E));
+            resources["ProfitLossNegativeBrush"] = new SolidColorBrush(Color.FromRgb(0xEA, 0x58, 0x0C));
+            resources["ProfitLossPositiveBgBrush"] = new SolidColorBrush(Color.FromRgb(0xCC, 0xFB, 0xF1));
+            resources["ProfitLossNegativeBgBrush"] = new SolidColorBrush(Color.FromRgb(0xFF, 0xED, 0xD5));
+
+            // Success cards colors
+            resources["SuccessCardBackgroundBrush"] = new SolidColorBrush(Color.FromRgb(0xF0, 0xFD, 0xF4));
+            resources["SuccessCardBorderBrush"] = new SolidColorBrush(Color.FromRgb(0xDC, 0xFC, 0xE7));
+            resources["SuccessCardTextBrush"] = new SolidColorBrush(Color.FromRgb(0x14, 0x53, 0x2D));
+            resources["SuccessCardSubTextBrush"] = new SolidColorBrush(Color.FromRgb(0x16, 0x65, 0x34));
+
+            // Lighter Blue brush
+            resources["LighterBlueBrush"] = new SolidColorBrush(Color.FromRgb(0x25, 0x63, 0xEB));
+
+            // Chart legend text color paint
+            resources["ChartLegendTextPaint"] = new SolidColorPaint(SKColor.Parse("#475569")) { SKTypeface = SKTypeface.FromFamilyName("Arial") };
+        }
     }
 
     /// <summary>Applies a professional brand accent across the app (buttons, nav highlight, focus rings).</summary>

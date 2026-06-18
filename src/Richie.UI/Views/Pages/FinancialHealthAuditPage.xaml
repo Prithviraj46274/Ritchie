@@ -117,7 +117,7 @@
                                     <ItemsControl ItemsSource="{Binding HealthFactors}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Border BorderBrush="#E2E8F0" BorderThickness="0,0,0,1" Margin="0,0,0,8" Padding="0,0,0,8">
+                                                <Border BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" BorderThickness="0,0,0,1" Margin="0,0,0,8" Padding="0,0,0,8">
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="*" />
@@ -155,7 +155,7 @@
 
                                 <!-- Benchmark Chart (Left Side) -->
                                 <Grid Grid.Column="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                                    <lvc:CartesianChart Series="{Binding BenchmarkComparisonSeries}" XAxes="{Binding BenchmarkComparisonAxes}" LegendPosition="Bottom" />
+                                    <lvc:CartesianChart Series="{Binding BenchmarkComparisonSeries}" XAxes="{Binding BenchmarkComparisonAxes}" YAxes="{Binding BenchmarkComparisonYAxes}" LegendTextPaint="{DynamicResource ChartLegendTextPaint}" LegendPosition="Bottom" />
                                 </Grid>
 
                                 <!-- Benchmark Table (Right Side) -->
@@ -230,7 +230,7 @@
 
                             <!-- Dynamic compliance badge color -->
                             <Border Padding="8,6" CornerRadius="8" Background="{Binding ComplianceBrush}" HorizontalAlignment="Stretch">
-                                <ui:TextBlock FontTypography="BodyStrong" Foreground="White" Text="{Binding ComplianceOverall}" TextWrapping="Wrap" />
+                                <ui:TextBlock FontTypography="BodyStrong" Foreground="{DynamicResource BadgeTextBrush}" Text="{Binding ComplianceOverall}" TextWrapping="Wrap" />
                             </Border>
 
                             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" MaxHeight="120" Margin="0,8,0,0">
@@ -249,7 +249,7 @@
                                                 </StackPanel>
 
                                                 <Border Grid.Column="1" Padding="4,2" CornerRadius="6" Background="{Binding StatusBrush}" VerticalAlignment="Top" Margin="4,0,0,0">
-                                                    <ui:TextBlock FontTypography="Caption" Foreground="White" Text="{Binding StatusText}" TextWrapping="Wrap" />
+                                                    <ui:TextBlock FontTypography="Caption" Foreground="{DynamicResource BadgeTextBrush}" Text="{Binding StatusText}" TextWrapping="Wrap" />
                                                 </Border>
                                             </Grid>
                                         </DataTemplate>

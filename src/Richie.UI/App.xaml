@@ -2,7 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Richie.UI"
-             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -11,11 +12,26 @@
                 <ResourceDictionary Source="Resources/DarkModeTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <!-- Brand semantic brushes (status triad). green = good, orange shades for all states. -->
-            <SolidColorBrush x:Key="BrandSuccessBrush" Color="#57B894" />
-            <SolidColorBrush x:Key="BrandWarningBrush" Color="#E6A756" />
-            <SolidColorBrush x:Key="BrandDangerBrush" Color="#FFB366" />
-            <SolidColorBrush x:Key="BrandPrimaryBrush" Color="#E6A756" />
+
+            <!-- Set all charts to have transparent background by default -->
+            <Style TargetType="lvc:CartesianChart">
+                <Setter Property="Background" Value="Transparent" />
+            </Style>
+            <Style TargetType="lvc:PieChart">
+                <Setter Property="Background" Value="Transparent" />
+            </Style>
+            <Style TargetType="lvc:PolarChart">
+                <Setter Property="Background" Value="Transparent" />
+            </Style>
+
+            <!-- Brand semantic brushes (status triad). green = good, amber = attention, red = critical. -->
+            <SolidColorBrush x:Key="BrandSuccessBrush" Color="#1FA56C" />
+            <SolidColorBrush x:Key="BrandWarningBrush" Color="#DE9326" />
+            <SolidColorBrush x:Key="BrandDangerBrush" Color="#CE2E20" />
+            <SolidColorBrush x:Key="BrandPrimaryBrush" Color="#3B82F6" />
+            <SolidColorBrush x:Key="LighterBlueBrush" Color="#2563EB" />
+
+
 
             <!-- Light app background with subtle orange tint (warm whites). -->
             <LinearGradientBrush x:Key="BrandBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
@@ -23,17 +39,6 @@
                 <GradientStop Color="#FEF5E8" Offset="1" />
             </LinearGradientBrush>
 
-
-            <!-- Professional Dracula-inspired Dark Mode Colors -->
-            <SolidColorBrush x:Key="DarkModeBackgroundBrush" Color="#1E1E2E" />
-            <SolidColorBrush x:Key="DarkModeCardBrush" Color="#282A36" />
-            <SolidColorBrush x:Key="DarkModeSecondaryCardBrush" Color="#313244" />
-            <SolidColorBrush x:Key="DarkModeTextBrush" Color="#F8F8F2" />
-            <SolidColorBrush x:Key="DarkModeSecondaryTextBrush" Color="#E0E0E0" />
-            <SolidColorBrush x:Key="DarkModeTertiaryTextBrush" Color="#B0B0B0" />
-            <SolidColorBrush x:Key="DarkModeBorderBrush" Color="#44475A" />
-            <SolidColorBrush x:Key="DarkModeHoverBrush" Color="#3A3D48" />
-=======
             <!-- Warm Dark Mode Colors (not pure black, with orange undertones) -->
             <SolidColorBrush x:Key="DarkModeBackgroundBrush" Color="#2A2416" />
             <SolidColorBrush x:Key="DarkModeCardBrush" Color="#3A3228" />
@@ -43,7 +48,6 @@
             <SolidColorBrush x:Key="DarkModeTertiaryTextBrush" Color="#B8AFA0" />
             <SolidColorBrush x:Key="DarkModeBorderBrush" Color="#524A3E" />
             <SolidColorBrush x:Key="DarkModeHoverBrush" Color="#4A4236" />
->>>>>>> 838b956 (Updated dashboard expense breakdown graph and UI improvements)
 
             <!-- Primary Button Colors (Soft Golden Orange) -->
             <SolidColorBrush x:Key="DarkModeButtonPrimaryBrush" Color="#E6A756" />
@@ -51,7 +55,6 @@
             <SolidColorBrush x:Key="DarkModeButtonSecondaryBrush" Color="#FFFFFF" />
             <SolidColorBrush x:Key="DarkModeButtonSecondaryHoverBrush" Color="#F8F4EC" />
 
->>>>>>> Stashed changes
             <!-- Sidebar Colors -->
             <SolidColorBrush x:Key="SidebarBackgroundBrush" Color="#FFFFFF" />
             <SolidColorBrush x:Key="SidebarSelectedItemBrush" Color="#FFF3E3" />

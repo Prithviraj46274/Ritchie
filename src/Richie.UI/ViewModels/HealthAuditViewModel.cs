@@ -41,6 +41,7 @@ public partial class HealthAuditViewModel : ObservableObject
     // Benchmark comparison (kept non-null to avoid LiveCharts startup crashes).
     [ObservableProperty] private ISeries[] _benchmarkComparisonSeries = [];
     [ObservableProperty] private Axis[] _benchmarkComparisonAxes = [];
+    [ObservableProperty] private Axis[] _benchmarkComparisonYAxes = [];
 
     [ObservableProperty] private int _riskScore;
     [ObservableProperty] private string _riskBand = string.Empty;
@@ -71,9 +72,19 @@ public partial class HealthAuditViewModel : ObservableObject
         "Interim scoring — the Risk Score, Health Score and age-group benchmarks are placeholder formulas pending team finalization (PRD §22).";
 
     // Visual palette (no red/green allowed on this page).
-    private static readonly Brush Orange = new SolidColorBrush(Color.FromRgb(0xEA, 0x58, 0x0C)); // #EA580C
-    private static readonly Brush Amber = new SolidColorBrush(Color.FromRgb(0xF5, 0x9E, 0x0B));  // #F59E0B
-    private static readonly Brush Teal = new SolidColorBrush(Color.FromRgb(0x0F, 0x76, 0x6E));    // #0F766E
+    private static bool IsDarkMode => Wpf.Ui.Appearance.ApplicationThemeManager.GetAppTheme() == Wpf.Ui.Appearance.ApplicationTheme.Dark;
+
+    private static Brush Orange => IsDarkMode
+        ? new SolidColorBrush(Color.FromRgb(0xFB, 0x92, 0x3C)) 
+        : new SolidColorBrush(Color.FromRgb(0xEA, 0x58, 0x0C)); 
+
+    private static Brush Amber => IsDarkMode
+        ? new SolidColorBrush(Color.FromRgb(0xF5, 0x9E, 0x0B)) 
+        : new SolidColorBrush(Color.FromRgb(0xF5, 0x9E, 0x0B)); 
+
+    private static Brush Blue => IsDarkMode
+        ? new SolidColorBrush(Color.FromRgb(0x60, 0xA5, 0xFA)) 
+        : new SolidColorBrush(Color.FromRgb(0x25, 0x63, 0xEB));
 
 
     public HealthAuditViewModel(IHealthAuditService audit, IComplianceService compliance, IInsightGenerator insights)
@@ -93,8 +104,8 @@ public partial class HealthAuditViewModel : ObservableObject
 
         HealthScore = r.HealthScore;
         HealthRating = r.HealthRating;
-        // Portfolio Health Score: 43/100 (low) should render as Orange, and “Good” as Teal.
-        HealthBrush = r.HealthScore >= 60 ? Teal : Orange;
+        // Portfolio Health Score: 43/100 (low) should render as Orange, and “Good” as Blue.
+        HealthBrush = r.HealthScore >= 60 ? Blue : Orange;
 
         HealthFactors = new ObservableCollection<ScoreFactor>(r.HealthFactors);
         BuildRadar(r.HealthFactors);
@@ -102,8 +113,8 @@ public partial class HealthAuditViewModel : ObservableObject
         RiskScore = r.RiskScore;
         RiskBand = r.RiskBand;
         RiskInterpretation = r.RiskInterpretation;
-        // Risk Score: high-risk should render as Orange; positives as Teal.
-        RiskBrush = r.RiskScore <= 40 ? Teal : r.RiskScore <= 60 ? Amber : Orange;
+        // Risk Score: high-risk should render as Orange; positives as Blue.
+        RiskBrush = r.RiskScore <= 40 ? Blue : r.RiskScore <= 60 ? Amber : Orange;
 
 
         AgeBandName = r.AgeBandName;
@@ -124,7 +135,7 @@ public partial class HealthAuditViewModel : ObservableObject
 
         ComplianceReport c = _complianceService.GetReport();
         ComplianceOverall = c.OverallStatus;
-        ComplianceBrush = c.IsCompliant ? Teal
+        ComplianceBrush = c.IsCompliant ? Blue
             : c.Areas.Any(a => a.Status == ComplianceStatus.Red) ? Orange : Amber;
 
         Compliance = new ObservableCollection<ComplianceDisplay>(c.Areas.Select(ToComplianceDisplay));
@@ -158,7 +169,9 @@ public partial class HealthAuditViewModel : ObservableObject
                     "Goal progress" => "Goals",
                     _ => f.Name
                 }).ToArray(),
-                TextSize = 10
+                TextSize = 10,
+                LabelsPaint = BrandPalette.ChartAxesLabelPaint,
+                SeparatorsPaint = BrandPalette.ChartGridLinesPaint
             }
         ];
         HealthRadarRadiusAxes = [
@@ -166,7 +179,9 @@ public partial class HealthAuditViewModel : ObservableObject
             {
                 MinLimit = 0,
                 MaxLimit = 100,
-                TextSize = 8
+                TextSize = 8,
+                LabelsPaint = BrandPalette.ChartAxesLabelPaint,
+                SeparatorsPaint = BrandPalette.ChartGridLinesPaint
             }
         ];
         HealthRadarDrawMargin = new Margin(15);
@@ -180,13 +195,13 @@ public partial class HealthAuditViewModel : ObservableObject
             {
                 Name = "Recommended %",
                 Values = benchmark.Select(b => (double)b.RecommendedPercent).ToArray(),
-                Fill = new SolidColorPaint(SKColor.Parse("#94A3B8"))
+                Fill = IsDarkMode ? new SolidColorPaint(SKColor.Parse("#475569")) : new SolidColorPaint(SKColor.Parse("#CBD5E1"))
             },
             new ColumnSeries<double>
             {
                 Name = "Mine %",
                 Values = benchmark.Select(b => (double)b.ActualPercent).ToArray(),
-                Fill = new SolidColorPaint(SKColor.Parse("#2563EB"))
+                Fill = new SolidColorPaint(BrandPalette.Primary)
             }
         ];
 
@@ -195,7 +210,18 @@ public partial class HealthAuditViewModel : ObservableObject
             new Axis
             {
                 Labels = benchmark.Select(b => b.ClassName).ToArray(),
-                LabelsRotation = 0
+                LabelsRotation = 0,
+                LabelsPaint = BrandPalette.ChartAxesLabelPaint,
+                SeparatorsPaint = BrandPalette.ChartGridLinesPaint
+            }
+        ];
+
+        BenchmarkComparisonYAxes =
+        [
+            new Axis
+            {
+                LabelsPaint = BrandPalette.ChartAxesLabelPaint,
+                SeparatorsPaint = BrandPalette.ChartGridLinesPaint
             }
         ];
     }
@@ -204,7 +230,7 @@ public partial class HealthAuditViewModel : ObservableObject
     {
         (string text, Brush brush) = area.Status switch
         {
-            ComplianceStatus.Green => ("Good", Teal),
+            ComplianceStatus.Green => ("Good", Blue),
             ComplianceStatus.Amber => ("Needs attention", Amber),
             _ => ("Critical", Orange)
 
@@ -216,7 +242,7 @@ public partial class HealthAuditViewModel : ObservableObject
     {
         (string text, Brush brush) = row.Status switch
         {
-            BenchmarkStatus.OnTarget => ("On target", Teal),
+            BenchmarkStatus.OnTarget => ("On target", Blue),
             // Task requirement: “Over” must be orange (#EA580C), not amber.
             BenchmarkStatus.Over => ("Over", Orange),
             _ => ("Under", Amber)

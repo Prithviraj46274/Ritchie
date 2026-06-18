@@ -26,9 +26,19 @@ public partial class AddEditVaultEntryViewModel : ObservableObject
     [ObservableProperty] private Brush _strengthBrush = Brushes.Transparent;
 
     // Soft status palette (green good / amber attention / red critical) — consistent app-wide.
-    private static readonly Brush Red = new SolidColorBrush(Color.FromRgb(0xC4, 0x2B, 0x1C));
-    private static readonly Brush Amber = new SolidColorBrush(Color.FromRgb(0x9D, 0x5D, 0x00));
-    private static readonly Brush Green = new SolidColorBrush(Color.FromRgb(0x0F, 0x7B, 0x0F));
+    private static bool IsDarkMode => Wpf.Ui.Appearance.ApplicationThemeManager.GetAppTheme() == Wpf.Ui.Appearance.ApplicationTheme.Dark;
+
+    private static Brush Red => IsDarkMode
+        ? new SolidColorBrush(Color.FromRgb(0xEF, 0x44, 0x44))
+        : new SolidColorBrush(Color.FromRgb(0xC4, 0x2B, 0x1C));
+
+    private static Brush Amber => IsDarkMode
+        ? new SolidColorBrush(Color.FromRgb(0xF5, 0x9E, 0x0B))
+        : new SolidColorBrush(Color.FromRgb(0x9D, 0x5D, 0x00));
+
+    private static Brush Green => IsDarkMode
+        ? new SolidColorBrush(Color.FromRgb(0x22, 0xC5, 0x5E))
+        : new SolidColorBrush(Color.FromRgb(0x0F, 0x7B, 0x0F));
 
     public event Action<bool>? CloseRequested;
 

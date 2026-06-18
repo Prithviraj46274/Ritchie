@@ -17,18 +17,35 @@ public partial class AssetDocumentationViewModel : ObservableObject
     private readonly IAssetService _assets;
     private readonly IAssetDocumentService _docs;
 
-    private static readonly string[] AssetPaletteColors =
+    private static bool IsDarkMode => Wpf.Ui.Appearance.ApplicationThemeManager.GetAppTheme() == Wpf.Ui.Appearance.ApplicationTheme.Dark;
+
+    private static readonly string[] LightAssetPaletteColors =
     [
-        "#1E3A8A", // Navy Blue
         "#2563EB", // Royal Blue
-        "#0F766E", // Teal
+        "#D97706", // Amber
         "#7C3AED", // Purple
-        "#F59E0B", // Amber
+        "#EA580C", // Orange
+        "#3B82F6", // Medium Blue
+        "#6D28D9", // Deep Purple
+        "#EAB308", // Yellow
         "#64748B", // Slate
-        "#4F46E5", // Indigo
-        "#0891B2", // Cyan
-        "#4682B4"  // Steel Blue
+        "#4F46E5"  // Indigo
     ];
+
+    private static readonly string[] DarkAssetPaletteColors =
+    [
+        "#818CF8", // Indigo
+        "#F59E0B", // Amber
+        "#A78BFA", // Violet
+        "#FB923C", // Orange
+        "#38BDF8", // Sky Blue
+        "#C084FC", // Purple
+        "#FDE047", // Yellow
+        "#94A3B8", // Slate
+        "#60A5FA"  // Soft Blue
+    ];
+
+    private static string[] AssetPaletteColors => IsDarkMode ? DarkAssetPaletteColors : LightAssetPaletteColors;
 
     private static SKColor GetSkColor(int index)
     {

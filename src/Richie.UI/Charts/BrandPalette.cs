@@ -11,11 +11,36 @@ namespace Richie.UI.Charts;
 /// </summary>
 public static class BrandPalette
 {
-    public static readonly SKColor[] Colors = BrandColors.Categorical.Select(SKColor.Parse).ToArray();
-    public static readonly SKColor Primary = SKColor.Parse(BrandColors.Primary);
-    public static readonly SKColor Success = SKColor.Parse(BrandColors.Success);
-    public static readonly SKColor Warning = SKColor.Parse(BrandColors.Warning);
-    public static readonly SKColor Danger = SKColor.Parse(BrandColors.Danger);
+    public static bool IsDarkMode => Wpf.Ui.Appearance.ApplicationThemeManager.GetAppTheme() == Wpf.Ui.Appearance.ApplicationTheme.Dark;
+
+    private static readonly SKColor[] LightColors = BrandColors.Categorical.Select(SKColor.Parse).ToArray();
+    private static readonly SKColor[] DarkColors = [
+        SKColor.Parse("#818CF8"), // Indigo
+        SKColor.Parse("#F59E0B"), // Amber
+        SKColor.Parse("#A78BFA"), // Violet
+        SKColor.Parse("#FB923C"), // Orange
+        SKColor.Parse("#38BDF8"), // Sky Blue
+        SKColor.Parse("#C084FC"), // Purple
+        SKColor.Parse("#FDE047"), // Yellow
+        SKColor.Parse("#93C5FD"), // Soft Blue
+        SKColor.Parse("#94A3B8"), // Slate
+        SKColor.Parse("#6366F1")  // Indigo Blue
+    ];
+
+    public static SKColor[] Colors => IsDarkMode ? DarkColors : LightColors;
+
+    public static SKColor Primary => IsDarkMode ? SKColor.Parse("#818CF8") : SKColor.Parse(BrandColors.Primary);
+    public static SKColor Success => IsDarkMode ? SKColor.Parse("#2DD4BF") : SKColor.Parse(BrandColors.Success);
+    public static SKColor Warning => IsDarkMode ? SKColor.Parse("#F59E0B") : SKColor.Parse(BrandColors.Warning);
+    public static SKColor Danger => IsDarkMode ? SKColor.Parse("#EF4444") : SKColor.Parse(BrandColors.Danger);
+
+    public static SolidColorPaint ChartAxesLabelPaint => IsDarkMode
+        ? new SolidColorPaint(SKColor.Parse("#FFFFFF")) { SKTypeface = SKTypeface.FromFamilyName("Arial") } // Pure White
+        : new SolidColorPaint(SKColor.Parse("#475569")) { SKTypeface = SKTypeface.FromFamilyName("Arial") }; // Dark slate
+
+    public static SolidColorPaint ChartGridLinesPaint => IsDarkMode
+        ? new SolidColorPaint(SKColor.Parse("#334155")) { StrokeThickness = 1 } // Dark gridline
+        : new SolidColorPaint(SKColor.Parse("#E2E8F0")) { StrokeThickness = 1 }; // Light gridline
 
     public static SKColor At(int index) => Colors[index % Colors.Length];
 

@@ -13,23 +13,6 @@
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <conv:AssetPageProfitLossBrushConverter x:Key="AssetPnlBrush" />
 
-        <!-- Overrides to replace every red accent with Primary: #2563EB -->
-        <Color x:Key="SystemAccentColor">#2563EB</Color>
-        <SolidColorBrush x:Key="SystemAccentColorBrush" Color="#2563EB" />
-        <Color x:Key="SystemAccentColorLight1">#3B82F6</Color>
-        <SolidColorBrush x:Key="SystemAccentColorLight1Brush" Color="#3B82F6" />
-        <Color x:Key="SystemAccentColorLight2">#60A5FA</Color>
-        <SolidColorBrush x:Key="SystemAccentColorLight2Brush" Color="#60A5FA" />
-        <Color x:Key="SystemAccentColorLight3">#93C5FD</Color>
-        <SolidColorBrush x:Key="SystemAccentColorLight3Brush" Color="#93C5FD" />
-        
-        <Color x:Key="SystemAccentColorDark1">#1D4ED8</Color>
-        <SolidColorBrush x:Key="SystemAccentColorDark1Brush" Color="#1D4ED8" />
-        <Color x:Key="SystemAccentColorDark2">#1E40AF</Color>
-        <SolidColorBrush x:Key="SystemAccentColorDark2Brush" Color="#1E40AF" />
-        <Color x:Key="SystemAccentColorDark3">#1E3A8A</Color>
-        <SolidColorBrush x:Key="SystemAccentColorDark3Brush" Color="#1E3A8A" />
-
         <SolidColorBrush x:Key="BrandPrimaryBrush" Color="#2563EB" />
         <SolidColorBrush x:Key="BrandSecondaryBrush" Color="#0F766E" />
         <SolidColorBrush x:Key="BrandAccentBrush" Color="#7C3AED" />
@@ -63,9 +46,9 @@
                                 <Setter TargetName="border" Property="BorderBrush" Value="#1E3A8A" />
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="border" Property="Background" Value="#E2E8F0" />
-                                <Setter TargetName="border" Property="BorderBrush" Value="#E2E8F0" />
-                                <Setter Property="Foreground" Value="#94A3B8" />
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource ControlFillColorDisabledBrush}" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource TextFillColorDisabledBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -128,9 +111,9 @@
             <ui:Card Grid.Column="0" Padding="12" VerticalAlignment="Stretch">
                 <StackPanel>
                     <ui:TextBlock Appearance="Secondary" FontSize="13" FontTypography="Caption" Text="TOTAL PORTFOLIO VALUE" FontWeight="SemiBold" />
-                    <ui:TextBlock FontSize="30" FontWeight="Bold" Margin="0,2,0,4" Text="{Binding TotalCurrentValueText}" Foreground="{StaticResource SystemAccentColorBrush}" />
+                    <ui:TextBlock FontSize="30" FontWeight="Bold" Margin="0,2,0,4" Text="{Binding TotalCurrentValueText}" Foreground="{DynamicResource LighterBlueBrush}" />
                     
-                    <Border BorderThickness="0,1,0,0" BorderBrush="#E2E8F0" Margin="0,4,0,4" />
+                    <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" Margin="0,4,0,4" />
                     
                     <UniformGrid Columns="2">
                         <StackPanel Margin="0,0,4,0">
@@ -155,10 +138,10 @@
                                     <Style TargetType="TextBlock">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding IsProfitLossNegative}" Value="True">
-                                                <Setter Property="Foreground" Value="#EA580C" />
+                                                <Setter Property="Foreground" Value="{DynamicResource ProfitLossNegativeBrush}" />
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding IsProfitLossNegative}" Value="False">
-                                                <Setter Property="Foreground" Value="#0F766E" />
+                                                <Setter Property="Foreground" Value="{DynamicResource ProfitLossPositiveBrush}" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -170,10 +153,10 @@
                                 <Style TargetType="Border">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsProfitLossNegative}" Value="True">
-                                            <Setter Property="Background" Value="#FFEDD5" />
+                                            <Setter Property="Background" Value="{DynamicResource ProfitLossNegativeBgBrush}" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding IsProfitLossNegative}" Value="False">
-                                            <Setter Property="Background" Value="#CCFBF1" />
+                                            <Setter Property="Background" Value="{DynamicResource ProfitLossPositiveBgBrush}" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -183,10 +166,10 @@
                                     <Style TargetType="TextBlock">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding IsProfitLossNegative}" Value="True">
-                                                <Setter Property="Foreground" Value="#EA580C" />
+                                                <Setter Property="Foreground" Value="{DynamicResource ProfitLossNegativeBrush}" />
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding IsProfitLossNegative}" Value="False">
-                                                <Setter Property="Foreground" Value="#0F766E" />
+                                                <Setter Property="Foreground" Value="{DynamicResource ProfitLossPositiveBrush}" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -215,8 +198,8 @@
                         </Grid.ColumnDefinitions>
                         
                         <Grid Grid.Column="0" Width="72" Height="72" Margin="0,0,8,0">
-                            <Ellipse Stroke="#E2E8F0" StrokeThickness="6" />
-                            <ui:TextBlock Text="{Binding DiversificationScore}" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource SystemAccentColorBrush}" />
+                            <Ellipse Stroke="{DynamicResource ControlStrokeColorDefaultBrush}" StrokeThickness="6" />
+                            <ui:TextBlock Text="{Binding DiversificationScore}" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource LighterBlueBrush}" />
                         </Grid>
                         
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
@@ -225,16 +208,16 @@
                                     <Style TargetType="TextBlock">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding DiversificationClassification}" Value="Poor">
-                                                <Setter Property="Foreground" Value="#EA580C" />
+                                                <Setter Property="Foreground" Value="{DynamicResource StatusOrangeBrush}" />
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding DiversificationClassification}" Value="Moderate">
-                                                <Setter Property="Foreground" Value="#F59E0B" />
+                                                <Setter Property="Foreground" Value="{DynamicResource StatusAmberBrush}" />
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding DiversificationClassification}" Value="Good">
-                                                <Setter Property="Foreground" Value="#2563EB" />
+                                                <Setter Property="Foreground" Value="{DynamicResource StatusBlueBrush}" />
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding DiversificationClassification}" Value="Excellent">
-                                                <Setter Property="Foreground" Value="#0F766E" />
+                                                <Setter Property="Foreground" Value="{DynamicResource StatusTealBrush}" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -245,8 +228,8 @@
                     </Grid>
                     
                     <StackPanel Grid.Row="2" Margin="0,4,0,0">
-                        <Border BorderThickness="0,1,0,0" BorderBrush="#E2E8F0" Margin="0,0,0,6" />
-                        <Grid Height="10" Background="#F1F5F9">
+                        <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" Margin="0,0,0,6" />
+                        <Grid Height="10" Background="{DynamicResource ControlFillColorDefaultBrush}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="{Binding ScoreGridLength}" />
                                 <ColumnDefinition Width="{Binding RemainingScoreGridLength}" />
@@ -256,16 +239,16 @@
                                     <Style TargetType="Border">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding DiversificationClassification}" Value="Poor">
-                                                <Setter Property="Background" Value="#EA580C" />
+                                                <Setter Property="Background" Value="{DynamicResource StatusOrangeBrush}" />
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding DiversificationClassification}" Value="Moderate">
-                                                <Setter Property="Background" Value="#F59E0B" />
+                                                <Setter Property="Background" Value="{DynamicResource StatusAmberBrush}" />
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding DiversificationClassification}" Value="Good">
-                                                <Setter Property="Background" Value="#2563EB" />
+                                                <Setter Property="Background" Value="{DynamicResource StatusBlueBrush}" />
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding DiversificationClassification}" Value="Excellent">
-                                                <Setter Property="Background" Value="#0F766E" />
+                                                <Setter Property="Background" Value="{DynamicResource StatusTealBrush}" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -284,11 +267,11 @@
                     <ui:TextBlock FontSize="20" FontWeight="Bold" Margin="0,6,0,2" Text="{Binding TopPerformingAssetName}" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Height="26" />
                     
                     <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
-                        <ui:SymbolIcon Symbol="DataTrending24" FontSize="18" Foreground="#0F766E" Margin="0,0,4,0" VerticalAlignment="Center" />
-                        <ui:TextBlock FontSize="22" FontWeight="Bold" Text="{Binding TopPerformingAssetReturnText}" Foreground="#0F766E" VerticalAlignment="Center" />
+                        <ui:SymbolIcon Symbol="DataTrending24" FontSize="18" Foreground="{DynamicResource StatusTealBrush}" Margin="0,0,4,0" VerticalAlignment="Center" />
+                        <ui:TextBlock FontSize="22" FontWeight="Bold" Text="{Binding TopPerformingAssetReturnText}" Foreground="{DynamicResource StatusTealBrush}" VerticalAlignment="Center" />
                     </StackPanel>
                     
-                    <Border BorderThickness="0,1,0,0" BorderBrush="#E2E8F0" Margin="0,6,0,4" />
+                    <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" Margin="0,6,0,4" />
                     
                     <ui:TextBlock Appearance="Secondary" FontSize="13" Text="Highest rate of return" />
                 </StackPanel>
@@ -351,7 +334,7 @@
                                             </ui:TextBlock>
                                             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
                                                 <ui:TextBlock Text="{Binding ValueText}" FontSize="13.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontWeight="SemiBold" VerticalAlignment="Center" />
-                                                <ui:TextBlock Text="{Binding PercentText}" FontSize="13.5" Foreground="#0F766E" FontWeight="SemiBold" Margin="12,0,0,0" VerticalAlignment="Center" />
+                                                <ui:TextBlock Text="{Binding PercentText}" FontSize="13.5" Foreground="{DynamicResource StatusTealBrush}" FontWeight="SemiBold" Margin="12,0,0,0" VerticalAlignment="Center" />
                                             </StackPanel>
                                         </Grid>
                                     </DataTemplate>
@@ -363,10 +346,10 @@
                     <ui:TextBlock Appearance="Secondary" Text="No assets yet." HorizontalAlignment="Center" Margin="0,30,0,0" Height="100"
                                   Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVisibilityConverter}}" />
                     
-                    <Border BorderThickness="0,1,0,0" BorderBrush="#E2E8F0" Margin="0,6,0,6" />
+                    <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" Margin="0,6,0,6" />
                     
                     <!-- Asset Allocation Summary Details -->
-                    <ui:TextBlock FontSize="15.5" FontWeight="SemiBold" Text="Asset Allocation Summary" Margin="0,0,0,4" Foreground="{StaticResource SystemAccentColorBrush}" />
+                    <ui:TextBlock FontSize="15.5" FontWeight="SemiBold" Text="Asset Allocation Summary" Margin="0,0,0,4" Foreground="{DynamicResource LighterBlueBrush}" />
                     <UniformGrid Columns="2" Rows="2">
                         <StackPanel Margin="0,1">
                             <ui:TextBlock FontSize="12.5" Appearance="Secondary" Text="Largest Asset Category" />
@@ -417,7 +400,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <ui:TextBlock FontSize="13" Appearance="Secondary" Text="DOCUMENT COVERAGE" FontWeight="SemiBold" />
-                                <ui:TextBlock Grid.Column="1" FontSize="14.5" FontWeight="Bold" Foreground="#0F766E">
+                                <ui:TextBlock Grid.Column="1" FontSize="14.5" FontWeight="Bold" Foreground="{DynamicResource StatusTealBrush}">
                                     <Run Text="{Binding DocumentedAssetCount, Mode=OneWay}" />
                                     <Run Text="of" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontWeight="Normal" />
                                     <Run Text="{Binding TotalAssetCount, Mode=OneWay}" />
@@ -426,7 +409,7 @@
                             </Grid>
                             
                             <!-- Progress Bar -->
-                            <ProgressBar Grid.Row="1" Value="{Binding DocumentCoveragePercent, Mode=OneWay}" Minimum="0" Maximum="100" Height="8" Background="#F1F5F9" Foreground="#2563EB" BorderThickness="0" Margin="0,4,0,4" />
+                            <ProgressBar Grid.Row="1" Value="{Binding DocumentCoveragePercent, Mode=OneWay}" Minimum="0" Maximum="100" Height="8" Background="{DynamicResource ControlFillColorDefaultBrush}" Foreground="{DynamicResource SystemAccentColorBrush}" BorderThickness="0" Margin="0,4,0,4" />
                             
                             <ui:TextBlock Grid.Row="2" FontSize="12.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}">
                                 <Run Text="{Binding DocumentCoveragePercent, Mode=OneWay, StringFormat='{}{0}% of your assets have attachments verified.'}" />
@@ -467,7 +450,7 @@
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
-                                            <ui:SymbolIcon Grid.Column="0" Symbol="Warning24" FontSize="16" Foreground="#EA580C" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                            <ui:SymbolIcon Grid.Column="0" Symbol="Warning24" FontSize="16" Foreground="{DynamicResource StatusOrangeBrush}" Margin="0,0,8,0" VerticalAlignment="Center" />
                                             <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                                 <ui:TextBlock Text="{Binding Name}" FontSize="13.5" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextTrimming="CharacterEllipsis" />
                                                 <ui:TextBlock Text="{Binding TypeName}" FontSize="11.5" Appearance="Secondary" />
@@ -500,16 +483,16 @@
                             </Style>
                         </Grid.Style>
                         
-                        <Border Background="#F0FDF4" BorderBrush="#DCFCE7" BorderThickness="1" CornerRadius="6" Padding="12" VerticalAlignment="Stretch">
+                        <Border Background="{DynamicResource SuccessCardBackgroundBrush}" BorderBrush="{DynamicResource SuccessCardBorderBrush}" BorderThickness="1" CornerRadius="6" Padding="12" VerticalAlignment="Stretch">
                             <Grid VerticalAlignment="Center">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <ui:SymbolIcon Grid.Column="0" Symbol="CheckmarkCircle24" FontSize="28" Foreground="#16A34A" Margin="0,0,10,0" VerticalAlignment="Center" />
+                                <ui:SymbolIcon Grid.Column="0" Symbol="CheckmarkCircle24" FontSize="28" Foreground="{DynamicResource StatusTealBrush}" Margin="0,0,10,0" VerticalAlignment="Center" />
                                 <StackPanel Grid.Column="1">
-                                    <ui:TextBlock Text="All Assets Documented!" FontSize="14" FontWeight="SemiBold" Foreground="#14532D" />
-                                    <ui:TextBlock Text="Every asset has supporting attachments uploaded. Great job keeping your portfolio files organized." FontSize="12.5" Foreground="#166534" TextWrapping="Wrap" Margin="0,2,0,0" />
+                                    <ui:TextBlock Text="All Assets Documented!" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource SuccessCardTextBrush}" />
+                                    <ui:TextBlock Text="Every asset has supporting attachments uploaded. Great job keeping your portfolio files organized." FontSize="12.5" Foreground="{DynamicResource SuccessCardSubTextBrush}" TextWrapping="Wrap" Margin="0,2,0,0" />
                                 </StackPanel>
                             </Grid>
                         </Border>
@@ -641,27 +624,27 @@
                                 <ui:Button Padding="0" Margin="0,0,3,0" Height="24" Width="28"
                                            Tag="{Binding Id}" Click="OnViewAsset" ToolTip="View Details"
                                            AutomationProperties.Name="View Asset Details">
-                                    <ui:SymbolIcon Symbol="Eye24" FontSize="13.5" Foreground="#2563EB" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                    <ui:SymbolIcon Symbol="Eye24" FontSize="13.5" Foreground="{DynamicResource LighterBlueBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </ui:Button>
                                 <ui:Button Padding="0" Margin="0,0,3,0" Height="24" Width="28"
                                            Tag="{Binding Id}" Click="OnSipAsset" ToolTip="SIP Scheduler"
                                            AutomationProperties.Name="Manage SIP Schedule">
-                                    <ui:SymbolIcon Symbol="ArrowSync24" FontSize="13.5" Foreground="#2563EB" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                    <ui:SymbolIcon Symbol="ArrowSync24" FontSize="13.5" Foreground="{DynamicResource LighterBlueBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </ui:Button>
                                 <ui:Button Padding="0" Margin="0,0,3,0" Height="24" Width="28"
                                            Tag="{Binding Id}" Click="OnDocsAsset" ToolTip="View Documents"
                                            AutomationProperties.Name="View Documents">
-                                    <ui:SymbolIcon Symbol="Document24" FontSize="13.5" Foreground="#2563EB" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                    <ui:SymbolIcon Symbol="Document24" FontSize="13.5" Foreground="{DynamicResource LighterBlueBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </ui:Button>
                                 <ui:Button Padding="0" Margin="0,0,3,0" Height="24" Width="28"
                                            Tag="{Binding Id}" Click="OnEditAsset" ToolTip="Edit Asset"
                                            AutomationProperties.Name="Edit Asset">
-                                    <ui:SymbolIcon Symbol="Edit24" FontSize="13.5" Foreground="#2563EB" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                    <ui:SymbolIcon Symbol="Edit24" FontSize="13.5" Foreground="{DynamicResource LighterBlueBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </ui:Button>
                                 <ui:Button Padding="0" Height="24" Width="28" Appearance="Secondary"
                                            Tag="{Binding Id}" Click="OnDeleteAsset" ToolTip="Delete Asset"
                                            AutomationProperties.Name="Delete Asset">
-                                    <ui:SymbolIcon Symbol="Delete24" FontSize="13.5" Foreground="#2563EB" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                    <ui:SymbolIcon Symbol="Delete24" FontSize="13.5" Foreground="{DynamicResource LighterBlueBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </ui:Button>
                             </StackPanel>
                         </DataTemplate>

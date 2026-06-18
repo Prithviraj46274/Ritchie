@@ -20,8 +20,15 @@ public partial class ExpenseTrackerViewModel : ObservableObject
     private readonly IIncomeService _income;
     private readonly IExpenseAnalyticsService _analytics;
 
-    public Brush SpendBrush { get; } = new SolidColorBrush((Color)ColorConverter.ConvertFromString(BrandColors.Danger)!);
-    public Brush IncomeBrush { get; } = new SolidColorBrush((Color)ColorConverter.ConvertFromString(BrandColors.Success)!);
+    private static bool IsDarkMode => Wpf.Ui.Appearance.ApplicationThemeManager.GetAppTheme() == Wpf.Ui.Appearance.ApplicationTheme.Dark;
+
+    public Brush SpendBrush => IsDarkMode
+        ? new SolidColorBrush(Color.FromRgb(0xEF, 0x44, 0x44))
+        : new SolidColorBrush((Color)ColorConverter.ConvertFromString(BrandColors.Danger)!);
+
+    public Brush IncomeBrush => IsDarkMode
+        ? new SolidColorBrush(Color.FromRgb(0x2D, 0xD4, 0xBF))
+        : new SolidColorBrush((Color)ColorConverter.ConvertFromString(BrandColors.Success)!);
 
     public sealed record CategoryFilterOption(ExpenseCategory? Value, string Text);
 
@@ -36,6 +43,7 @@ public partial class ExpenseTrackerViewModel : ObservableObject
     [ObservableProperty] private string _topCategoryText = string.Empty;
     [ObservableProperty] private ISeries[] _incomeExpenseSeries = [];
     [ObservableProperty] private Axis[] _incomeExpenseAxes = [];
+    [ObservableProperty] private Axis[] _incomeExpenseYAxes = [];
     [ObservableProperty] private ObservableCollection<CategorySpend> _breakdown = [];
     [ObservableProperty] private ObservableCollection<string> _insights = [];
     [ObservableProperty] private ObservableCollection<ExpenseSummary> _items = [];
@@ -81,7 +89,8 @@ public partial class ExpenseTrackerViewModel : ObservableObject
             TrendLine("Income", income, BrandPalette.Success),
             TrendLine("Expense", expense, BrandPalette.Danger)
         ];
-        IncomeExpenseAxes = [new Axis { Labels = income.Select(d => d.Label).ToArray(), LabelsRotation = 0 }];
+        IncomeExpenseAxes = [new Axis { Labels = income.Select(d => d.Label).ToArray(), LabelsRotation = 0, LabelsPaint = BrandPalette.ChartAxesLabelPaint, SeparatorsPaint = BrandPalette.ChartGridLinesPaint }];
+        IncomeExpenseYAxes = [new Axis { LabelsPaint = BrandPalette.ChartAxesLabelPaint, SeparatorsPaint = BrandPalette.ChartGridLinesPaint }];
     }
 
     private static LineSeries<double> TrendLine(string name, IReadOnlyList<PeriodDatum> data, SKColor color) => new()
