@@ -61,22 +61,6 @@
             <SolidColorBrush x:Key="CardBorderBrush" Color="#E8E2D8" />
             <SolidColorBrush x:Key="CardShadowBrush" Color="#00000008" />
 
-            <!-- Warm Dark Mode Colors -->
-            <SolidColorBrush x:Key="DarkModeBackgroundBrush" Color="#2A2416" />
-            <SolidColorBrush x:Key="DarkModeCardBrush" Color="#3A3228" />
-            <SolidColorBrush x:Key="DarkModeSecondaryCardBrush" Color="#4A4236" />
-            <SolidColorBrush x:Key="DarkModeTextBrush" Color="#F5F1E8" />
-            <SolidColorBrush x:Key="DarkModeSecondaryTextBrush" Color="#E0D9CE" />
-            <SolidColorBrush x:Key="DarkModeTertiaryTextBrush" Color="#B8AFA0" />
-            <SolidColorBrush x:Key="DarkModeBorderBrush" Color="#524A3E" />
-            <SolidColorBrush x:Key="DarkModeHoverBrush" Color="#4A4236" />
-
-            <!-- Dark Mode Button Colors -->
-            <SolidColorBrush x:Key="DarkModeButtonPrimaryBrush" Color="#E6A756" />
-            <SolidColorBrush x:Key="DarkModeButtonPrimaryHoverBrush" Color="#D99F3E" />
-            <SolidColorBrush x:Key="DarkModeButtonSecondaryBrush" Color="#FFFFFF" />
-            <SolidColorBrush x:Key="DarkModeButtonSecondaryHoverBrush" Color="#F8F4EC" />
-
             <!-- Sidebar Colors -->
             <SolidColorBrush x:Key="SidebarBackgroundBrush" Color="#FFFFFF" />
             <SolidColorBrush x:Key="SidebarSelectedItemBrush" Color="#FFF3E3" />
