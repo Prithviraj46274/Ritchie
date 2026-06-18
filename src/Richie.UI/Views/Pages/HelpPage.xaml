@@ -7,7 +7,7 @@
       mc:Ignorable="d"
       Title="Help &amp; About"
       ScrollViewer.CanContentScroll="False">
-    <Grid>
+    <Grid Background="{DynamicResource PageBackgroundBrush}">
         <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="24">
             <StackPanel MaxWidth="760" HorizontalAlignment="Left">
                 <ui:TextBlock FontTypography="TitleLarge" Text="Help &amp; About" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,12" />

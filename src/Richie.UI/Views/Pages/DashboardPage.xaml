@@ -13,7 +13,7 @@
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </Page.Resources>
-    <Grid>
+    <Grid Background="{DynamicResource PageBackgroundBrush}">
         <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="24">
         <StackPanel>
             <!-- Hero greeting: date · greeting · portfolio insight · mini-calendar · live clock -->

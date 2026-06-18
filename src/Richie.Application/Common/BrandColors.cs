@@ -5,52 +5,62 @@ namespace Richie.Application.Common;
 /// any layer can convert to its own colour type (WPF <c>Media.Color</c>, SkiaSharp <c>SKColor</c>).
 /// The categorical list is colour-blind-safe and is the single source of truth for chart series
 /// colours on-screen and in exported reports. No "Others" bucket — every series is named explicitly.
+/// Premium warm palette: Soft Golden Orange accent, professional chart colors, accessible contrasts.
 /// </summary>
 public static class BrandColors
 {
-    public const string Primary = "#2926c9";   // Richie Red
-    public const string Secondary = "#45a5d8"; // Golden Amber
-    public const string Accent = "#fbfaf7";    // Soft Gold
+    // PRIMARY BRAND COLORS (Premium Golden Orange + Green)
+    public const string Primary = "#E6A756";      // Soft Golden Orange (primary accent)
+    public const string PrimaryHover = "#D99F3E"; // Darker orange on hover
+    public const string PrimaryPressed = "#C98D2D"; // Pressed state
 
-    // Status triad (consistent app-wide): green = good, amber = needs attention, red = critical.
-    public const string Success = "#1FA56C";
-    public const string Warning = "#DE9326";
-    public const string Danger = "#ed523a"; // violet
+    // STATUS TRIAD (Consistent app-wide): green = good, orange = moderate, red = critical
+    public const string Success = "#57B894";      // Professional green - healthy/good
+    public const string Warning = "#E6A756";      // Soft golden orange - moderate/caution
+    public const string Danger = "#D96C6C";       // Professional red - critical/loss
 
+    // RESERVED COLORS for profit (green) / loss (red) in exported reports
+    // By design: NO chart series or other report component uses these two colours
+    // This keeps them semantically unambiguous.
+    public const string ProfitGreen = "#57B894";  // Green profit
+    public const string LossRed = "#D96C6C";      // Red loss (no bright orange)
 
-    // Reserved exclusively for profit (green) / loss (red) in exported reports. By design NO chart
-    // series or other report component uses these two colours, so they stay semantically unambiguous.
-    public const string ProfitGreen = "#1FA56C";
-    public const string LossRed = "#CE2E20";
-
-    /// <summary>Series colours for report charts — deliberately free of green and red hues so the
-    /// reserved profit/loss colours are never confused with a chart slice. No "Others" bucket.</summary>
+    /// <summary>
+    /// Professional chart palette for reports — carefully selected to be:
+    /// - Distinct and visually balanced
+    /// - Free of pure red/green (reserved for profit/loss)
+    /// - Accessible for mild color blindness
+    /// - Modern and premium appearance
+    /// </summary>
     public static readonly IReadOnlyList<string> ReportChartPalette =
     [
-        "#D89A45", // Gold
-        "#3E86C6", // Blue
-        "#6E59A5", // Violet
-        "#CC7DAC", // Rose
-        "#B5651D", // Sienna
-        "#8E7CC3", // Lavender
-        "#2A7DB1", // Ocean
-        "#E2BE74", // Soft gold
-        "#94527A", // Plum
-        "#5A6B8C"  // Slate
+        "#5B8DEF", // Equity: Professional Blue
+        "#E6A756", // Mutual Funds: Soft Golden Orange
+        "#56B7B1", // Real Estate: Teal
+        "#9B7EDE", // Digital Gold: Purple
+        "#F3C969", // Gold Jewellery: Light Gold
+        "#8A8A8A", // Guaranteed Plans: Gray
+        "#4FA87A", // Secondary: Emerald
+        "#2A7DB1", // Secondary: Ocean
+        "#CC7DAC", // Secondary: Rose
+        "#B8860B"  // Secondary: Dark Goldenrod
     ];
 
-    /// <summary>Distinct, colour-blind-safe categorical series colours for asset allocation charts.</summary>
+    /// <summary>
+    /// Distinct, color-blind-safe categorical series colors for asset allocation charts.
+    /// Using the premium palette with proper contrast and professional appearance.
+    /// </summary>
     public static readonly IReadOnlyList<string> Categorical =
     [
-        "#2563EB", // Royal Blue
-        "#D97706", // Amber
-        "#7C3AED", // Purple
-        "#EA580C", // Orange
-        "#3B82F6", // Medium Blue
-        "#6D28D9", // Deep Purple
-        "#EAB308", // Yellow
-        "#4F46E5", // Indigo
-        "#64748B", // Slate
-        "#1E3A8A"  // Navy Blue
+        "#5B8DEF", // Equity: Professional Blue
+        "#E6A756", // Mutual Funds: Soft Golden Orange
+        "#56B7B1", // Real Estate: Teal
+        "#9B7EDE", // Digital Gold: Purple
+        "#F3C969", // Gold Jewellery: Light Gold
+        "#8A8A8A", // Guaranteed Plans: Gray
+        "#4FA87A", // Emerald (secondary)
+        "#2A7DB1", // Ocean Blue (secondary)
+        "#CC7DAC", // Rose (secondary)
+        "#B8860B"  // Dark Goldenrod (secondary)
     ];
 }

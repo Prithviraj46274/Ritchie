@@ -3,30 +3,38 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
 
-    <!-- =====================================
-         WARM DARK THEME
-         Colors: Warm brown background (not pure black) with orange accents
-         Accent: Soft Golden Orange (#E6A756) with light orange for status
-         ===================================== -->
+    <!-- ═════════════════════════════════════════════════════════════════════════════════════
+         PREMIUM WARM DARK THEME
+         Color Palette: Premium warm browns (not pure black) + Soft Golden Orange accents
+         Designed for: Professional financial app with excellent readability during extended use
+         ════════════════════════════════════════════════════════════════════════════════════ -->
 
-    <!-- Primary Dark Mode Colors: Warm browns (not pure black) with excellent contrast -->
-    <Color x:Key="DarkBg">#2A2416</Color>               <!-- Main background: Warm brown -->
-    <Color x:Key="DarkCardBg">#3A3228</Color>           <!-- Card/container background -->
-    <Color x:Key="DarkSecondaryBg">#4A4236</Color>      <!-- Secondary container -->
-    <Color x:Key="DarkTertiaryBg">#524A3E</Color>       <!-- Hover/tertiary -->
-    <Color x:Key="DarkBorder">#5A524A</Color>           <!-- Border color -->
-    <Color x:Key="DarkText">#F5F1E8</Color>             <!-- Primary text: Warm white -->
-    <Color x:Key="DarkSecondaryText">#E0D9CE</Color>    <!-- Secondary text: Light warm gray -->
-    <Color x:Key="DarkTertiaryText">#B8AFA0</Color>     <!-- Tertiary text/disabled -->
-    <Color x:Key="DarkPlaceholder">#8A8278</Color>     <!-- Placeholder text -->
+    <!-- PRIMARY DARK MODE COLORS: Warm premium palette (accessible, not pure black) -->
+    <Color x:Key="DarkBg">#25211C</Color>                  <!-- Main background: Premium warm brown -->
+    <Color x:Key="DarkCardBg">#312B25</Color>              <!-- Card/container background -->
+    <Color x:Key="DarkSecondaryBg">#3B342C</Color>         <!-- Secondary container: Modal, popups -->
+    <Color x:Key="DarkTertiaryBg">#433B32</Color>          <!-- Hover/tertiary container -->
+    <Color x:Key="DarkBorder">#4C443B</Color>              <!-- Border: Subtle definition -->
+    <Color x:Key="DarkText">#F8F5EF</Color>                <!-- Primary text: Premium warm white -->
+    <Color x:Key="DarkSecondaryText">#D8D1C5</Color>       <!-- Secondary text: Light warm gray -->
+    <Color x:Key="DarkTertiaryText">#9E9590</Color>        <!-- Tertiary/disabled text -->
+    <Color x:Key="DarkPlaceholder">#6B6259</Color>         <!-- Placeholder text: Subtle -->
 
-    <!-- Accent & Status Colors -->
-    <Color x:Key="DarkAccent">#E6A756</Color>           <!-- Soft Golden Orange -->
-    <Color x:Key="DarkAccentHover">#D99F3E</Color>      <!-- Darker Orange on hover -->
-    <Color x:Key="DarkAccentActive">#CC8F2C</Color>     <!-- Active/pressed -->
-    <Color x:Key="DarkSuccess">#57B894</Color>          <!-- Green success -->
-    <Color x:Key="DarkWarning">#E6A756</Color>          <!-- Soft Orange warning -->
-    <Color x:Key="DarkDanger">#FFB366</Color>           <!-- Light Orange danger (no red) -->
+    <!-- ACCENT & STATUS COLORS -->
+    <Color x:Key="DarkAccent">#E6A756</Color>              <!-- Primary accent: Soft Golden Orange -->
+    <Color x:Key="DarkAccentHover">#D99F3E</Color>         <!-- Hover state -->
+    <Color x:Key="DarkAccentActive">#C98D2D</Color>        <!-- Active/pressed state -->
+    <Color x:Key="DarkSuccess">#57B894</Color>             <!-- Success: Professional green -->
+    <Color x:Key="DarkWarning">#E6A756</Color>             <!-- Warning: Golden orange -->
+    <Color x:Key="DarkDanger">#D96C6C</Color>              <!-- Danger: Red (no bright orange for errors) -->
+
+    <!-- CHART COLORS - Harmonious professional palette -->
+    <Color x:Key="DarkChartEquity">#5B8DEF</Color>         <!-- Equity: Professional blue -->
+    <Color x:Key="DarkChartMutualFunds">#E6A756</Color>    <!-- Mutual Funds: Golden orange -->
+    <Color x:Key="DarkChartRealEstate">#56B7B1</Color>     <!-- Real Estate: Teal -->
+    <Color x:Key="DarkChartDigitalGold">#9B7EDE</Color>    <!-- Digital Gold: Purple -->
+    <Color x:Key="DarkChartGoldJewellery">#F3C969</Color>  <!-- Gold Jewellery: Light gold -->
+    <Color x:Key="DarkChartGuaranteedPlans">#8A8A8A</Color><!-- Guaranteed Plans: Gray -->
 
     <!-- Convert colors to brushes for easy reuse -->
     <SolidColorBrush x:Key="DarkBgBrush" Color="{StaticResource DarkBg}" />
@@ -44,6 +52,45 @@
     <SolidColorBrush x:Key="DarkSuccessBrush" Color="{StaticResource DarkSuccess}" />
     <SolidColorBrush x:Key="DarkWarningBrush" Color="{StaticResource DarkWarning}" />
     <SolidColorBrush x:Key="DarkDangerBrush" Color="{StaticResource DarkDanger}" />
+
+    <!-- Chart Brushes -->
+    <SolidColorBrush x:Key="DarkChartEquityBrush" Color="{StaticResource DarkChartEquity}" />
+    <SolidColorBrush x:Key="DarkChartMutualFundsBrush" Color="{StaticResource DarkChartMutualFunds}" />
+    <SolidColorBrush x:Key="DarkChartRealEstateBrush" Color="{StaticResource DarkChartRealEstate}" />
+    <SolidColorBrush x:Key="DarkChartDigitalGoldBrush" Color="{StaticResource DarkChartDigitalGold}" />
+    <SolidColorBrush x:Key="DarkChartGoldJewelleryBrush" Color="{StaticResource DarkChartGoldJewellery}" />
+    <SolidColorBrush x:Key="DarkChartGuaranteedPlansBrush" Color="{StaticResource DarkChartGuaranteedPlans}" />
+
+    <!-- ═════════════════════════════════════════════════════════════════════════════════════
+         DARK MODE PAGE & UI BACKGROUNDS - Override Light Mode
+         These resources replace their light mode counterparts when Dark Mode is active
+         ════════════════════════════════════════════════════════════════════════════════════ -->
+
+    <!-- Page Background - Solid premium warm brown (not gradient) for dark mode -->
+    <SolidColorBrush x:Key="PageBackgroundBrush" Color="{StaticResource DarkBg}" />
+    
+    <!-- Sidebar Colors for Dark Mode -->
+    <SolidColorBrush x:Key="DarkSidebarBackgroundBrush" Color="#1F1B17" />
+    <SolidColorBrush x:Key="DarkSidebarSelectedItemBrush" Color="#433B32" />
+    <SolidColorBrush x:Key="DarkSidebarHoverBrush" Color="#3A342D" />
+    <SolidColorBrush x:Key="DarkSidebarIndicatorBrush" Color="#E6A756" />
+    <SolidColorBrush x:Key="DarkSidebarTextBrush" Color="#F8F5EF" />
+    <SolidColorBrush x:Key="DarkSidebarIconsBrush" Color="#9E9590" />
+    <SolidColorBrush x:Key="DarkSidebarIconsActiveBrush" Color="#E6A756" />
+
+    <!-- Card Backgrounds for Dark Mode -->
+    <SolidColorBrush x:Key="DarkCardBackgroundBrush" Color="{StaticResource DarkCardBg}" />
+    <SolidColorBrush x:Key="DarkCardSecondaryBrush" Color="{StaticResource DarkSecondaryBg}" />
+    <SolidColorBrush x:Key="DarkCardBorderBrush" Color="{StaticResource DarkBorder}" />
+
+    <!-- Button Backgrounds for Dark Mode -->
+    <SolidColorBrush x:Key="DarkButtonPrimaryBackgroundBrush" Color="#E6A756" />
+    <SolidColorBrush x:Key="DarkButtonPrimaryForegroundBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="DarkButtonPrimaryHoverBrush" Color="#D99F3E" />
+    <SolidColorBrush x:Key="DarkButtonSecondaryBackgroundBrush" Color="#3B342C" />
+    <SolidColorBrush x:Key="DarkButtonSecondaryForegroundBrush" Color="#F8F5EF" />
+    <SolidColorBrush x:Key="DarkButtonSecondaryBorderBrush" Color="#4C443B" />
+    <SolidColorBrush x:Key="DarkButtonSecondaryHoverBrush" Color="#433B32" />
 
 
 </ResourceDictionary>

@@ -12,75 +12,174 @@
                 <ResourceDictionary Source="Resources/DarkModeTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-
             <!-- Set all charts to have transparent background by default -->
             <Style TargetType="lvc:CartesianChart">
                 <Setter Property="Background" Value="Transparent" />
             </Style>
+
             <Style TargetType="lvc:PieChart">
                 <Setter Property="Background" Value="Transparent" />
             </Style>
+
             <Style TargetType="lvc:PolarChart">
                 <Setter Property="Background" Value="Transparent" />
             </Style>
 
-            <!-- Brand semantic brushes (status triad). green = good, amber = attention, red = critical. -->
-            <SolidColorBrush x:Key="BrandSuccessBrush" Color="#1FA56C" />
-            <SolidColorBrush x:Key="BrandWarningBrush" Color="#DE9326" />
-            <SolidColorBrush x:Key="BrandDangerBrush" Color="#CE2E20" />
-            <SolidColorBrush x:Key="BrandPrimaryBrush" Color="#3B82F6" />
-            <SolidColorBrush x:Key="LighterBlueBrush" Color="#2563EB" />
+            <!-- ═════════════════════════════════════════════════════════════════
+                 PREMIUM LIGHT MODE PALETTE - Professional Financial App
+                 Primary Accent: Soft Golden Orange (#E6A756)
+                 ════════════════════════════════════════════════════════════════ -->
 
+            <!-- Primary Accent Colors -->
+            <SolidColorBrush x:Key="BrandPrimaryBrush" Color="#E6A756" />
+            <SolidColorBrush x:Key="BrandPrimaryHoverBrush" Color="#D99F3E" />
+            <SolidColorBrush x:Key="BrandPrimaryPressedBrush" Color="#C98D2D" />
 
+            <!-- Status Colors -->
+            <SolidColorBrush x:Key="BrandSuccessBrush" Color="#57B894" />
+            <SolidColorBrush x:Key="BrandWarningBrush" Color="#E6A756" />
+            <SolidColorBrush x:Key="BrandDangerBrush" Color="#D96C6C" />
 
-            <!-- Light app background with subtle orange tint (warm whites). -->
+            <!-- Optional secondary blue brush -->
+            <SolidColorBrush x:Key="LighterBlueBrush" Color="#5B8DEF" />
+
+            <!-- Main Background - Subtle Warm Gradient -->
             <LinearGradientBrush x:Key="BrandBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
                 <GradientStop Color="#FFFBF5" Offset="0" />
                 <GradientStop Color="#FEF5E8" Offset="1" />
             </LinearGradientBrush>
 
-            <!-- Warm Dark Mode Colors (not pure black, with orange undertones) -->
-            <SolidColorBrush x:Key="DarkModeBackgroundBrush" Color="#2A2416" />
-            <SolidColorBrush x:Key="DarkModeCardBrush" Color="#3A3228" />
-            <SolidColorBrush x:Key="DarkModeSecondaryCardBrush" Color="#4A4236" />
-            <SolidColorBrush x:Key="DarkModeTextBrush" Color="#F5F1E8" />
-            <SolidColorBrush x:Key="DarkModeSecondaryTextBrush" Color="#E0D9CE" />
-            <SolidColorBrush x:Key="DarkModeTertiaryTextBrush" Color="#B8AFA0" />
-            <SolidColorBrush x:Key="DarkModeBorderBrush" Color="#524A3E" />
-            <SolidColorBrush x:Key="DarkModeHoverBrush" Color="#4A4236" />
+            <!-- Page Background - Theme-aware (Light Mode) -->
+            <LinearGradientBrush x:Key="PageBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="#FFFBF5" Offset="0" />
+                <GradientStop Color="#FEF5E8" Offset="1" />
+            </LinearGradientBrush>
 
-            <!-- Primary Button Colors (Soft Golden Orange) -->
-            <SolidColorBrush x:Key="DarkModeButtonPrimaryBrush" Color="#E6A756" />
-            <SolidColorBrush x:Key="DarkModeButtonPrimaryHoverBrush" Color="#D99F3E" />
-            <SolidColorBrush x:Key="DarkModeButtonSecondaryBrush" Color="#FFFFFF" />
-            <SolidColorBrush x:Key="DarkModeButtonSecondaryHoverBrush" Color="#F8F4EC" />
+            <!-- Card Styling -->
+            <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="CardSecondaryBrush" Color="#FFFBF5" />
+            <SolidColorBrush x:Key="CardBorderBrush" Color="#E8E2D8" />
+            <SolidColorBrush x:Key="CardShadowBrush" Color="#00000008" />
 
             <!-- Sidebar Colors -->
             <SolidColorBrush x:Key="SidebarBackgroundBrush" Color="#FFFFFF" />
             <SolidColorBrush x:Key="SidebarSelectedItemBrush" Color="#FFF3E3" />
-            <SolidColorBrush x:Key="SidebarIndicatorBrush" Color="#E6A756" />
             <SolidColorBrush x:Key="SidebarHoverBrush" Color="#F8F4EC" />
+            <SolidColorBrush x:Key="SidebarIndicatorBrush" Color="#E6A756" />
+            <SolidColorBrush x:Key="SidebarTextBrush" Color="#374151" />
+            <SolidColorBrush x:Key="SidebarIconsBrush" Color="#6B7280" />
+            <SolidColorBrush x:Key="SidebarIconsActiveBrush" Color="#E6A756" />
 
-            <!-- Richie AI Card Colors -->
+            <!-- Table/List Styling -->
+            <SolidColorBrush x:Key="TableHeaderBrush" Color="#F6F2EB" />
+            <SolidColorBrush x:Key="TableHeaderTextBrush" Color="#4B5563" />
+            <SolidColorBrush x:Key="TableAlternateRowBrush" Color="#FFFBF7" />
+            <SolidColorBrush x:Key="TableHoverRowBrush" Color="#FFF5E6" />
+
+            <!-- Button Styling -->
+            <SolidColorBrush x:Key="ButtonPrimaryBackgroundBrush" Color="#E6A756" />
+            <SolidColorBrush x:Key="ButtonPrimaryForegroundBrush" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="ButtonPrimaryHoverBrush" Color="#D99F3E" />
+            <SolidColorBrush x:Key="ButtonSecondaryBackgroundBrush" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="ButtonSecondaryForegroundBrush" Color="#374151" />
+            <SolidColorBrush x:Key="ButtonSecondaryBorderBrush" Color="#D6D6D6" />
+            <SolidColorBrush x:Key="ButtonSecondaryHoverBrush" Color="#F8F4EC" />
+            <SolidColorBrush x:Key="DangerButtonBrush" Color="#D96C6C" />
+            <SolidColorBrush x:Key="DangerButtonHoverBrush" Color="#C65A5A" />
+
+            <!-- KPI Cards -->
+            <SolidColorBrush x:Key="KPICardBackgroundBrush" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="KPICardBorderBrush" Color="#ECE7DF" />
+            <SolidColorBrush x:Key="KPIAccentStripBrush" Color="#E6A756" />
+
+            <!-- Chart Colors -->
+            <SolidColorBrush x:Key="ChartEquityBrush" Color="#5B8DEF" />
+            <SolidColorBrush x:Key="ChartMutualFundsBrush" Color="#E6A756" />
+            <SolidColorBrush x:Key="ChartRealEstateBrush" Color="#56B7B1" />
+            <SolidColorBrush x:Key="ChartDigitalGoldBrush" Color="#9B7EDE" />
+            <SolidColorBrush x:Key="ChartGoldJewelleryBrush" Color="#F3C969" />
+            <SolidColorBrush x:Key="ChartGuaranteedPlansBrush" Color="#8A8A8A" />
+            <SolidColorBrush x:Key="ChartSuccessBrush" Color="#57B894" />
+            <SolidColorBrush x:Key="ChartLossBrush" Color="#D96C6C" />
+
+            <!-- Richie AI Insight Cards -->
             <SolidColorBrush x:Key="RichieAICardBackgroundBrush" Color="#F7F2FF" />
             <SolidColorBrush x:Key="RichieAICardBorderBrush" Color="#D9C7FF" />
             <SolidColorBrush x:Key="RichieAICardIconBrush" Color="#6D28D9" />
             <SolidColorBrush x:Key="RichieAICardTitleBrush" Color="#6D28D9" />
 
-            <!-- Health Score Colors -->
+            <!-- Financial Health Status Colors -->
+            <SolidColorBrush x:Key="HealthScoreHealthyBrush" Color="#57B894" />
+            <SolidColorBrush x:Key="HealthScoreModerateBrush" Color="#E6A756" />
+            <SolidColorBrush x:Key="HealthScoreCriticalBrush" Color="#D96C6C" />
+
+            <!-- Text Colors -->
+            <SolidColorBrush x:Key="TextPrimaryBrush" Color="#1F2937" />
+            <SolidColorBrush x:Key="TextSecondaryBrush" Color="#6B7280" />
+            <SolidColorBrush x:Key="TextTertiaryBrush" Color="#9CA3AF" />
+            <SolidColorBrush x:Key="TextDisabledBrush" Color="#D1D5DB" />
+
+            <!-- Borders & Dividers -->
+            <SolidColorBrush x:Key="BorderLightBrush" Color="#E8E2D8" />
+            <SolidColorBrush x:Key="BorderMediumBrush" Color="#D6D0C4" />
+            <SolidColorBrush x:Key="DividerBrush" Color="#F0E8DC" />
+
+            <!-- Legacy compatibility (kept for existing references) -->
+            <SolidColorBrush x:Key="LightCardBackgroundBrush" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="LightCardAltBackgroundBrush" Color="#FFFBF5" />
+            <SolidColorBrush x:Key="LightSubtleBackgroundBrush" Color="#FEF5E8" />
             <SolidColorBrush x:Key="HealthScoreGreenBrush" Color="#57B894" />
             <SolidColorBrush x:Key="HealthScoreOrangeBrush" Color="#E6A756" />
             <SolidColorBrush x:Key="HealthScoreRedBrush" Color="#FFB366" />
 
-            <!-- Light mode card backgrounds -->
-            <SolidColorBrush x:Key="LightCardBackgroundBrush" Color="#FFFFFF" />
-            <SolidColorBrush x:Key="LightCardAltBackgroundBrush" Color="#FFFBF5" />
-            <SolidColorBrush x:Key="LightSubtleBackgroundBrush" Color="#FEF5E8" />
+            <!-- Dark Mode Colors -->
+            <SolidColorBrush x:Key="DarkModeBackgroundBrush" Color="#25211C" />
+            <SolidColorBrush x:Key="DarkModeCardBrush" Color="#312B25" />
+            <SolidColorBrush x:Key="DarkModeSecondaryCardBrush" Color="#3B342C" />
+            <SolidColorBrush x:Key="DarkModeTextBrush" Color="#F8F5EF" />
+            <SolidColorBrush x:Key="DarkModeSecondaryTextBrush" Color="#D8D1C5" />
+            <SolidColorBrush x:Key="DarkModeTertiaryTextBrush" Color="#9E9590" />
+            <SolidColorBrush x:Key="DarkModeBorderBrush" Color="#4C443B" />
+            <SolidColorBrush x:Key="DarkModeHoverBrush" Color="#433B32" />
 
-            <!-- Danger/Delete Button Color (Light Orange) -->
-            <SolidColorBrush x:Key="DangerButtonBrush" Color="#FFB366" />
+            <!-- Dark Mode Buttons -->
+            <SolidColorBrush x:Key="DarkModeButtonPrimaryBrush" Color="#E6A756" />
+            <SolidColorBrush x:Key="DarkModeButtonPrimaryHoverBrush" Color="#D99F3E" />
+            <SolidColorBrush x:Key="DarkModeButtonSecondaryBrush" Color="#3B342C" />
+            <SolidColorBrush x:Key="DarkModeButtonSecondaryHoverBrush" Color="#433B32" />
 
-            <!-- Light Mode Text Overrides for Dark Theme -->
+            <!-- ═════════════════════════════════════════════════════════════════
+                 CONTROL STYLES - Professional & Consistent
+                 ════════════════════════════════════════════════════════════════ -->
+
+            <!-- Primary Button (Golden Orange Accent) -->
+            <Style x:Key="PrimaryButtonStyle" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
+                <Setter Property="Background" Value="{StaticResource ButtonPrimaryBackgroundBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource ButtonPrimaryForegroundBrush}" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Padding" Value="16,8" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+            </Style>
+
+            <!-- Secondary Button (White with Border) -->
+            <Style x:Key="SecondaryButtonStyle" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
+                <Setter Property="Background" Value="{StaticResource ButtonSecondaryBackgroundBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource ButtonSecondaryForegroundBrush}" />
+                <Setter Property="BorderBrush" Value="{StaticResource ButtonSecondaryBorderBrush}" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="Padding" Value="16,8" />
+            </Style>
+
+            <!-- Danger Button (Red for Destructive Actions Only) -->
+            <Style x:Key="DangerButtonStyle" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
+                <Setter Property="Background" Value="{StaticResource DangerButtonBrush}" />
+                <Setter Property="Foreground" Value="#FFFFFF" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Padding" Value="16,8" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+            </Style>
+
+            <!-- Dark Mode TextBlock -->
             <Style x:Key="DarkModeTextBlockStyle" TargetType="TextBlock">
                 <Style.Triggers>
                     <Trigger Property="Background" Value="{x:Null}">
@@ -89,39 +188,24 @@
                 </Style.Triggers>
             </Style>
 
-            <!-- Style for ComboBox in Dark Mode -->
+            <!-- Dark Mode ComboBox -->
             <Style x:Key="DarkModeComboBoxStyle" TargetType="ComboBox" BasedOn="{StaticResource DefaultComboBoxStyle}">
                 <Setter Property="Background" Value="{StaticResource DarkModeCardBrush}" />
                 <Setter Property="Foreground" Value="{StaticResource DarkModeTextBrush}" />
                 <Setter Property="BorderBrush" Value="{StaticResource DarkModeBorderBrush}" />
             </Style>
 
-            <!-- Style for CheckBox in Dark Mode -->
+            <!-- Dark Mode CheckBox -->
             <Style x:Key="DarkModeCheckBoxStyle" TargetType="CheckBox">
                 <Setter Property="Foreground" Value="{StaticResource DarkModeTextBrush}" />
                 <Setter Property="SnapsToDevicePixels" Value="True" />
             </Style>
 
-            <!-- Style for Button in Dark Mode -->
+            <!-- Dark Mode Button -->
             <Style x:Key="DarkModeButtonStyle" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
                 <Setter Property="Background" Value="{StaticResource DarkModeButtonSecondaryBrush}" />
                 <Setter Property="Foreground" Value="{StaticResource DarkModeTextBrush}" />
                 <Setter Property="BorderBrush" Value="{StaticResource DarkModeBorderBrush}" />
-            </Style>
-
-            <!-- Secondary Button Style (White with border) -->
-            <Style x:Key="SecondaryButtonStyle" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
-                <Setter Property="Background" Value="#FFFFFF" />
-                <Setter Property="Foreground" Value="#374151" />
-                <Setter Property="BorderBrush" Value="#D6D6D6" />
-                <Setter Property="BorderThickness" Value="1" />
-            </Style>
-
-            <!-- Danger Button Style (Light Orange for Delete) -->
-            <Style x:Key="DangerButtonStyle" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
-                <Setter Property="Background" Value="#FFB366" />
-                <Setter Property="Foreground" Value="#FFFFFF" />
-                <Setter Property="BorderBrush" Value="#FFB366" />
             </Style>
         </ResourceDictionary>
     </Application.Resources>

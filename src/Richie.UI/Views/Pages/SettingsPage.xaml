@@ -7,7 +7,7 @@
       mc:Ignorable="d"
       Title="Settings"
       ScrollViewer.CanContentScroll="False">
-    <Grid>
+    <Grid Background="{DynamicResource PageBackgroundBrush}">
         <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="24">
             <StackPanel>
                 <Grid Margin="0,0,0,12">

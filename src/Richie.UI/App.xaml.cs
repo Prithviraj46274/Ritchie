@@ -1,5 +1,6 @@
 using System.IO;
 using System.Windows;
+using System.Windows.Media;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Richie.Application.Authentication;
@@ -126,6 +127,91 @@ public partial class App : System.Windows.Application
 
     /// <summary>Service provider for views that resolve their view-models / dialogs.</summary>
     public IServiceProvider Services => _host.Services;
+
+    /// <summary>Updates theme-aware resource brushes when application theme changes.</summary>
+    public static void UpdateThemeResources()
+    {
+        var current = System.Windows.Application.Current;
+        if (current == null) return;
+
+        var theme = Wpf.Ui.Appearance.ApplicationThemeManager.GetAppTheme();
+        var resources = current.Resources;
+
+        if (theme == Wpf.Ui.Appearance.ApplicationTheme.Dark)
+        {
+            // Apply dark mode brushes
+            if (resources["DarkBgBrush"] is Brush darkBg)
+                resources["PageBackgroundBrush"] = darkBg;
+
+            if (resources["DarkCardBgBrush"] is Brush darkCard)
+                resources["CardBackgroundBrush"] = darkCard;
+
+            if (resources["DarkCardSecondaryBgBrush"] is Brush darkSecondaryCard)
+                resources["CardSecondaryBrush"] = darkSecondaryCard;
+
+            if (resources["DarkCardBorderBrush"] is Brush darkBorder)
+                resources["CardBorderBrush"] = darkBorder;
+
+            if (resources["DarkSidebarBackgroundBrush"] is Brush darkSidebar)
+                resources["SidebarBackgroundBrush"] = darkSidebar;
+
+            if (resources["DarkSidebarSelectedItemBrush"] is Brush darkSelected)
+                resources["SidebarSelectedItemBrush"] = darkSelected;
+
+            if (resources["DarkSidebarHoverBrush"] is Brush darkSidebarHover)
+                resources["SidebarHoverBrush"] = darkSidebarHover;
+
+            if (resources["DarkSidebarIndicatorBrush"] is Brush darkIndicator)
+                resources["SidebarIndicatorBrush"] = darkIndicator;
+
+            if (resources["DarkSidebarTextBrush"] is Brush darkSidebarText)
+                resources["SidebarTextBrush"] = darkSidebarText;
+
+            if (resources["DarkSidebarIconsBrush"] is Brush darkIcons)
+                resources["SidebarIconsBrush"] = darkIcons;
+
+            if (resources["DarkSidebarIconsActiveBrush"] is Brush darkIconsActive)
+                resources["SidebarIconsActiveBrush"] = darkIconsActive;
+        }
+        else
+        {
+            // Apply light mode brushes
+            if (resources["BrandBackgroundBrush"] is Brush lightBg)
+                resources["PageBackgroundBrush"] = lightBg;
+
+            // Light mode card colors
+            if (resources["CardBackgroundBrush"] != null)
+                resources["CardBackgroundBrush"] = resources["CardBackgroundBrush"];
+
+            if (resources["CardSecondaryBrush"] != null)
+                resources["CardSecondaryBrush"] = resources["CardSecondaryBrush"];
+
+            if (resources["CardBorderBrush"] != null)
+                resources["CardBorderBrush"] = resources["CardBorderBrush"];
+
+            // Light mode sidebar colors
+            if (resources["SidebarBackgroundBrush"] != null)
+                resources["SidebarBackgroundBrush"] = resources["SidebarBackgroundBrush"];
+
+            if (resources["SidebarSelectedItemBrush"] != null)
+                resources["SidebarSelectedItemBrush"] = resources["SidebarSelectedItemBrush"];
+
+            if (resources["SidebarHoverBrush"] != null)
+                resources["SidebarHoverBrush"] = resources["SidebarHoverBrush"];
+
+            if (resources["SidebarIndicatorBrush"] != null)
+                resources["SidebarIndicatorBrush"] = resources["SidebarIndicatorBrush"];
+
+            if (resources["SidebarTextBrush"] != null)
+                resources["SidebarTextBrush"] = resources["SidebarTextBrush"];
+
+            if (resources["SidebarIconsBrush"] != null)
+                resources["SidebarIconsBrush"] = resources["SidebarIconsBrush"];
+
+            if (resources["SidebarIconsActiveBrush"] != null)
+                resources["SidebarIconsActiveBrush"] = resources["SidebarIconsActiveBrush"];
+        }
+    }
 
     // Cap only modal dialogs (which have an Owner) to the app window's size, so popups can't exceed
     // the app. The main/auth/splash windows have no Owner, so they stay freely resizable/maximizable.

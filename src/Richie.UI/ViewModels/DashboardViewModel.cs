@@ -71,19 +71,21 @@ public partial class DashboardViewModel : ObservableObject
     [ObservableProperty] private bool _hasActivity;
     [ObservableProperty] private bool _noActivity;
 
-    private static bool IsDarkMode => Wpf.Ui.Appearance.ApplicationThemeManager.GetAppTheme() == Wpf.Ui.Appearance.ApplicationTheme.Dark;
+private static bool IsDarkMode =>
+    Wpf.Ui.Appearance.ApplicationThemeManager.GetAppTheme() ==
+    Wpf.Ui.Appearance.ApplicationTheme.Dark;
 
-    private static Brush Red => IsDarkMode 
-        ? new SolidColorBrush(Color.FromRgb(0xEF, 0x44, 0x44)) 
-        : new SolidColorBrush(Color.FromRgb(0xC4, 0x2B, 0x1C));
+private static Brush Red => IsDarkMode
+    ? new SolidColorBrush(Color.FromRgb(0xD9, 0x6C, 0x6C))   // Soft red in dark mode
+    : new SolidColorBrush(Color.FromRgb(0xD9, 0x6C, 0x6C));  // Soft red in light mode
 
-    private static Brush Amber => IsDarkMode 
-        ? new SolidColorBrush(Color.FromRgb(0xF5, 0x9E, 0x0B)) 
-        : new SolidColorBrush(Color.FromRgb(0x9D, 0x5D, 0x00));
+private static Brush Orange => IsDarkMode
+    ? new SolidColorBrush(Color.FromRgb(0xE6, 0xA7, 0x56))   // Golden orange
+    : new SolidColorBrush(Color.FromRgb(0xE6, 0xA7, 0x56));
 
-    private static Brush Green => IsDarkMode 
-        ? new SolidColorBrush(Color.FromRgb(0x22, 0xC5, 0x5E)) 
-        : new SolidColorBrush(Color.FromRgb(0x0F, 0x7B, 0x0F));
+private static Brush Green => IsDarkMode
+    ? new SolidColorBrush(Color.FromRgb(0x57, 0xB8, 0x94))   // Professional green
+    : new SolidColorBrush(Color.FromRgb(0x57, 0xB8, 0x94));
 
     public DashboardViewModel(IDashboardService dashboard, IAssetService assets,
         IExpenseAnalyticsService analytics, IIncomeService income, IUserSession session)
@@ -109,7 +111,7 @@ public partial class DashboardViewModel : ObservableObject
         HealthScore = s.HealthScore;
         HealthScoreText = $"{s.HealthScore}/100";
         HealthRating = s.HealthRating;
-        HealthBrush = s.HealthScore >= 80 ? Green : s.HealthScore >= 60 ? Amber : Red;
+        HealthBrush = s.HealthScore >= 80 ? Green : s.HealthScore >= 60 ? Orange : Red;
         HealthIsInterim = s.HealthIsInterim;
 
         UpcomingSips = new ObservableCollection<UpcomingSipRow>(s.UpcomingSips.Select(u =>
