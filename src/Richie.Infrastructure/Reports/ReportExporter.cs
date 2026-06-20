@@ -4,14 +4,28 @@ using Richie.Application.Reports;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using SkiaSharp;
 
 namespace Richie.Infrastructure.Reports;
 
 public sealed partial class ReportExporter : IReportExporter
 {
+    // ── Brand constants ───────────────────────────────────────────────────────
+    private const string NavyDark    = "#1A2942";
+    private const string NavyMedium  = "#243860";
+    private const string NavyLight   = "#2E4D80";
+    private const string Gold        = "#E6A756";
+    private const string GoldLight   = "#F3C969";
+    private const string AccentTeal  = "#56B7B1";
+    private const string BodyText    = "#1E2B3C";
+    private const string SubText     = "#5A7288";
+    private const string BorderGrey  = "#D4DDE8";
+    private const string RowEven     = "#F4F7FB";
+    private const string RowOdd      = "#FFFFFF";
+    private const string SectionBg   = "#EEF3FA";
+
     static ReportExporter()
     {
-        // QuestPDF is free for this use under the Community licence (offline desktop app).
         QuestPDF.Settings.License = LicenseType.Community;
     }
 
@@ -21,43 +35,322 @@ public sealed partial class ReportExporter : IReportExporter
         {
             doc.Page(page =>
             {
-                page.Margin(36);
+                page.Margin(0);
                 page.Size(PageSizes.A4);
-                // Segoe UI / Nirmala UI both carry the ₹ glyph (U+20B9); the bundled default does not.
-                page.DefaultTextStyle(x => x.FontSize(10).FontFamily("Segoe UI", "Nirmala UI", Fonts.Arial));
+                page.DefaultTextStyle(x => x
+                    .FontSize(10)
+                    .FontFamily("Segoe UI", "Nirmala UI", Fonts.Arial)
+                    .FontColor(BodyText));
 
-                page.Header().Column(col =>
-                {
-                    col.Item().Text(content.Title).FontSize(20).SemiBold();
-                    col.Item().Text($"Generated {content.GeneratedUtc.ToLocalTime():g}  ·  {content.PeriodLabel}")
-                        .FontColor(Colors.Grey.Medium);
-                });
+                // ── Cover header band ─────────────────────────────────────────
+                page.Header().Element(RenderPageHeader);
 
-                page.Content().PaddingVertical(8).Column(col =>
+                // ── Body content ──────────────────────────────────────────────
+                page.Content().PaddingHorizontal(36).PaddingVertical(8).Column(col =>
                 {
-                    col.Spacing(10);
+                    col.Spacing(0);
                     foreach (ReportSection section in content.Sections)
-                    {
-                        col.Item().PaddingTop(6).Text(section.Heading).FontSize(13).SemiBold();
-                        foreach (string line in section.Lines)
-                            col.Item().Text(line);
-                        if (section.Table is { } table)
-                            col.Item().Element(c => RenderTable(c, table));
-                        if (section.Chart is { Points.Count: > 0 } chart)
-                            col.Item().PaddingTop(6).MaxWidth(380).Image(RenderChartImage(chart));
-                    }
+                        col.Item().Element(c => RenderSection(c, section, content));
                 });
 
-                page.Footer().AlignRight().Text(x =>
-                {
-                    x.Span("Page ");
-                    x.CurrentPageNumber();
-                    x.Span(" / ");
-                    x.TotalPages();
-                });
+                // ── Footer (every page) ───────────────────────────────────────
+                page.Footer().Element(c => RenderPageFooter(c, content));
             });
         }).GeneratePdf();
     }
+
+    // ══════════════════════════════════════════════════════════════════════════
+    // Page header & footer
+    // ══════════════════════════════════════════════════════════════════════════
+
+    private static void RenderPageHeader(IContainer container)
+    {
+        container.Column(col =>
+        {
+            // Deep navy gradient band
+            col.Item().Background(NavyDark).PaddingHorizontal(36).PaddingVertical(20).Row(row =>
+            {
+                row.RelativeItem().Column(inner =>
+                {
+                    inner.Item()
+                         .Text("Richie Wealth OS")
+                         .FontSize(11)
+                         .FontColor(Gold)
+                         .LetterSpacing(0.06f);
+                    inner.Item()
+                         .Text("Full Portfolio Report")
+                         .FontSize(20)
+                         .Bold()
+                         .FontColor(Colors.White);
+                });
+                row.ConstantItem(160).AlignRight().AlignMiddle().Column(badge =>
+                {
+                    badge.Item()
+                         .Background(NavyMedium)
+                         .Padding(8)
+                         .Text($"Generated\n{DateTime.UtcNow.ToLocalTime():dd MMM yyyy  HH:mm}")
+                         .FontSize(8)
+                         .FontColor(AccentTeal)
+                         .AlignRight();
+                });
+            });
+
+            // Gold accent rule
+            col.Item().Height(3).Background(Gold);
+        });
+    }
+
+    private static void RenderPageFooter(IContainer container, ReportContent content)
+    {
+        container.Background(SectionBg).PaddingHorizontal(36).PaddingVertical(6).Row(row =>
+        {
+            row.RelativeItem().Text($"Generated by Richie Wealth OS  ·  {content.GeneratedUtc.ToLocalTime():g}  ·  Period: {content.PeriodLabel}")
+               .FontSize(7.5f).FontColor(SubText);
+
+            row.ConstantItem(80).AlignRight().Text(x =>
+            {
+                x.Span("Page ").FontSize(7.5f).FontColor(SubText);
+                x.CurrentPageNumber().FontSize(7.5f).FontColor(SubText);
+                x.Span(" / ").FontSize(7.5f).FontColor(SubText);
+                x.TotalPages().FontSize(7.5f).FontColor(SubText);
+            });
+        });
+    }
+
+    // ══════════════════════════════════════════════════════════════════════════
+    // Section dispatcher
+    // ══════════════════════════════════════════════════════════════════════════
+
+    private static void RenderSection(IContainer container, ReportSection section, ReportContent content)
+    {
+        container.Column(col =>
+        {
+            col.Spacing(0);
+
+            // ── Section heading ───────────────────────────────────────────────
+            col.Item().PaddingTop(18).PaddingBottom(4).Column(h =>
+            {
+                h.Item().Row(row =>
+                {
+                    row.ConstantItem(4).Background(Gold);
+                    row.ConstantItem(8);
+                    row.RelativeItem()
+                       .Text(section.Heading)
+                       .FontSize(13)
+                       .SemiBold()
+                       .FontColor(NavyDark);
+                });
+                h.Item().PaddingTop(4).Height(1).Background(BorderGrey);
+            });
+
+            col.Item().PaddingTop(6).Column(body =>
+            {
+                body.Spacing(6);
+
+                // Lines
+                foreach (string line in section.Lines)
+                    body.Item().Text(line).FontSize(9.5f).FontColor(SubText);
+
+                // KPI Cards
+                if (section.KpiCards is { Count: > 0 } kpis)
+                    body.Item().Element(c => RenderKpiCards(c, kpis));
+
+                // Standard table
+                if (section.Table is { } table)
+                    body.Item().Element(c => RenderTable(c, table));
+
+                // Chart
+                if (section.Chart is { Points.Count: > 0 } chart)
+                {
+                    float maxW = chart.IsLarge ? 500 : 360;
+                    body.Item().PaddingTop(8).AlignCenter().MaxWidth(maxW).Image(RenderChartImage(chart));
+
+                    if (chart.LargestLabel is { Length: > 0 } label)
+                        body.Item().AlignCenter().Text($"▲ {label} is the largest allocation").FontSize(8).FontColor(SubText).Italic();
+                }
+
+                // Asset cards
+                if (section.AssetCards is { Count: > 0 } cards)
+                    body.Item().Element(c => RenderAssetCards(c, cards));
+
+                // Insights
+                if (section.Insights is { Count: > 0 } insights)
+                    body.Item().Element(c => RenderInsights(c, insights));
+            });
+        });
+    }
+
+    // ══════════════════════════════════════════════════════════════════════════
+    // KPI Card grid  (2 columns)
+    // ══════════════════════════════════════════════════════════════════════════
+
+    private static void RenderKpiCards(IContainer container, IReadOnlyList<ReportKpiCard> cards)
+    {
+        // Render in pairs
+        var rows = new List<(ReportKpiCard, ReportKpiCard?)>();
+        for (int i = 0; i < cards.Count; i += 2)
+            rows.Add((cards[i], i + 1 < cards.Count ? cards[i + 1] : null));
+
+        container.Column(col =>
+        {
+            col.Spacing(6);
+            foreach (var (left, right) in rows)
+            {
+                col.Item().Row(row =>
+                {
+                    row.RelativeItem().Element(c => RenderSingleKpiCard(c, left));
+                    row.ConstantItem(6);
+                    if (right != null)
+                        row.RelativeItem().Element(c => RenderSingleKpiCard(c, right));
+                    else
+                        row.RelativeItem();
+                });
+            }
+        });
+    }
+
+    private static void RenderSingleKpiCard(IContainer container, ReportKpiCard card)
+    {
+        string valueFg = card.Sentiment switch
+        {
+            KpiSentiment.Positive => BrandColors.ProfitGreen,
+            KpiSentiment.Negative => BrandColors.LossRed,
+            KpiSentiment.Warning  => BrandColors.Warning,
+            _                     => NavyDark
+        };
+
+        container
+            .Border(1).BorderColor(BorderGrey)
+            .Background(RowOdd)
+            .Padding(10)
+            .Column(col =>
+            {
+                col.Item().Text(card.Label).FontSize(8).FontColor(SubText).SemiBold();
+                col.Item().PaddingTop(3).Text(card.Value).FontSize(16).Bold().FontColor(valueFg);
+                if (card.SubLabel is { Length: > 0 })
+                    col.Item().PaddingTop(2).Text(card.SubLabel).FontSize(7.5f).FontColor(SubText).Italic();
+            });
+    }
+
+    // ══════════════════════════════════════════════════════════════════════════
+    // Asset Detail Cards
+    // ══════════════════════════════════════════════════════════════════════════
+
+    private static void RenderAssetCards(IContainer container, IReadOnlyList<ReportAssetCard> cards)
+    {
+        container.Column(col =>
+        {
+            col.Spacing(8);
+            foreach (ReportAssetCard card in cards)
+                col.Item().Element(c => RenderSingleAssetCard(c, card));
+        });
+    }
+
+    private static void RenderSingleAssetCard(IContainer container, ReportAssetCard card)
+    {
+        string glColor = card.ReturnSentiment switch
+        {
+            KpiSentiment.Positive => BrandColors.ProfitGreen,
+            KpiSentiment.Negative => BrandColors.LossRed,
+            KpiSentiment.Warning  => BrandColors.Warning,
+            _                     => BodyText
+        };
+
+        container.Border(1).BorderColor(BorderGrey).Background(RowEven).Row(row =>
+        {
+            // ── Thumbnail / type badge ──────────────────────────────────────
+            row.ConstantItem(70).Background(NavyDark).AlignCenter().AlignMiddle().Column(thumb =>
+            {
+                if (card.ThumbnailPng is { Length: > 0 } png)
+                {
+                    thumb.Item().Padding(4).Image(png).FitArea();
+                }
+                else
+                {
+                    // Placeholder with asset type initial
+                    thumb.Item().PaddingVertical(20).AlignCenter().Text(card.TypeName.Length > 0 ? card.TypeName[..1] : "A")
+                         .FontSize(24).Bold().FontColor(Gold);
+                }
+
+                thumb.Item().PaddingBottom(4).Text(card.TypeName).FontSize(7).FontColor(AccentTeal).AlignCenter();
+            });
+
+            // ── Asset details ─────────────────────────────────────────────
+            row.RelativeItem().Padding(10).Column(detail =>
+            {
+                detail.Spacing(3);
+
+                // Name row
+                detail.Item().Row(nameRow =>
+                {
+                    nameRow.RelativeItem().Text(card.Name).FontSize(11).SemiBold().FontColor(NavyDark);
+                    nameRow.ConstantItem(100).AlignRight()
+                           .Text(card.ReturnPercent).FontSize(11).Bold().FontColor(glColor);
+                });
+
+                // Data grid — 3 pairs in a row
+                detail.Item().PaddingTop(4).Row(dataRow =>
+                {
+                    void Stat(RowDescriptor r, string label, string value, string? fg = null)
+                    {
+                        r.RelativeItem().Column(s =>
+                        {
+                            s.Item().Text(label).FontSize(7.5f).FontColor(SubText);
+                            s.Item().Text(value).FontSize(9).SemiBold().FontColor(fg ?? BodyText);
+                        });
+                    }
+
+                    Stat(dataRow, "Invested", card.Invested);
+                    Stat(dataRow, "Current Value", card.CurrentValue,
+                         card.ReturnSentiment == KpiSentiment.Positive ? BrandColors.ProfitGreen : null);
+                    Stat(dataRow, "Gain / Loss", card.GainLoss, glColor);
+                });
+
+                // Footer row
+                detail.Item().PaddingTop(4).Row(footRow =>
+                {
+                    footRow.RelativeItem().Text($"📎 {card.DocumentCount} doc(s)  |  🖼 {card.ImageCount} image(s)")
+                           .FontSize(7.5f).FontColor(SubText);
+                    if (card.Notes is { Length: > 0 })
+                        footRow.RelativeItem().Text($"Note: {card.Notes}").FontSize(7.5f).FontColor(SubText).Italic();
+                });
+            });
+        });
+    }
+
+    // ══════════════════════════════════════════════════════════════════════════
+    // Insight blocks
+    // ══════════════════════════════════════════════════════════════════════════
+
+    private static void RenderInsights(IContainer container, IReadOnlyList<ReportInsight> insights)
+    {
+        container.Column(col =>
+        {
+            col.Spacing(4);
+            foreach (ReportInsight insight in insights)
+            {
+                (string bg, string border, string text) = insight.Level switch
+                {
+                    InsightLevel.Positive => ("#EAF7F1", BrandColors.ProfitGreen, "#1A5C3C"),
+                    InsightLevel.Warning  => ("#FFF8EC", BrandColors.Warning, "#7A4F00"),
+                    InsightLevel.Alert    => ("#FEF0F0", BrandColors.LossRed, "#7A1C1C"),
+                    _                     => ("#EEF3FA", AccentTeal, NavyDark)
+                };
+
+                col.Item().Border(1).BorderColor(border).Background(bg).Row(row =>
+                {
+                    row.ConstantItem(3).Background(border);
+                    row.ConstantItem(6);
+                    row.RelativeItem().PaddingVertical(6).PaddingRight(8)
+                       .Text(insight.Text).FontSize(9).FontColor(text);
+                });
+            }
+        });
+    }
+
+    // ══════════════════════════════════════════════════════════════════════════
+    // Table (existing, with premium styling)
+    // ══════════════════════════════════════════════════════════════════════════
 
     private static void RenderTable(IContainer container, ReportTable table)
     {
@@ -69,25 +362,36 @@ public sealed partial class ReportExporter : IReportExporter
                     cols.RelativeColumn();
             });
 
+            // Header row — navy background
             foreach (string column in table.Columns)
-                t.Cell().Background(Colors.Grey.Lighten3).Padding(4).Text(column).SemiBold();
+                t.Cell()
+                 .Background(NavyDark)
+                 .Padding(5)
+                 .Text(column)
+                 .FontSize(8.5f)
+                 .SemiBold()
+                 .FontColor(Colors.White);
 
             for (int r = 0; r < table.Rows.Count; r++)
             {
                 IReadOnlyList<string> row = table.Rows[r];
                 string? rowLink = table.RowLinks is { } links && r < links.Count ? links[r] : null;
+                string rowBg = r % 2 == 0 ? RowEven : RowOdd;
 
                 for (int c = 0; c < row.Count; c++)
                 {
-                    IContainer cell = t.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(4);
+                    IContainer cell = t.Cell()
+                        .Background(rowBg)
+                        .BorderBottom(1).BorderColor(BorderGrey)
+                        .Padding(5);
 
                     bool isLink = rowLink is { Length: > 0 } && table.LinkColumns?.Contains(c) == true;
                     if (isLink)
                         cell = cell.Hyperlink(rowLink!);
 
-                    var span = cell.Text(row[c]);
+                    var span = cell.Text(row[c]).FontSize(9);
                     if (isLink)
-                        span.FontColor("#3E86C6").Underline();          // link styling (brand blue)
+                        span.FontColor("#3E86C6").Underline();
                     else if (table.SignedColumns?.Contains(c) == true)
                     {
                         int sign = SignOf(row[c]);
