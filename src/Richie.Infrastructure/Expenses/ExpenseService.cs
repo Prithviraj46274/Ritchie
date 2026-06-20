@@ -2,6 +2,7 @@ using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using Richie.Application.Abstractions;
 using Richie.Application.Authentication;
+using Richie.Application.Common;
 using Richie.Application.Expenses;
 using Richie.Domain.Auditing;
 using Richie.Domain.Expenses;
@@ -198,7 +199,8 @@ public sealed class ExpenseService : IExpenseService
     }
 
     private static ExpenseSummary ToSummary(Expense e) => new(
-        e.Id, e.Date, e.Amount, e.Category, ExpenseCategoryNames.Display(e.Category), e.SpentBy, e.SpentFor,
+        e.Id, e.Date, DateFormatter.Format(e.Date), e.Amount, CurrencyFormatter.FormatWhole(e.Amount), 
+        e.Category, ExpenseCategoryNames.Display(e.Category), e.SpentBy, e.SpentFor,
         e.RecurringId is not null);
 
     private static bool Contains(string? value, string term) =>

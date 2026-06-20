@@ -1,7 +1,9 @@
 using System.Globalization;
+using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Richie.Application.Assets;
+using Richie.Application.Common;
 using Richie.Domain.Assets;
 
 namespace Richie.UI.ViewModels;
@@ -9,6 +11,7 @@ namespace Richie.UI.ViewModels;
 public partial class AddEditAssetViewModel : ObservableObject
 {
     private readonly IAssetService _assets;
+    private readonly IAssetDocumentService _docs;
     private Guid? _editId;
 
     public sealed record TypeOption(AssetType Value, string Text);
@@ -45,8 +48,13 @@ public partial class AddEditAssetViewModel : ObservableObject
     [ObservableProperty] private bool _isExcludedFromPortfolio;
 
     [ObservableProperty] private string? _error;
+    [ObservableProperty] private string _imageUploadStatus = string.Empty;
 
-    public AddEditAssetViewModel(IAssetService assets) => _assets = assets;
+    public AddEditAssetViewModel(IAssetService assets, IAssetDocumentService docs)
+    {
+        _assets = assets;
+        _docs = docs;
+    }
 
     public event Action<bool>? CloseRequested;
 
@@ -92,10 +100,10 @@ public partial class AddEditAssetViewModel : ObservableObject
         Name = a.Name;
         Identifier = a.Identifier;
         InvestmentStartDate = a.InvestmentStartDate;
-        InvestedAmountText = a.InvestedAmount.ToString(CultureInfo.CurrentCulture);
+        InvestedAmountText = NumberFormatter.FormatIndianWhole(a.InvestedAmount);
         QuantityText = a.Quantity?.ToString(CultureInfo.CurrentCulture) ?? string.Empty;
         PurchasePriceText = a.PurchasePricePerUnit?.ToString(CultureInfo.CurrentCulture) ?? string.Empty;
-        CurrentValueText = a.CurrentValue.ToString(CultureInfo.CurrentCulture);
+        CurrentValueText = NumberFormatter.FormatIndianWhole(a.CurrentValue);
         ValuationDate = a.ValuationDate;
         IsSip = a.InvestmentMode == InvestmentMode.Sip;
         Notes = a.Notes;
@@ -176,6 +184,39 @@ public partial class AddEditAssetViewModel : ObservableObject
 
     [RelayCommand]
     private void Cancel() => CloseRequested?.Invoke(false);
+
+    [RelayCommand]
+    private async System.Threading.Tasks.Task UploadImageAsync()
+    {
+        try
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = "Image files|*.jpg;*.jpeg;*.png;*.bmp;*.gif;*.webp|All files|*.*",
+                Title = "Select an image to upload"
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                byte[] fileBytes = await System.IO.File.ReadAllBytesAsync(dialog.FileName);
+                
+                // If editing, upload to existing asset. If adding, we'll need to save first.
+                if (_editId is not null)
+                {
+                    _docs.Attach(_editId.Value, dialog.FileName, fileBytes);
+                    ImageUploadStatus = $"Image '{System.IO.Path.GetFileName(dialog.FileName)}' uploaded successfully.";
+                }
+                else
+                {
+                    ImageUploadStatus = "Please save the asset first before uploading images.";
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ImageUploadStatus = $"Error uploading image: {ex.Message}";
+        }
+    }
 
     private static bool TryParse(string text, out decimal value) =>
         decimal.TryParse(text, NumberStyles.Number, CultureInfo.CurrentCulture, out value);

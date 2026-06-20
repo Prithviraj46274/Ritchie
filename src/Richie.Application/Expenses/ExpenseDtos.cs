@@ -1,3 +1,4 @@
+using Richie.Application.Common;
 using Richie.Domain.Expenses;
 
 namespace Richie.Application.Expenses;
@@ -6,7 +7,7 @@ public sealed record ExpenseInput(
     DateTime Date, decimal Amount, ExpenseCategory Category, string? SpentBy, string? SpentFor, string? Notes);
 
 public sealed record ExpenseSummary(
-    Guid Id, DateTime Date, decimal Amount, ExpenseCategory Category, string CategoryName,
+    Guid Id, DateTime Date, string DateText, decimal Amount, string AmountText, ExpenseCategory Category, string CategoryName,
     string? SpentBy, string? SpentFor, bool IsRecurring);
 
 /// <summary>Filters for the expense history (all optional).</summary>

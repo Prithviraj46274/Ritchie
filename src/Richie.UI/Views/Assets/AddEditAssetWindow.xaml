@@ -157,6 +157,26 @@
                 <ui:TextBox PlaceholderText="Notes" Margin="0,0,0,10" AcceptsReturn="True" MinLines="2"
                             Text="{Binding Notes, UpdateSourceTrigger=PropertyChanged}" />
 
+                <!-- Image Upload Section -->
+                <Border Background="{DynamicResource ControlFillColorSecondaryBrush}" 
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" 
+                        BorderThickness="1" 
+                        CornerRadius="6" 
+                        Padding="16" 
+                        Margin="0,0,0,10">
+                    <StackPanel>
+                        <ui:TextBlock FontSize="15" FontWeight="SemiBold" Text="Images &amp; Documents" Margin="0,0,0,8" />
+                        <ui:Button Content="Upload Image" 
+                                   Command="{Binding UploadImageCommand}" 
+                                   HorizontalAlignment="Left" 
+                                   Margin="0,0,0,8" />
+                        <ui:TextBlock FontSize="13" 
+                                      Appearance="Secondary" 
+                                      TextWrapping="Wrap" 
+                                      Text="{Binding ImageUploadStatus}" />
+                    </StackPanel>
+                </Border>
+
                 <ui:TextBlock Foreground="#C42B1C" TextWrapping="Wrap" Text="{Binding Error}" />
             </StackPanel>
         </ScrollViewer>

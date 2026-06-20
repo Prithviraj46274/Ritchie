@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Richie.Application.Abstractions;
 using Richie.Application.Assets;
 using Richie.Application.Authentication;
+using Richie.Application.Common;
 using Richie.Domain.Assets;
 using Richie.Domain.Auditing;
 using Richie.Infrastructure.Auditing;
@@ -36,7 +37,7 @@ public sealed class AssetService : IAssetService
             .Where(a => a.UserId == userId)
             .OrderBy(a => a.Name)
             .AsEnumerable()
-            .Select(ToSummary)
+            .Select(a => ToSummary(a, db))
             .ToList();
     }
 
@@ -160,12 +161,22 @@ public bool SetPortfolioExclusion(Guid id, bool excluded)
             allocation);
     }
 
-    private AssetSummary ToSummary(Asset a) => new(
-        a.Id, a.Type, AssetTypeNames.Display(a.Type), a.Name, a.Identifier,
-        a.InvestedAmount, a.CurrentValue,
-        _valuation.ProfitLoss(a.InvestedAmount, a.CurrentValue),
-        _valuation.ProfitLossPercent(a.InvestedAmount, a.CurrentValue),
-        a.InvestmentMode, a.IsExcludedFromPortfolio);
+    private AssetSummary ToSummary(Asset a, RichieDbContext db)
+    {
+        int imageCount = db.AssetDocuments
+            .Count(d => d.AssetId == a.Id && d.Kind == DocumentKind.Image);
+        
+        decimal profitLoss = _valuation.ProfitLoss(a.InvestedAmount, a.CurrentValue);
+        
+        return new AssetSummary(
+            a.Id, a.Type, AssetTypeNames.Display(a.Type), a.Name, a.Identifier,
+            a.InvestedAmount, CurrencyFormatter.FormatWhole(a.InvestedAmount),
+            a.CurrentValue, CurrencyFormatter.FormatWhole(a.CurrentValue),
+            profitLoss, CurrencyFormatter.FormatWhole(profitLoss),
+            _valuation.ProfitLossPercent(a.InvestedAmount, a.CurrentValue),
+            a.InvestmentMode, a.IsExcludedFromPortfolio,
+            imageCount > 0, imageCount);
+    }
 
     private static void Apply(Asset a, AssetInput i)
     {

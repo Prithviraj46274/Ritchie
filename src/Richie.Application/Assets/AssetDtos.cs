@@ -1,3 +1,4 @@
+using Richie.Application.Common;
 using Richie.Domain.Assets;
 
 namespace Richie.Application.Assets;
@@ -10,11 +11,16 @@ public sealed record AssetSummary(
     string Name,
     string? Identifier,
     decimal InvestedAmount,
+    string InvestedAmountText,
     decimal CurrentValue,
+    string CurrentValueText,
     decimal ProfitLoss,
+    string ProfitLossText,
     decimal ProfitLossPercent,
     InvestmentMode InvestmentMode,
-    bool IsExcludedFromPortfolio);
+    bool IsExcludedFromPortfolio,
+    bool HasImages,
+    int ImageCount);
 
 /// <summary>One named slice of the allocation breakdown (never an "Others" bucket).</summary>
 public sealed record AllocationSlice(AssetType Type, string TypeName, decimal Value, decimal Percent);

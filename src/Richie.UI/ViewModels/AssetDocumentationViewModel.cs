@@ -7,6 +7,7 @@ using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Richie.Application.Assets;
+using Richie.Application.Common;
 using Richie.UI.Charts;
 using SkiaSharp;
 
@@ -165,7 +166,7 @@ public partial class AssetDocumentationViewModel : ObservableObject
                 GetMediaBrush(i),
                 s.TypeName,
                 Money(s.Value),
-                string.Format(CultureInfo.CurrentCulture, "({0:0.0}%)", s.Percent),
+                string.Format(CultureInfo.InvariantCulture, "({0:0.0}%)", s.Percent),
                 percentVal,
                 new GridLength(filled, GridUnitType.Star),
                 new GridLength(empty, GridUnitType.Star));
@@ -190,7 +191,7 @@ public partial class AssetDocumentationViewModel : ObservableObject
         // 4. Expose clean values for summary cards
         TotalInvestedValueText = Money(summary.TotalInvested);
         TotalProfitLossValueText = Money(summary.TotalProfitLoss);
-        TotalProfitLossPercentText = string.Format(CultureInfo.CurrentCulture, "{0:+0.0;-0.0;0.0}%", summary.TotalProfitLossPercent);
+        TotalProfitLossPercentText = string.Format(CultureInfo.InvariantCulture, "{0:+0.0;-0.0;0.0}%", summary.TotalProfitLossPercent);
         IsProfitLossNegative = summary.TotalProfitLoss < 0;
 
         // 5. Calculate diversification score (HHI-based)
@@ -260,7 +261,7 @@ public partial class AssetDocumentationViewModel : ObservableObject
         if (topAsset != null && Items.Count > 0)
         {
             TopPerformingAssetName = topAsset.Name;
-            TopPerformingAssetReturnText = string.Format(CultureInfo.CurrentCulture, "{0:+0.0;-0.0;0.0}%", topAsset.ProfitLossPercent);
+            TopPerformingAssetReturnText = string.Format(CultureInfo.InvariantCulture, "{0:+0.0;-0.0;0.0}%", topAsset.ProfitLossPercent);
         }
         else
         {
@@ -300,5 +301,5 @@ public partial class AssetDocumentationViewModel : ObservableObject
         Refresh();
     }
 
-    private static string Money(decimal value) => Richie.Application.Common.CurrencyFormatter.Format(value);
+    private static string Money(decimal value) => CurrencyFormatter.Format(value);
 }

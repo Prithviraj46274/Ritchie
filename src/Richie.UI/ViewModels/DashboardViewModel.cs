@@ -308,5 +308,5 @@ private static Brush Green => IsDarkMode
     };
 
     private static string Money(decimal value) => Richie.Application.Common.CurrencyFormatter.Format(value);
-    private static string CompactMoney(decimal value) => Richie.Application.Common.CurrencyFormatter.FormatCompact(value);
+    private static string CompactMoney(decimal value) => Richie.Application.Common.CurrencyFormatter.Format(value);
 }

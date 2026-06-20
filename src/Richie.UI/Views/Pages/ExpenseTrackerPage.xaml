@@ -118,14 +118,15 @@
             <DataGrid.Resources>
                 <Style TargetType="DataGridColumnHeader">
                     <Setter Property="FontWeight" Value="SemiBold" />
-                    <Setter Property="Background" Value="#F8FAFC" />
+                    <Setter Property="Background" Value="{DynamicResource LayerFillColorDefaultBrush}" />
+                    <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
                 </Style>
 </DataGrid.Resources>
             <DataGrid.Columns>
 
-                <DataGridTextColumn Header="Date" Binding="{Binding Date, StringFormat=d}" Width="120" />
+                <DataGridTextColumn Header="Date" Binding="{Binding DateText}" Width="120" />
                 <DataGridTextColumn Header="Category" Binding="{Binding CategoryName}" Width="*" />
-                <DataGridTextColumn Header="Amount" Binding="{Binding Amount, StringFormat='₹{0:N2}'}" Width="140" />
+                <DataGridTextColumn Header="Amount" Binding="{Binding AmountText}" Width="140" />
                 <DataGridTextColumn Header="Spent by" Binding="{Binding SpentBy}" Width="140" />
                 <DataGridTextColumn Header="Spent for" Binding="{Binding SpentFor}" Width="*" />
                 <DataGridTemplateColumn Header="Recurring" Width="110">

@@ -558,7 +558,7 @@
                 <DataGridTextColumn Header="Type" Binding="{Binding TypeName}" Width="Auto" MinWidth="100" />
                 <DataGridTextColumn Header="Identifier" Binding="{Binding Identifier}" Width="*" />
                 
-                 <DataGridTextColumn Header="Invested" Binding="{Binding InvestedAmount, StringFormat='₹{0:N2}'}" Width="Auto">
+                 <DataGridTextColumn Header="Invested" Binding="{Binding InvestedAmountText}" Width="Auto">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
@@ -569,7 +569,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
                 
-                <DataGridTextColumn Header="Current" Binding="{Binding CurrentValue, StringFormat='₹{0:N2}'}" Width="Auto">
+                <DataGridTextColumn Header="Current" Binding="{Binding CurrentValueText}" Width="Auto">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
@@ -580,7 +580,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
                 
-                <DataGridTextColumn Header="P&amp;L" Binding="{Binding ProfitLoss, StringFormat='₹{0:N2}'}" Width="Auto">
+                <DataGridTextColumn Header="P&amp;L" Binding="{Binding ProfitLossText}" Width="Auto">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="Foreground" Value="{Binding ProfitLoss, Converter={StaticResource AssetPnlBrush}}" />
@@ -601,6 +601,17 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
+
+                <DataGridTemplateColumn Header="Images" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <ui:SymbolIcon Symbol="Image24" FontSize="16" Foreground="White" Margin="0,0,4,0" VerticalAlignment="Center" Visibility="{Binding HasImages, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                <TextBlock FontSize="13" Text="{Binding ImageCount}" VerticalAlignment="Center" Visibility="{Binding HasImages, Converter={StaticResource BoolToVisibilityConverter}}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                              <DataGridTemplateColumn Header="Excl." Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -624,27 +635,27 @@
                                 <ui:Button Padding="0" Margin="0,0,3,0" Height="24" Width="28"
                                            Tag="{Binding Id}" Click="OnViewAsset" ToolTip="View Details"
                                            AutomationProperties.Name="View Asset Details">
-                                    <ui:SymbolIcon Symbol="Eye24" FontSize="13.5" Foreground="{DynamicResource LighterBlueBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                    <ui:SymbolIcon Symbol="Eye24" FontSize="13.5" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </ui:Button>
                                 <ui:Button Padding="0" Margin="0,0,3,0" Height="24" Width="28"
                                            Tag="{Binding Id}" Click="OnSipAsset" ToolTip="SIP Scheduler"
                                            AutomationProperties.Name="Manage SIP Schedule">
-                                    <ui:SymbolIcon Symbol="ArrowSync24" FontSize="13.5" Foreground="{DynamicResource LighterBlueBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                    <ui:SymbolIcon Symbol="ArrowSync24" FontSize="13.5" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </ui:Button>
                                 <ui:Button Padding="0" Margin="0,0,3,0" Height="24" Width="28"
                                            Tag="{Binding Id}" Click="OnDocsAsset" ToolTip="View Documents"
                                            AutomationProperties.Name="View Documents">
-                                    <ui:SymbolIcon Symbol="Document24" FontSize="13.5" Foreground="{DynamicResource LighterBlueBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                    <ui:SymbolIcon Symbol="Document24" FontSize="13.5" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </ui:Button>
                                 <ui:Button Padding="0" Margin="0,0,3,0" Height="24" Width="28"
                                            Tag="{Binding Id}" Click="OnEditAsset" ToolTip="Edit Asset"
                                            AutomationProperties.Name="Edit Asset">
-                                    <ui:SymbolIcon Symbol="Edit24" FontSize="13.5" Foreground="{DynamicResource LighterBlueBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                    <ui:SymbolIcon Symbol="Edit24" FontSize="13.5" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </ui:Button>
                                 <ui:Button Padding="0" Height="24" Width="28" Appearance="Secondary"
                                            Tag="{Binding Id}" Click="OnDeleteAsset" ToolTip="Delete Asset"
                                            AutomationProperties.Name="Delete Asset">
-                                    <ui:SymbolIcon Symbol="Delete24" FontSize="13.5" Foreground="{DynamicResource LighterBlueBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                    <ui:SymbolIcon Symbol="Delete24" FontSize="13.5" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </ui:Button>
                             </StackPanel>
                         </DataTemplate>
