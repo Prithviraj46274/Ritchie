@@ -173,15 +173,17 @@ public partial class AssetDocumentationViewModel : ObservableObject
         }));
 
         // 2. Set allocation chart series with custom palette
-        AllocationSeries = summary.Allocation
-            .Select((s, i) => (ISeries)new PieSeries<double>
-            {
-                Values = [(double)s.Value],
-                Name = s.TypeName,
-                InnerRadius = 55,
-                Fill = new SolidColorPaint(GetSkColor(i))
-            })
-            .ToArray();
+AllocationSeries = summary.Allocation
+    .Select((a, i) => (ISeries)new PieSeries<double>
+    {
+        Values = new[] { (double)a.Value },
+        Name = a.TypeName,
+        InnerRadius = 45,
+        Fill = BrandPalette.Categorical(i),
+        ToolTipLabelFormatter = point =>
+            $"₹{FormatIndian(point.Coordinate.PrimaryValue)}"
+    })
+    .ToArray();
 
         // 3. Base texts
         TotalCurrentValueText = Money(summary.TotalCurrentValue);
@@ -300,6 +302,11 @@ public partial class AssetDocumentationViewModel : ObservableObject
         _assets.SetPortfolioExclusion(id, excluded);
         Refresh();
     }
-
+private static string FormatIndian(double value)
+{
+    // Indian number system: 10,00,000 instead of 1,000,000
+    var culture = new CultureInfo("en-IN");
+    return value.ToString("N0", culture);
+}
     private static string Money(decimal value) => CurrencyFormatter.Format(value);
 }

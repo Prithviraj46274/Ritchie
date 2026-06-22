@@ -50,7 +50,7 @@
                     <ColumnDefinition Width="12" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <!-- Total Assets -->
+<!-- Total Assets -->
 <ui:Card Grid.Column="0" Padding="12" Height="100">
     <StackPanel VerticalAlignment="Center">
         <StackPanel Orientation="Horizontal"
@@ -66,7 +66,7 @@
                           Text="Total assets"/>
         </StackPanel>
 
-        <ui:TextBlock FontTypography="Subtitle"
+        <ui:TextBlock FontSize="15"
                       Text="{Binding TotalAssetsText}"
                       HorizontalAlignment="Center"/>
     </StackPanel>
@@ -88,7 +88,7 @@
                           Text="Total invested"/>
         </StackPanel>
 
-        <ui:TextBlock FontTypography="Subtitle"
+        <ui:TextBlock FontSize="15"
                       Text="{Binding TotalInvestedText}"
                       HorizontalAlignment="Center"/>
     </StackPanel>
@@ -110,7 +110,7 @@
                           Text="Expenses (this month)"/>
         </StackPanel>
 
-        <ui:TextBlock FontTypography="Subtitle"
+        <ui:TextBlock FontSize="15"
                       Text="{Binding TotalExpensesText}"
                       HorizontalAlignment="Center"/>
     </StackPanel>
@@ -132,7 +132,7 @@
                           Text="Profit &amp; loss"/>
         </StackPanel>
 
-        <ui:TextBlock FontTypography="Subtitle"
+        <ui:TextBlock FontSize="15"
                       Foreground="{Binding ProfitLossBrush}"
                       Text="{Binding ProfitLossText}"
                       HorizontalAlignment="Center"/>
@@ -155,7 +155,7 @@
                           Text="Financial health"/>
         </StackPanel>
 
-        <ui:TextBlock FontTypography="Subtitle"
+        <ui:TextBlock FontSize="15"
                       Foreground="{Binding HealthBrush}"
                       Text="{Binding HealthScoreText}"
                       HorizontalAlignment="Center"/>
@@ -260,9 +260,12 @@
                     <StackPanel>
                         <ui:TextBlock FontTypography="BodyStrong" Text="Expense breakdown" />
                         <ui:TextBlock Appearance="Secondary" FontTypography="Caption" Text="This month" Margin="0,0,0,8" />
-                        <lvc:CartesianChart Height="220" Series="{Binding ExpenseBreakdownSeries}"
-                                            XAxes="{Binding ExpenseBreakdownAxes}"
-                                            YAxes="{Binding ExpenseBreakdownYAxes}" />
+                        <lvc:CartesianChart Height="220"
+                    Series="{Binding ExpenseBreakdownSeries}"
+                    XAxes="{Binding ExpenseBreakdownAxes}"
+                    YAxes="{Binding ExpenseBreakdownYAxes}"
+                    TooltipBackgroundPaint="{Binding TooltipBgPaint}"
+                    TooltipTextPaint="{Binding TooltipTextPaint}" />
                     </StackPanel>
                 </ui:Card>
             </Grid>

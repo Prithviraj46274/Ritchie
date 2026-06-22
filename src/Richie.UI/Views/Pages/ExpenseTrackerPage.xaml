@@ -82,13 +82,30 @@
 
 
         <!-- Income vs expense chart -->
-        <ui:Card Grid.Row="2" Margin="0,0,0,10" Height="210">
+        <ui:Card Grid.Row="2" Margin="0,0,0,10" Height="230">
             <StackPanel>
                 <ui:TextBlock FontTypography="BodyStrong" Text="Income vs expense trend (last 6 months)" Margin="0,0,0,4" />
-                <lvc:CartesianChart Height="160" Series="{Binding IncomeExpenseSeries}" XAxes="{Binding IncomeExpenseAxes}"
-                                    YAxes="{Binding IncomeExpenseYAxes}"
-                                    LegendTextPaint="{DynamicResource ChartLegendTextPaint}"
-                                    LegendPosition="Right" />
+                <StackPanel>
+    <lvc:CartesianChart Height="150"
+                        Series="{Binding IncomeExpenseSeries}"
+                        XAxes="{Binding IncomeExpenseAxes}"
+                        YAxes="{Binding IncomeExpenseYAxes}"
+                        LegendPosition="Hidden" />
+
+    <!-- Custom legend -->
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,6,0,0">
+        <StackPanel Orientation="Horizontal" Margin="0,0,16,0">
+            <Ellipse Width="10" Height="10" Fill="{Binding IncomeBrush}"
+                     VerticalAlignment="Center" Margin="0,0,6,0"/>
+            <TextBlock Text="Income (₹'000s)" VerticalAlignment="Center" FontSize="12"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Ellipse Width="10" Height="10" Fill="{Binding SpendBrush}"
+                     VerticalAlignment="Center" Margin="0,0,6,0"/>
+            <TextBlock Text="Expense (₹'000s)" VerticalAlignment="Center" FontSize="12"/>
+        </StackPanel>
+    </StackPanel>
+</StackPanel>
             </StackPanel>
         </ui:Card>
 

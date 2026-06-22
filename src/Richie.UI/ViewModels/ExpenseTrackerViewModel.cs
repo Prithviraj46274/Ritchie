@@ -90,8 +90,13 @@ public partial class ExpenseTrackerViewModel : ObservableObject
             TrendLine("Expense", expense, BrandPalette.Danger)
         ];
         IncomeExpenseAxes = [new Axis { Labels = income.Select(d => d.Label).ToArray(), LabelsRotation = 0, LabelsPaint = BrandPalette.ChartAxesLabelPaint, SeparatorsPaint = BrandPalette.ChartGridLinesPaint }];
-        IncomeExpenseYAxes = [new Axis { LabelsPaint = BrandPalette.ChartAxesLabelPaint, SeparatorsPaint = BrandPalette.ChartGridLinesPaint }];
-    }
+       IncomeExpenseYAxes = [new Axis
+{ 
+    Labeler = value => (value / 1000).ToString("0.#") + "K",
+    LabelsPaint = BrandPalette.ChartAxesLabelPaint, 
+    SeparatorsPaint = BrandPalette.ChartGridLinesPaint 
+}];
+}
 
     private static LineSeries<double> TrendLine(string name, IReadOnlyList<PeriodDatum> data, SKColor color) => new()
     {
@@ -102,7 +107,8 @@ public partial class ExpenseTrackerViewModel : ObservableObject
         GeometryFill = new SolidColorPaint(color),
         GeometrySize = 8,
         Fill = null,                 // trend line, not a filled area
-        LineSmoothness = 0.6         // smooth trend
+        LineSmoothness = 0.6,         // smooth trend
+    YToolTipLabelFormatter = point => $"₹{FormatIndian(point.Coordinate.PrimaryValue)}"
     };
 
     public void ApplyFilter()
@@ -137,6 +143,10 @@ public partial class ExpenseTrackerViewModel : ObservableObject
 
     private static decimal? ParseNullable(string text) =>
         decimal.TryParse(text, NumberStyles.Number, CultureInfo.CurrentCulture, out decimal v) ? v : null;
-
+private static string FormatIndian(double value)
+{
+    var culture = new CultureInfo("en-IN");
+    return value.ToString("N0", culture);
+}
     private static string Money(decimal value) => Richie.Application.Common.CurrencyFormatter.Format(value);
 }

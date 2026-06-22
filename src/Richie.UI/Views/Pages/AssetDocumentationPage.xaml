@@ -134,19 +134,19 @@
                         <StackPanel Grid.Column="0">
                             <ui:TextBlock Appearance="Secondary" FontSize="13" Text="Profit / Loss" />
                             <ui:TextBlock FontSize="15.5" FontWeight="SemiBold" Text="{Binding TotalProfitLossValueText}">
-                                <ui:TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsProfitLossNegative}" Value="True">
-                                                <Setter Property="Foreground" Value="{DynamicResource ProfitLossNegativeBrush}" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding IsProfitLossNegative}" Value="False">
-                                                <Setter Property="Foreground" Value="{DynamicResource ProfitLossPositiveBrush}" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </ui:TextBlock.Style>
-                            </ui:TextBlock>
+    <ui:TextBlock.Style>
+        <Style TargetType="TextBlock">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsProfitLossNegative}" Value="True">
+                    <Setter Property="Foreground" Value="{DynamicResource StatusOrangeBrush}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsProfitLossNegative}" Value="False">
+                    <Setter Property="Foreground" Value="{DynamicResource StatusTealBrush}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </ui:TextBlock.Style>
+</ui:TextBlock>
                         </StackPanel>
                         <Border Grid.Column="1" CornerRadius="4" Padding="6,2" VerticalAlignment="Bottom" Height="24">
                             <Border.Style>
@@ -162,19 +162,19 @@
                                 </Style>
                             </Border.Style>
                             <ui:TextBlock FontSize="14" FontWeight="Bold" VerticalAlignment="Center" Text="{Binding TotalProfitLossPercentText}">
-                                <ui:TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsProfitLossNegative}" Value="True">
-                                                <Setter Property="Foreground" Value="{DynamicResource ProfitLossNegativeBrush}" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding IsProfitLossNegative}" Value="False">
-                                                <Setter Property="Foreground" Value="{DynamicResource ProfitLossPositiveBrush}" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </ui:TextBlock.Style>
-                            </ui:TextBlock>
+    <ui:TextBlock.Style>
+        <Style TargetType="TextBlock">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsProfitLossNegative}" Value="True">
+                    <Setter Property="Foreground" Value="{DynamicResource StatusOrangeBrush}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsProfitLossNegative}" Value="False">
+                    <Setter Property="Foreground" Value="{DynamicResource StatusTealBrush}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </ui:TextBlock.Style>
+</ui:TextBlock>
                         </Border>
                     </Grid>
                 </StackPanel>
@@ -333,7 +333,6 @@
                                                 <Run Text="{Binding TypeName}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                                             </ui:TextBlock>
                                             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
-                                                <ui:TextBlock Text="{Binding ValueText}" FontSize="13.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontWeight="SemiBold" VerticalAlignment="Center" />
                                                 <ui:TextBlock Text="{Binding PercentText}" FontSize="13.5" Foreground="{DynamicResource StatusTealBrush}" FontWeight="SemiBold" Margin="12,0,0,0" VerticalAlignment="Center" />
                                             </StackPanel>
                                         </Grid>
@@ -635,27 +634,27 @@
                                 <ui:Button Padding="0" Margin="0,0,3,0" Height="24" Width="28"
                                            Tag="{Binding Id}" Click="OnViewAsset" ToolTip="View Details"
                                            AutomationProperties.Name="View Asset Details">
-                                    <ui:SymbolIcon Symbol="Eye24" FontSize="13.5" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                    <ui:SymbolIcon Symbol="Eye24" FontSize="13.5" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ui:Button}}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </ui:Button>
                                 <ui:Button Padding="0" Margin="0,0,3,0" Height="24" Width="28"
                                            Tag="{Binding Id}" Click="OnSipAsset" ToolTip="SIP Scheduler"
                                            AutomationProperties.Name="Manage SIP Schedule">
-                                    <ui:SymbolIcon Symbol="ArrowSync24" FontSize="13.5" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                    <ui:SymbolIcon Symbol="ArrowSync24" FontSize="13.5" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ui:Button}}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </ui:Button>
                                 <ui:Button Padding="0" Margin="0,0,3,0" Height="24" Width="28"
                                            Tag="{Binding Id}" Click="OnDocsAsset" ToolTip="View Documents"
                                            AutomationProperties.Name="View Documents">
-                                    <ui:SymbolIcon Symbol="Document24" FontSize="13.5" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                    <ui:SymbolIcon Symbol="Document24" FontSize="13.5" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ui:Button}}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </ui:Button>
                                 <ui:Button Padding="0" Margin="0,0,3,0" Height="24" Width="28"
                                            Tag="{Binding Id}" Click="OnEditAsset" ToolTip="Edit Asset"
                                            AutomationProperties.Name="Edit Asset">
-                                    <ui:SymbolIcon Symbol="Edit24" FontSize="13.5" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                    <ui:SymbolIcon Symbol="Edit24" FontSize="13.5" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ui:Button}}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </ui:Button>
                                 <ui:Button Padding="0" Height="24" Width="28" Appearance="Secondary"
                                            Tag="{Binding Id}" Click="OnDeleteAsset" ToolTip="Delete Asset"
                                            AutomationProperties.Name="Delete Asset">
-                                    <ui:SymbolIcon Symbol="Delete24" FontSize="13.5" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                    <ui:SymbolIcon Symbol="Delete24" FontSize="13.5" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ui:Button}}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </ui:Button>
                             </StackPanel>
                         </DataTemplate>

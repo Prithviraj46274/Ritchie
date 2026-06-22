@@ -124,9 +124,9 @@ private static Brush Green => IsDarkMode
             s.Insights.Take(3).Select(i => new InsightRow(i.Text, ActionLabel(i.Topic), i.Topic)));
         NoInsights = Insights.Count == 0;
 
-        RecentActivity = new ObservableCollection<ActivityRow>(s.RecentActivity.Select(a =>
-            new ActivityRow(a.TimestampUtc.ToLocalTime().ToString("g", CultureInfo.CurrentCulture), a.Module, a.Action, a.Description)));
-        HasActivity = RecentActivity.Count > 0;
+      RecentActivity = new ObservableCollection<ActivityRow>(s.RecentActivity.Select(a =>
+    new ActivityRow(a.TimestampUtc.ToLocalTime().ToString("dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture), a.Module, a.Action, a.Description)));
+    HasActivity = RecentActivity.Count > 0;
         NoActivity = !HasActivity;
 
         BuildCharts(s);
@@ -138,10 +138,17 @@ private static Brush Green => IsDarkMode
         IReadOnlyList<AllocationSlice> allocation = _assets.GetPortfolioSummary().Allocation;
         HasAssets = allocation.Count > 0;
         NoAssets = !HasAssets;
-        AllocationSeries = allocation
-            .Select((a, i) => (ISeries)new PieSeries<double>
-                { Values = new[] { (double)a.Value }, Name = a.TypeName, InnerRadius = 45, Fill = BrandPalette.Categorical(i) })
-            .ToArray();
+       AllocationSeries = allocation
+    .Select((a, i) => (ISeries)new PieSeries<double>
+    {
+        Values = new[] { (double)a.Value },
+        Name = a.TypeName,
+        InnerRadius = 45,
+        Fill = BrandPalette.Categorical(i),
+        ToolTipLabelFormatter = point =>
+            $"₹{FormatIndian(point.Coordinate.PrimaryValue)}"
+    })
+    .ToArray();
         // Custom legend (matches slice colours) so it lays out inside the card instead of the
         // built-in legend overflowing it.
         AllocationLegend = new ObservableCollection<AllocationLegendItem>(
@@ -149,9 +156,20 @@ private static Brush Green => IsDarkMode
         // Income vs Expense — filled area trend over the last 9 months.
         IReadOnlyList<PeriodDatum> income = _income.GetMonthlyTotals(9);
         IReadOnlyList<PeriodDatum> expense = _analytics.GetMonthlyTotals(9);
-        IncomeExpenseSeries = [Area("Income", income, BrandPalette.Success), Area("Expense", expense, BrandPalette.Danger)];
-        IncomeExpenseAxes = [new Axis { Labels = income.Select(d => d.Label).ToArray(), LabelsRotation = 0, LabelsPaint = BrandPalette.ChartAxesLabelPaint, SeparatorsPaint = BrandPalette.ChartGridLinesPaint }];
-        IncomeExpenseYAxes = [new Axis { LabelsPaint = BrandPalette.ChartAxesLabelPaint, SeparatorsPaint = BrandPalette.ChartGridLinesPaint }];
+        IncomeExpenseSeries = [Area("Income (₹'000s)", income, BrandPalette.Success), Area("Expense (₹'000s)", expense, BrandPalette.Danger)];
+        IncomeExpenseAxes = [new Axis
+{ 
+    Labels = income.Select(d => FormatMonthLabel(d.Label)).ToArray(),
+    LabelsRotation = 0, 
+    LabelsPaint = BrandPalette.ChartAxesLabelPaint, 
+    SeparatorsPaint = BrandPalette.ChartGridLinesPaint 
+}];
+IncomeExpenseYAxes = [new Axis
+{ 
+    Labeler = value => (value / 1000).ToString("0.#") + "K",
+    LabelsPaint = BrandPalette.ChartAxesLabelPaint, 
+    SeparatorsPaint = BrandPalette.ChartGridLinesPaint 
+}];
 
         // Investment growth — invested capital over time (line + period-growth badge).
         InvestmentSeries =
@@ -165,82 +183,97 @@ private static Brush Green => IsDarkMode
                 GeometryFill = new SolidColorPaint(BrandPalette.Primary),
                 GeometrySize = 7,
                 Fill = null,
-                LineSmoothness = 0.5
+                LineSmoothness = 0.5,
+                YToolTipLabelFormatter = point => $"₹{FormatIndian(point.Coordinate.PrimaryValue)}"
+
             }
         ];
-        InvestmentAxes = [new Axis { Labels = s.InvestedHistory.Select(d => d.Label).ToArray(), LabelsPaint = BrandPalette.ChartAxesLabelPaint, SeparatorsPaint = BrandPalette.ChartGridLinesPaint }];
-        InvestmentYAxes = [new Axis { LabelsPaint = BrandPalette.ChartAxesLabelPaint, SeparatorsPaint = BrandPalette.ChartGridLinesPaint }];
-        InvestmentGrowthText = $"{(s.InvestedGrowthPercent >= 0 ? "▲ +" : "▼ ")}{s.InvestedGrowthPercent:0.#}% YoY";
+int totalPoints = s.InvestedHistory.Count;
+DateTime endMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+
+string[] mmmYyLabels = s.InvestedHistory
+    .Select((d, i) =>
+    {
+        // Last point = current month, walk backwards for older points
+        var monthDate = endMonth.AddMonths(-(totalPoints - 1 - i));
+        return monthDate.ToString("MMM-yy", CultureInfo.CurrentCulture);
+    })
+    .ToArray();
+
+InvestmentAxes = [new Axis
+{
+    Labels = mmmYyLabels,
+    LabelsPaint = BrandPalette.ChartAxesLabelPaint,
+    SeparatorsPaint = BrandPalette.ChartGridLinesPaint
+}];
+InvestmentYAxes = [new Axis
+{
+    Labeler = value => (value / 100000).ToString("0.#") + "L",
+    LabelsPaint = BrandPalette.ChartAxesLabelPaint,
+    SeparatorsPaint = BrandPalette.ChartGridLinesPaint
+}];
+InvestmentGrowthText = $"{(s.InvestedGrowthPercent >= 0 ? "▲ +" : "▼ ")}{s.InvestedGrowthPercent:0.#}% YoY";
 
         // Expense breakdown — this month's spend by category (horizontal bar chart for better space efficiency).
-        var categories = _analytics.GetCategoryDistribution(AnalyticsPeriod.ThisMonth)
-            .Where(c => c.Amount > 0)
-            .OrderByDescending(c => c.Amount)
-            .ToList();
+       // Expense breakdown — this month's spend by category (horizontal bars).
+var categories = _analytics.GetCategoryDistribution(AnalyticsPeriod.ThisMonth)
+    .Where(c => c.Amount > 0)
+    .OrderByDescending(c => c.Amount)
+    .ToList();
 
-        // Category-specific colors for each expense type
-        var colorMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-        {
-            ["Transportation"] = "#F4B400",  // Yellow
-            ["Food"] = "#34A853",            // Green
-            ["Utilities"] = "#4285F4",       // Blue
-            ["Shopping"] = "#A142F4",        // Purple
-            ["Healthcare"] = "#00ACC1",      // Teal
-            ["Entertainment"] = "#FB8C00",   // Orange
-            ["Education"] = "#4B4FC7",       // Indigo
-            ["Other"] = "#9E9E9E",           // Gray
-        };
+var categoryLabels = categories.Select(c => c.CategoryName).ToArray();
+var categoryValues = categories.Select(c => (double)c.Amount).ToArray();
 
-        // Create one RowSeries per category with its own color (horizontal bars)
-        var rowSeries = new List<ISeries>();
-        var categoryLabels = new List<string>();
-        
-        for (int i = 0; i < categories.Count; i++)
-        {
-            var category = categories[i];
-            categoryLabels.Add(category.CategoryName);
-            
-            var color = colorMap.ContainsKey(category.CategoryName)
-                ? colorMap[category.CategoryName]
-                : "#9E9E9E";
-            
-            var skColor = SKColor.Parse(color);
-            
-            // Pad the values array so the value is at the correct index for this category
-            var values = new double?[categories.Count];
-            values[i] = (double)category.Amount;
-            
-            rowSeries.Add(new RowSeries<double?>
-            {
-                Name = category.CategoryName,
-                Values = values,
-                Fill = new SolidColorPaint(skColor),
-                MaxBarWidth = 24,
-                DataLabelsPosition = DataLabelsPosition.End,
-                DataLabelsFormatter = (point) => FormatCompactNumber(point.Coordinate.PrimaryValue)
-            });
-        }
+ExpenseBreakdownSeries = new ISeries[]
+{
+    new RowSeries<double>
+{
+    Name = string.Empty,
+    Values = categoryValues,
+    Fill = new SolidColorPaint(SKColor.Parse("#4285F4")),
+    MaxBarWidth = 22,
+    Padding = 4,
+    DataLabelsPaint = null,
+    MiniatureShapeSize = 0, 
+    IsVisibleAtLegend = false,                  // ✅ removes legend icon
+    XToolTipLabelFormatter = point =>
+        $"{categoryLabels[point.Index]}: ₹{FormatIndian(point.Coordinate.PrimaryValue)}"
+}
+};
 
-        ExpenseBreakdownSeries = rowSeries.ToArray();
-        
-        // X axis: values (horizontal) — compact formatting, start at zero
-        ExpenseBreakdownAxes = [new Axis { Labeler = FormatCompactNumber, MinLimit = 0, LabelsPaint = BrandPalette.ChartAxesLabelPaint, SeparatorsPaint = BrandPalette.ChartGridLinesPaint }];
-        
-        // Y axis: category labels (vertical)
-        ExpenseBreakdownYAxes = [new Axis { Labels = categoryLabels.ToArray(), LabelsPaint = BrandPalette.ChartAxesLabelPaint, SeparatorsPaint = BrandPalette.ChartGridLinesPaint }];
+// X axis — compact ₹ values starting at zero
+ExpenseBreakdownAxes = [new Axis
+{
+    Labeler = FormatCompactNumber,
+    MinLimit = 0,
+    TextSize = 11,
+    LabelsPaint = BrandPalette.ChartAxesLabelPaint,
+    SeparatorsPaint = BrandPalette.ChartGridLinesPaint
+}];
+
+// Y axis — category labels (one per bar, perfectly aligned)
+ExpenseBreakdownYAxes = [new Axis
+{
+    Labels = categoryLabels,
+    TextSize = 11,
+    MinStep = 1,                                        // ✅ force one label per bar
+    ForceStepToMin = true,                              // ✅ guarantees alignment
+    LabelsPaint = BrandPalette.ChartAxesLabelPaint,
+    SeparatorsPaint = BrandPalette.ChartGridLinesPaint
+}];
     }
-
-    private static LineSeries<double> Area(string name, IReadOnlyList<PeriodDatum> data, SKColor color) => new()
-    {
-        Name = name,
-        Values = data.Select(d => (double)d.Amount).ToArray(),
-        Stroke = new SolidColorPaint(color) { StrokeThickness = 2f },
-        GeometryFill = null,
-        GeometryStroke = null,
-        GeometrySize = 0,
-        Fill = new SolidColorPaint(color.WithAlpha(50)),
-        LineSmoothness = 0.6
-    };
+private static LineSeries<double> Area(string name, IReadOnlyList<PeriodDatum> data, SKColor color) => new()
+{
+    Name = name,
+    Values = data.Select(d => (double)d.Amount).ToArray(),
+    Stroke = new SolidColorPaint(color) { StrokeThickness = 2f },
+    GeometryFill = null,
+    GeometryStroke = null,
+    GeometrySize = 0,
+    Fill = new SolidColorPaint(color.WithAlpha(50)),
+    LineSmoothness = 0.6,
+    YToolTipLabelFormatter = point => $"₹{FormatIndian(point.Coordinate.PrimaryValue)}"
+};
 
     private static string FormatCompactNumber(double value)
     {
@@ -256,6 +289,33 @@ private static Brush Green => IsDarkMode
         }
         return value.ToString("0", CultureInfo.InvariantCulture);
     }
+    private static string FormatIndian(double value)
+{
+    // Indian number system: 10,00,000 instead of 1,000,000
+    var culture = new CultureInfo("en-IN");
+    return value.ToString("N0", culture);
+}
+    private static string ToMmmYy(string label)
+{
+    if (string.IsNullOrWhiteSpace(label))
+        return label;
+
+    string[] formats =
+    {
+        "MMM yyyy", "MMMM yyyy", "yyyy-MM", "yyyy/MM",
+        "MM-yyyy", "MM/yyyy", "MMM-yyyy", "MMM yy", "MMM-yy"
+    };
+
+    if (DateTime.TryParseExact(label, formats, CultureInfo.CurrentCulture,
+            DateTimeStyles.None, out var dt) ||
+        DateTime.TryParse(label, CultureInfo.CurrentCulture,
+            DateTimeStyles.None, out dt))
+    {
+        return dt.ToString("MMM-yy", CultureInfo.CurrentCulture);
+    }
+
+    return label; // fallback: return original
+}
 
     private static string FormatMonthLabel(string label)
     {
