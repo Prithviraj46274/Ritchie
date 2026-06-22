@@ -665,6 +665,135 @@ namespace Richie.Infrastructure.Migrations
                     b.ToTable("InsurancePolicies");
                 });
 
+            modelBuilder.Entity("Richie.Domain.Liabilities.Loan", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AccountNumber")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("AutoDebitEnabled")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("BorrowerName")
+                        .HasMaxLength(150)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CoApplicant")
+                        .HasMaxLength(150)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CollateralType")
+                        .HasMaxLength(150)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("EmiAmount")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("InterestRate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("InterestType")
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("NextDueDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("OriginalAmount")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("OutstandingAmount")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("PrepaymentTotal")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("ProcessingFee")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Provider")
+                        .HasMaxLength(150)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("UpdatedUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "NextDueDate");
+
+                    b.HasIndex("UserId", "Status");
+
+                    b.ToTable("Loans");
+                });
+
+            modelBuilder.Entity("Richie.Domain.Liabilities.LoanPayment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("InterestComponent")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("LoanId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PaymentType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("PrincipalComponent")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LoanId", "PaymentDate");
+
+                    b.ToTable("LoanPayments");
+                });
+
             modelBuilder.Entity("Richie.Domain.Notifications.Notification", b =>
                 {
                     b.Property<Guid>("Id")
@@ -869,9 +998,25 @@ namespace Richie.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Richie.Domain.Liabilities.LoanPayment", b =>
+                {
+                    b.HasOne("Richie.Domain.Liabilities.Loan", "Loan")
+                        .WithMany("Payments")
+                        .HasForeignKey("LoanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Loan");
+                });
+
             modelBuilder.Entity("Richie.Domain.Authentication.User", b =>
                 {
                     b.Navigation("SecurityAnswers");
+                });
+
+            modelBuilder.Entity("Richie.Domain.Liabilities.Loan", b =>
+                {
+                    b.Navigation("Payments");
                 });
 #pragma warning restore 612, 618
         }

@@ -51,14 +51,13 @@
                             Title="Interim scoring"
                             Message="{Binding InterimNotice}" />
 
-                <!-- SECTION 1: 2-Column Score KPI Cards (consistent with Expenses page style) -->
+                <!-- SECTION 1: 2-Column Score KPI Cards -->
                 <Grid Margin="0,0,0,16">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <!-- KPI 1: Portfolio Health Score -->
                     <ui:Card Grid.Column="0" Margin="0,0,10,0" MinHeight="92" VerticalAlignment="Stretch">
                         <StackPanel Margin="6" VerticalAlignment="Stretch">
                             <ui:TextBlock Appearance="Secondary" Text="Portfolio Health Score" />
@@ -68,7 +67,6 @@
                         </StackPanel>
                     </ui:Card>
 
-                    <!-- KPI 2: Risk Score -->
                     <ui:Card Grid.Column="1" Margin="0,0,0,0" MinHeight="92" VerticalAlignment="Stretch">
                         <StackPanel Margin="6" VerticalAlignment="Stretch">
                             <ui:TextBlock Appearance="Secondary" Text="Risk Score (Riskometer)" />
@@ -80,27 +78,23 @@
                     </ui:Card>
                 </Grid>
 
-                <!-- SECTION 2: Radar Chart & Factors (Left Card) and Benchmark Chart & Table (Right Card) (2 Columns) -->
+                <!-- SECTION 2: Radar Chart & Benchmark -->
                 <Grid Margin="0,0,0,16">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <!-- Left Card: Health Dimensions Polar (Radar) Chart & Score Factors List -->
                     <ui:Card Grid.Column="0" Margin="0,0,10,0" Padding="16" VerticalAlignment="Stretch">
                         <StackPanel>
                             <ui:TextBlock FontTypography="BodyStrong" Text="Health Dimensions &amp; Factors" Margin="0,0,0,4" />
                             <ui:TextBlock Appearance="Secondary" FontTypography="Caption" TextWrapping="Wrap" Margin="0,0,0,12"
                                           Text="Each health-score factor on a 0–100 scale — a larger, more even shape is healthier." />
-
                             <Grid Height="300">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1.2*" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-
-                                <!-- Polar (Radar) Chart (Left Side) -->
                                 <Grid Grid.Column="0" Visibility="{Binding HasAssets, Converter={StaticResource BoolToVisibilityConverter}}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                     <lvc:PolarChart
                                         Series="{Binding HealthRadarSeries}"
@@ -111,8 +105,6 @@
                                 <Grid Grid.Column="0" Visibility="{Binding NoAssets, Converter={StaticResource BoolToVisibilityConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center">
                                     <ui:TextBlock Appearance="Secondary" FontTypography="Body" Text="No assets available to display radar chart." TextAlignment="Center" TextWrapping="Wrap" />
                                 </Grid>
-
-                                <!-- Health Factors List (Right Side) -->
                                 <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="12,0,0,0">
                                     <ItemsControl ItemsSource="{Binding HealthFactors}">
                                         <ItemsControl.ItemTemplate>
@@ -140,25 +132,19 @@
                         </StackPanel>
                     </ui:Card>
 
-                    <!-- Right Card: Benchmark Comparison Chart & Table -->
                     <ui:Card Grid.Column="1" Margin="0,0,0,0" Padding="16" VerticalAlignment="Stretch">
                         <StackPanel>
                             <ui:TextBlock FontTypography="BodyStrong" Text="{Binding AgeBandName, StringFormat='Benchmark Comparison &amp; Table — {0}'}" Margin="0,0,0,4" />
                             <ui:TextBlock Appearance="Secondary" FontTypography="Caption" TextWrapping="Wrap" Margin="0,0,0,12"
                                           Text="Your asset allocation vs recommended range for your age group." />
-
                             <Grid Height="300">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1.2*" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-
-                                <!-- Benchmark Chart (Left Side) -->
                                 <Grid Grid.Column="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                                     <lvc:CartesianChart Series="{Binding BenchmarkComparisonSeries}" XAxes="{Binding BenchmarkComparisonAxes}" YAxes="{Binding BenchmarkComparisonYAxes}" LegendTextPaint="{DynamicResource ChartLegendTextPaint}" LegendPosition="Bottom" />
                                 </Grid>
-
-                                <!-- Benchmark Table (Right Side) -->
                                 <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Stretch">
                                     <DataGrid ItemsSource="{Binding Benchmark}"
                                               AutoGenerateColumns="False"
@@ -192,7 +178,6 @@
                                             </DataGridTemplateColumn>
                                         </DataGrid.Columns>
                                     </DataGrid>
-
                                     <ui:TextBlock Appearance="Secondary" FontTypography="Caption" Margin="0,8,0,0" TextWrapping="Wrap" Text="{Binding DiversificationText}" />
                                 </StackPanel>
                             </Grid>
@@ -200,14 +185,13 @@
                     </ui:Card>
                 </Grid>
 
-                <!-- SECTION 3: Actionable Insights & Compliance Summary side by side (right below charts) -->
+                <!-- SECTION 3: Insights & Compliance -->
                 <Grid Margin="0,0,0,16">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <!-- Actionable Insights Card -->
                     <ui:Card Grid.Column="0" Margin="0,0,10,0" Padding="12" VerticalAlignment="Stretch">
                         <StackPanel Margin="6" VerticalAlignment="Stretch">
                             <ui:TextBlock FontTypography="BodyStrong" Text="Actionable Insights" Margin="0,0,0,8" />
@@ -223,16 +207,12 @@
                         </StackPanel>
                     </ui:Card>
 
-                    <!-- Compliance Summary Card -->
                     <ui:Card Grid.Column="1" Margin="0,0,0,0" Padding="12" VerticalAlignment="Stretch">
                         <StackPanel Margin="6" VerticalAlignment="Stretch">
                             <ui:TextBlock FontTypography="BodyStrong" Text="Compliance Summary" Margin="0,0,0,8" />
-
-                            <!-- Dynamic compliance badge color -->
                             <Border Padding="8,6" CornerRadius="8" Background="{Binding ComplianceBrush}" HorizontalAlignment="Stretch">
                                 <ui:TextBlock FontTypography="BodyStrong" Foreground="{DynamicResource BadgeTextBrush}" Text="{Binding ComplianceOverall}" TextWrapping="Wrap" />
                             </Border>
-
                             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" MaxHeight="120" Margin="0,8,0,0">
                                 <ItemsControl ItemsSource="{Binding Compliance}">
                                     <ItemsControl.ItemTemplate>
@@ -242,12 +222,10 @@
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
-
                                                 <StackPanel Grid.Column="0">
                                                     <ui:TextBlock Text="{Binding Name}" TextWrapping="Wrap" FontTypography="Body" />
                                                     <ui:TextBlock Appearance="Secondary" TextWrapping="Wrap" Text="{Binding Detail}" FontTypography="Caption" />
                                                 </StackPanel>
-
                                                 <Border Grid.Column="1" Padding="4,2" CornerRadius="6" Background="{Binding StatusBrush}" VerticalAlignment="Top" Margin="4,0,0,0">
                                                     <ui:TextBlock FontTypography="Caption" Foreground="{DynamicResource BadgeTextBrush}" Text="{Binding StatusText}" TextWrapping="Wrap" />
                                                 </Border>
@@ -260,9 +238,7 @@
                     </ui:Card>
                 </Grid>
 
-
-
-                <!-- SECTION 5: Bottom Detail Cards (3 Columns) -->
+                <!-- SECTION 5: Bottom Detail Cards -->
                 <Grid Margin="0,0,0,16">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -270,7 +246,6 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <!-- Card 1: Goal Progress -->
                     <ui:Card Grid.Column="0" Margin="0,0,10,0" Padding="12" VerticalAlignment="Stretch">
                         <StackPanel>
                             <ui:TextBlock FontTypography="BodyStrong" Text="Goal Progress" Margin="0,0,0,8" />
@@ -294,7 +269,6 @@
                         </StackPanel>
                     </ui:Card>
 
-                    <!-- Card 2: Protection Coverage -->
                     <ui:Card Grid.Column="1" Margin="0,0,10,0" Padding="12" VerticalAlignment="Stretch">
                         <StackPanel>
                             <ui:TextBlock FontTypography="BodyStrong" Text="Protection Coverage" Margin="0,0,0,8" />
@@ -315,7 +289,6 @@
                         </StackPanel>
                     </ui:Card>
 
-                    <!-- Card 3: Guaranteed Investments -->
                     <ui:Card Grid.Column="2" Margin="0,0,0,0" Padding="12" VerticalAlignment="Stretch">
                         <StackPanel>
                             <ui:TextBlock FontTypography="BodyStrong" Text="Guaranteed Investments" Margin="0,0,0,8" />

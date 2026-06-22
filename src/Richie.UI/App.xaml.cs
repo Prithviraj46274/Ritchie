@@ -88,6 +88,9 @@ public partial class App : System.Windows.Application
                 services.AddTransient<VaultRecoveryViewModel>();
                 services.AddTransient<InsuranceViewModel>();
                 services.AddTransient<AddEditInsuranceViewModel>();
+                services.AddTransient<LiabilitiesViewModel>();
+                services.AddTransient<Views.Liabilities.AddEditLoanViewModel>();
+                services.AddTransient<LoanDetailsViewModel>();
                 services.AddTransient<HealthAuditViewModel>();
                 services.AddTransient<DashboardViewModel>();
                 services.AddTransient<ReportsViewModel>();
@@ -117,6 +120,9 @@ public partial class App : System.Windows.Application
                 services.AddTransient<Views.Vault.VaultRecoveryWindow>();
                 services.AddTransient<Views.Insurance.InsuranceWindow>();
                 services.AddTransient<Views.Insurance.AddEditInsuranceWindow>();
+                services.AddTransient<Views.Liabilities.LiabilitiesWindow>();
+                services.AddTransient<Views.Liabilities.AddEditLoanWindow>();
+                services.AddTransient<Views.Liabilities.LoanDetailsWindow>();
 
                 services.AddHostedService<Infrastructure.Assets.SipProcessingService>();
                 services.AddHostedService<Infrastructure.Expenses.RecurringExpenseProcessingService>();

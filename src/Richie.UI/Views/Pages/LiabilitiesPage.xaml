@@ -1,0 +1,134 @@
+<Page x:Class="Richie.UI.Views.Pages.LiabilitiesPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+      mc:Ignorable="d"
+      Title="Liabilities"
+      ScrollViewer.CanContentScroll="False"
+      Loaded="OnLoaded">
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </Page.Resources>
+    <Grid Margin="16" Background="{DynamicResource PageBackgroundBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ui:TextBlock Grid.Column="0" FontTypography="TitleLarge"
+                          Text="Liabilities &amp; Loans"
+                          Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                          VerticalAlignment="Center" />
+            <ui:Button Grid.Column="1" Content="Add loan"
+                       Appearance="Primary" Click="OnAddLoan" />
+        </Grid>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <Grid Margin="0,0,0,12" Height="100">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="12" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="12" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="12" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <ui:Card Grid.Column="0" Padding="12">
+                        <StackPanel VerticalAlignment="Center">
+                            <ui:TextBlock Appearance="Secondary" FontTypography="Caption"
+                                          HorizontalAlignment="Center" Text="Total Outstanding" Margin="0,0,0,6" />
+                            <ui:TextBlock FontTypography="Subtitle" HorizontalAlignment="Center"
+                                          Text="{Binding TotalOutstanding, StringFormat='&#x20B9;{0:N0}'}" />
+                        </StackPanel>
+                    </ui:Card>
+                    <ui:Card Grid.Column="2" Padding="12">
+                        <StackPanel VerticalAlignment="Center">
+                            <ui:TextBlock Appearance="Secondary" FontTypography="Caption"
+                                          HorizontalAlignment="Center" Text="Monthly EMI" Margin="0,0,0,6" />
+                            <ui:TextBlock FontTypography="Subtitle" HorizontalAlignment="Center"
+                                          Text="{Binding TotalMonthlyEmi, StringFormat='&#x20B9;{0:N0}'}" />
+                        </StackPanel>
+                    </ui:Card>
+                    <ui:Card Grid.Column="4" Padding="12">
+                        <StackPanel VerticalAlignment="Center">
+                            <ui:TextBlock Appearance="Secondary" FontTypography="Caption"
+                                          HorizontalAlignment="Center" Text="Interest Payable" Margin="0,0,0,6" />
+                            <ui:TextBlock FontTypography="Subtitle" HorizontalAlignment="Center"
+                                          Text="{Binding TotalInterestPayable, StringFormat='&#x20B9;{0:N0}'}" />
+                        </StackPanel>
+                    </ui:Card>
+                    <ui:Card Grid.Column="6" Padding="12">
+                        <StackPanel VerticalAlignment="Center">
+                            <ui:TextBlock Appearance="Secondary" FontTypography="Caption"
+                                          HorizontalAlignment="Center" Text="Net Worth" Margin="0,0,0,6" />
+                            <ui:TextBlock FontTypography="Subtitle" HorizontalAlignment="Center"
+                                          Text="{Binding NetWorth, StringFormat='&#x20B9;{0:N0}'}" />
+                        </StackPanel>
+                    </ui:Card>
+                </Grid>
+
+                <ui:Card Margin="0,0,0,12" Height="250">
+                    <StackPanel>
+                        <ui:TextBlock FontTypography="BodyStrong" Text="Outstanding vs Original Amount" Margin="0,0,0,8" />
+                        <lvc:CartesianChart Height="185"
+                                            Series="{Binding LoanRepaymentSeries}"
+                                            XAxes="{Binding LoanRepaymentXAxes}"
+                                            YAxes="{Binding LoanRepaymentYAxes}"
+                                            LegendTextPaint="{DynamicResource ChartLegendTextPaint}"
+                                            LegendPosition="Bottom" />
+                    </StackPanel>
+                </ui:Card>
+
+                <ui:TextBlock FontTypography="BodyStrong" Text="Your loans" Margin="0,0,0,8" />
+                <DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="False"
+                          MinHeight="220" IsReadOnly="True" CanUserAddRows="False"
+                          HeadersVisibility="Column" GridLinesVisibility="Horizontal">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Type" Binding="{Binding TypeName}" Width="Auto" />
+                        <DataGridTextColumn Header="Borrower" Binding="{Binding BorrowerName}" Width="*" />
+                        <DataGridTextColumn Header="Provider" Binding="{Binding Provider}" Width="*" />
+                        <DataGridTextColumn Header="Outstanding"
+                                            Binding="{Binding OutstandingAmount, StringFormat='&#x20B9;{0:N0}'}"
+                                            Width="Auto" />
+                        <DataGridTextColumn Header="EMI"
+                                            Binding="{Binding EmiAmount, StringFormat='&#x20B9;{0:N0}'}"
+                                            Width="Auto" />
+                        <DataGridTextColumn Header="Rate"
+                                            Binding="{Binding InterestRate, StringFormat='{}{0:0.##}%'}"
+                                            Width="Auto" />
+                        <DataGridTextColumn Header="Next due"
+                                            Binding="{Binding NextDueDate, StringFormat=d}"
+                                            Width="Auto" />
+                        <DataGridTextColumn Header="Status" Binding="{Binding StatusName}" Width="Auto" />
+                        <DataGridTemplateColumn Header="Actions" Width="Auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <ui:Button Content="Edit" Padding="8,2" Margin="0,0,4,0"
+                                                   Tag="{Binding Id}" Click="OnEditLoan" />
+                                        <ui:Button Content="Delete" Padding="8,2"
+                                                   Tag="{Binding Id}" Click="OnDeleteLoan" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <ui:TextBlock Margin="0,16,0,0" Appearance="Secondary" TextWrapping="Wrap"
+                              Text="No loans yet. Add a home, education, vehicle or other loan to track EMIs and debt health."
+                              Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVisibilityConverter}}" />
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

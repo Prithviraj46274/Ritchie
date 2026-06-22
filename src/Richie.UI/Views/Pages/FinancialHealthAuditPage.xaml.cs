@@ -25,6 +25,6 @@ public partial class FinancialHealthAuditPage : Page
             .GetRequiredService<InsuranceWindow>();
         window.Owner = Window.GetWindow(this);
         window.ShowDialog();
-        Vm.Load();   // coverage gaps may have changed
+        Vm.Load();
     }
 }

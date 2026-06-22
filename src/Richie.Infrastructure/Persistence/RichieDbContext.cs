@@ -9,6 +9,7 @@ using Richie.Domain.Insurance;
 using Richie.Domain.Notifications;
 using Richie.Domain.Settings;
 using Richie.Domain.Vault;
+using Richie.Domain.Liabilities;
 
 namespace Richie.Infrastructure.Persistence;
 
@@ -38,6 +39,8 @@ public class RichieDbContext : DbContext
     public DbSet<VaultEntry> VaultEntries => Set<VaultEntry>();
     public DbSet<VaultKey> VaultKeys => Set<VaultKey>();
     public DbSet<InsurancePolicy> InsurancePolicies => Set<InsurancePolicy>();
+    public DbSet<Loan> Loans => Set<Loan>();
+    public DbSet<LoanPayment> LoanPayments => Set<LoanPayment>();
     public DbSet<AppSettings> AppSettings => Set<AppSettings>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 

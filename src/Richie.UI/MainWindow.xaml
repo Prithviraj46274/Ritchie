@@ -133,6 +133,9 @@
                 <ui:NavigationViewItem Content="Password Vault" TargetPageType="{x:Type pages:PasswordVaultPage}">
                     <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="LockClosed24" /></ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="Liabilities" TargetPageType="{x:Type pages:LiabilitiesPage}">
+                    <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="CreditCardClock24" /></ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
                 <ui:NavigationViewItem Content="Financial Health Audit" TargetPageType="{x:Type pages:FinancialHealthAuditPage}">
                     <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="Heart24" /></ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
