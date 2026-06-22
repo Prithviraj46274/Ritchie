@@ -175,7 +175,7 @@
 
         <!-- App tour overlay -->
         <Border x:Name="TourOverlay" Grid.RowSpan="4" Panel.ZIndex="100"
-                Background="{DynamicResource SolidBackgroundFillColorBaseBrush}" Opacity="0.6" Visibility="Collapsed">
+                Background="{DynamicResource SolidBackgroundFillColorBaseBrush}" Opacity="1" Visibility="Collapsed">
             <ui:Card Width="440" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <StackPanel>
                     <ui:TextBlock x:Name="TourTitle" FontTypography="Subtitle" />
