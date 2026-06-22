@@ -24,6 +24,8 @@ using Richie.Infrastructure.Persistence;
 using Richie.Infrastructure.Security;
 using Richie.Infrastructure.Storage;
 using Richie.Infrastructure.Vault;
+using Richie.Application.Liabilities;
+using Richie.Infrastructure.Liabilities;
 
 namespace Richie.Infrastructure;
 
@@ -68,6 +70,7 @@ public static class DependencyInjection
         services.AddSingleton<IVaultHealthService, VaultHealthService>();
         services.AddSingleton<IVaultImportService, VaultImportService>();
         services.AddSingleton<IInsuranceService, InsuranceService>();
+        services.AddSingleton<ILoanService, LoanService>();
         services.AddSingleton<IScoringEngine, PlaceholderScoringEngine>();
         services.AddSingleton<IBenchmarkProvider, AgeBandBenchmarkProvider>();
         services.AddSingleton<IHealthAuditService, Audit.HealthAuditService>();

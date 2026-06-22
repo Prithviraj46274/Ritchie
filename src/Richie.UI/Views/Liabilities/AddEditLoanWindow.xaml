@@ -1,0 +1,81 @@
+<ui:FluentWindow x:Class="Richie.UI.Views.Liabilities.AddEditLoanWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:vm="clr-namespace:Richie.UI.ViewModels"
+        mc:Ignorable="d"
+        Title="Loan"
+        Height="760" Width="480"
+        WindowStartupLocation="CenterOwner"
+        ExtendsContentIntoTitleBar="True"
+        WindowBackdropType="Mica"
+        WindowCornerPreference="Round">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Title="{Binding Title}" />
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="24,8,24,8">
+            <StackPanel>
+                <ui:TextBlock Text="Loan type" Margin="0,0,0,4" />
+                <ComboBox ItemsSource="{Binding Types}" DisplayMemberPath="Text"
+                          SelectedValuePath="Value" SelectedValue="{Binding Type}"
+                          Margin="0,0,0,10" />
+                <ui:TextBox PlaceholderText="Loan provider / bank" Margin="0,0,0,10"
+                            Text="{Binding Provider, UpdateSourceTrigger=PropertyChanged}" />
+                <ui:TextBox PlaceholderText="Loan account number (optional)" Margin="0,0,0,10"
+                            Text="{Binding AccountNumber, UpdateSourceTrigger=PropertyChanged}" />
+                <ui:TextBox PlaceholderText="Borrower name" Margin="0,0,0,10"
+                            Text="{Binding BorrowerName, UpdateSourceTrigger=PropertyChanged}" />
+                <ui:TextBox PlaceholderText="Original loan amount" Margin="0,0,0,10"
+                            Text="{Binding OriginalAmount, UpdateSourceTrigger=PropertyChanged}" />
+                <ui:TextBox PlaceholderText="Outstanding amount" Margin="0,0,0,10"
+                            Text="{Binding OutstandingAmount, UpdateSourceTrigger=PropertyChanged}" />
+                <ui:TextBox PlaceholderText="Interest rate (%)" Margin="0,0,0,10"
+                            Text="{Binding InterestRate, UpdateSourceTrigger=PropertyChanged}" />
+                <ui:TextBox PlaceholderText="EMI amount" Margin="0,0,0,10"
+                            Text="{Binding EmiAmount, UpdateSourceTrigger=PropertyChanged}" />
+                <ui:TextBlock Text="Start date" Margin="0,0,0,4" />
+                <DatePicker SelectedDate="{Binding StartDate}" Margin="0,0,0,10" />
+                <ui:TextBlock Text="End date / maturity date" Margin="0,0,0,4" />
+                <DatePicker SelectedDate="{Binding EndDate}" Margin="0,0,0,10" />
+                <ui:TextBlock Text="Next EMI due date" Margin="0,0,0,4" />
+                <DatePicker SelectedDate="{Binding NextDueDate}" Margin="0,0,0,10" />
+                <ui:TextBlock Text="Status" Margin="0,0,0,4" />
+                <ComboBox ItemsSource="{Binding Statuses}" DisplayMemberPath="Text"
+                          SelectedValuePath="Value" SelectedValue="{Binding Status}"
+                          Margin="0,0,0,10" />
+                <ui:TextBlock Text="Interest type" Margin="0,0,0,4" />
+                <ComboBox Margin="0,0,0,10" IsEditable="True"
+                          Text="{Binding InterestType, UpdateSourceTrigger=PropertyChanged}">
+                    <ComboBoxItem Content="Fixed" />
+                    <ComboBoxItem Content="Floating" />
+                </ComboBox>
+                <ui:TextBox PlaceholderText="Processing fee" Margin="0,0,0,10"
+                            Text="{Binding ProcessingFee, UpdateSourceTrigger=PropertyChanged}" />
+                <ui:TextBox PlaceholderText="Co-applicant (optional)" Margin="0,0,0,10"
+                            Text="{Binding CoApplicant, UpdateSourceTrigger=PropertyChanged}" />
+                <ui:TextBox PlaceholderText="Collateral type (optional)" Margin="0,0,0,10"
+                            Text="{Binding CollateralType, UpdateSourceTrigger=PropertyChanged}" />
+                <CheckBox Content="EMI auto-debit enabled"
+                          IsChecked="{Binding AutoDebitEnabled}" Margin="0,0,0,10" />
+                <ui:TextBox PlaceholderText="Notes" Margin="0,0,0,10"
+                            AcceptsReturn="True" MinLines="2"
+                            Text="{Binding Notes, UpdateSourceTrigger=PropertyChanged}" />
+                <ui:TextBlock Foreground="#C42B1C" TextWrapping="Wrap" Text="{Binding Error}" />
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal"
+                    HorizontalAlignment="Right" Margin="24,8,24,16">
+            <ui:Button Content="Cancel" Margin="0,0,8,0" Command="{Binding CancelCommand}" />
+            <ui:Button Content="Save" Appearance="Primary" Command="{Binding SaveCommand}" />
+        </StackPanel>
+    </Grid>
+</ui:FluentWindow>
